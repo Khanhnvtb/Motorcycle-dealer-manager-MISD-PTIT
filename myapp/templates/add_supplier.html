@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập</title>
+    <title>Add supplier</title>
 </head>
 <body>
 {% if messages %}
@@ -15,10 +15,12 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/login/" method="post">{% csrf_token %}
-    <p>Tên đăng nhập: {{ login_form.user }}</p>
-    <p>Mật khẩu: {{ login_form.password }}</p>
-    <input type="submit" value="Đăng nhập">
+<form action="/add_supplier/" method="post">{% csrf_token %}
+    <p>Tên nhà cung cấp: {{ supplier_form.name}}</p>
+    <p>Địa chỉ: {{ supplier_form.address}}</p>
+    <p>Số điện thoại: {{ supplier_form.phone}}</p>
+    <p>Email: {{ supplier_form.email}}</p>
+    <input type="submit" value="Thêm">
 </form>
 </body>
 </html>

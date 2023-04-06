@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Store manager</title>
+</head>
+<body>
+<h1>Danh sách cửa hàng</h1>
+<ul>
+    {% for store in stores %}
+    <li>Tên cửa hàng: {{ store.name }}</li>
+    <li>Tên chủ cửa hàng: {{ store.owner }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

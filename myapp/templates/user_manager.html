@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show user</title>
+</head>
+<body>
+<h1>Danh sách nhân viên</h1>
+<ul>
+    {% for user in users %}
+    <li>Tên nhân viên: {{ user.name }}</li>
+    <li>{{ user.avatar }}</li>
+    <li>Tuổi: {{user.dob }}</li>
+    <li>Chức vụ: {{ user.role }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

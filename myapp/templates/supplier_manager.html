@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supplier manager</title>
+</head>
+<body>
+    <h1>Danh sách nhà cung cấp</h1>
+<ul>
+    {% for supplier in suppliers %}
+    <li>Tên nhà cung cấp: {{ supplier.name }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

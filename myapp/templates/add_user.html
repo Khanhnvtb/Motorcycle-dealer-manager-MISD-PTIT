@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add user</title>
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="/add_user/" method="post">{% csrf_token %}
+    <p>Tên đăng nhập: {{ user_form.username }}</p>
+    <p>Mật khẩu: {{ user_form.password }}</p>
+    <p>Tên: {{ user_form.name }}</p>
+    <p>Ảnh đại diện: {{ user_form.avatar }}</p>
+    <p>Ngày sinh: {{ user_form.dob }}</p>
+    <p>Giới tính: {{ user_form.gender }}</p>
+    <p>Địa chỉ: {{ user_form.address }}</p>
+    <p>Số điện thoại: {{ user_form.phone }}</p>
+    <p>Email: {{ user_form.email }}</p>
+    <p>Chức vụ: {{ user_form.role }}</p>
+<!--    Chức vụ:-->
+<!--    <select id="role">-->
+<!--        <option value="Nhân viên bán hàng">Nhân viên bán hàng</option>-->
+<!--        <option value="Nhân viên kho">Nhân viên kho</option>-->
+<!--        {{ user_form.role}}-->
+<!--    </select>-->
+    <input type="submit" value="Thêm">
+</form>
+</body>
+</html>

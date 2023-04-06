@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motor manager</title>
+</head>
+<body>
+<h1>Danh sách xe máy</h1>
+<ul>
+    {% for motor in motors %}
+    <li>Tên xe máy: {{ motor.name }}</li>
+    <li>Thương hiệu{{ motor.brand }}</li>
+    <li> {{motor.image }}</li>
+    <li>Số lượng {{ motor.quantity }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
