@@ -1,15 +1,8 @@
 from django import forms
 from .models import *
 
-
-class LoginForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('username', 'password',)
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'username', 'placeholder': 'username'}),
-            'password': forms.TextInput(attrs={'class': 'password', 'placeholder': 'password'}),
-        }
+gender_choice = ['Nam', 'Nữ', 'Khác']
+role_choice = ['Nhân viên bán hàng', 'Nhân viên kho']
 
 
 class UserForm(forms.ModelForm):

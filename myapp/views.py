@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
@@ -7,24 +8,26 @@ from .models import *
 
 
 # Create your views here.
-def login(request):
+def loginUser(request):
     if request.method == "POST":
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            # try:
-            #     user = User.objects.filter(user=login_form.cleaned_data['user'], password=login_form.cleaned_data['password']).values()
-            messages.add_message(request, messages.SUCCESS, 'abc')
-            # return render(request, 'home.html')
-        # except User.DoseNotExist:
-        #     messages.add_message(request, messages.ERROR, 'Tài khoản hoặc mật khẩu không chính xác')
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return render(request, 'home.html', {'user': user})
+        else:
+            messages.add_message(request, messages.ERROR, 'Tài khoản hoặc mật khẩu không chính xác')
     else:
-        login_form = LoginForm()
-    return render(request, 'login.html', {'login_form': login_form})
+        username = ''
+        password = ''
+    return render(request, "login.html", {'username': username, 'password': password})
 
 
-def logout(request):
+def logoutUser(request):
     logout(request)
-    messages.add_message('Đăng xuất thành công')
+    messages.add_message(request, messages.SUCCESS, "Đăng xuất thành công")
     return render(request, 'home.html')
 
 
@@ -37,14 +40,11 @@ def addUser(request):
     if request.method == "POST":
         user_form = UserForm(request.POST)
         if user_form.is_valid():
-            try:
-                User.objects.get(username=user_form.cleaned_data['username'])
-                messages.add_message(request, messages.ERROR, 'Tài khoản đã tồn tại')
-            except User.DoesNotExist:
+            if User.objects.filter(username=user_form.cleaned_data['username']).exists():
+                messages.add_message(request, messages.SUCCESS, 'Tài khoản đã tồn tại')
+            else:
                 user_form.save()
                 user_form = UserForm()
-                # e = Employee(User.objects.filter(user=user_form.cleaned_data['user']).user_id, 0)
-                # e.save()
                 messages.add_message(request, messages.SUCCESS, 'Thêm người dùng thành công')
     else:
         user_form = UserForm()
@@ -127,10 +127,11 @@ def supplierManager(request):
 
 
 @login_required(login_url='/login')
-def showUser(request, user_id):
-    user = User.objects.filter(user_id=user_id)
+def showUser(request):
+    user = request.user
+    # employee = Employee.objects.get(employee_id=user.objects.username)
     return render(request, 'show_user.html', {'user': user})
-
+    # return render(request, 'show_user.html', {'user': user}, {'employee': employee}
 
 @login_required(login_url='/login')
 def showMotor(request, motor_id):

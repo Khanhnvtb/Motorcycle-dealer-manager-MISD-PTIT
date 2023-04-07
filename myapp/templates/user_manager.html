@@ -6,13 +6,21 @@
 </head>
 <body>
 <h1>Danh sách nhân viên</h1>
-<ul>
+<table style="width:100%">
+    <tr>
+        <td style="display:none">Ảnh đại diện</td>
+        <td style="display: none">Thông tin</td>
+    </tr>
     {% for user in users %}
-    <li>Tên nhân viên: {{ user.name }}</li>
-    <li>{{ user.avatar }}</li>
-    <li>Tuổi: {{user.dob }}</li>
-    <li>Chức vụ: {{ user.role }}</li>
+    <tr>
+        <td><img src="{{ user.avatar }}" alt="{{ user.name }}.image"></td>
+        <td>
+            <li>Tên nhân viên: {{ user.name }}</li>
+            <li>Tuổi: {{user.dob }}</li>
+            <li>Chức vụ: {{ user.role }}</li>
+        </td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 </body>
 </html>

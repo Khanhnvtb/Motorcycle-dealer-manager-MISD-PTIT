@@ -1,17 +1,16 @@
 from django.db import models
-# from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+
 
 # Create your models here.
 from django.utils import timezone
 
 
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True, blank=False, null=False)
-    username = models.CharField(max_length=100, unique=True, blank=False, null=False)
-    password = models.CharField(max_length=100, blank=False, null=False)
+class User(AbstractUser):
     name = models.CharField(max_length=100, blank=False, null=False)
     avatar = models.CharField(max_length=100, blank=False, null=False)
-    dob = models.DateField(blank=False, null=False)
+    dob = models.DateField(blank=False, null=True)
     gender = models.CharField(max_length=50, blank=False, null=False)
     address = models.CharField(max_length=100, blank=False, null=False)
     phone = models.CharField(max_length=20, blank=False, null=False)
@@ -20,8 +19,8 @@ class User(models.Model):
 
 
 class Employee(models.Model):
-    employee_id = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True, blank=False, null=False)
-    salary = models.IntegerField(blank=False, null=False)
+    employee_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    salary = models.IntegerField(default=0, blank=False, null=False)
 
 
 class Supplier(models.Model):

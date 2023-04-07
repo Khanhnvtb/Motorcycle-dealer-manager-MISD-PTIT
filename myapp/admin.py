@@ -6,5 +6,5 @@ admin.site.register(User)
 admin.site.register(Motor)
 admin.site.register(Store)
 admin.site.register(Supplier)
-# admin.site.register(Employee)
+admin.site.register(Employee)
 
