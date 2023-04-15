@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 from django.utils import timezone
 
 
@@ -16,24 +15,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=20, blank=False, null=False)
     email = models.EmailField(max_length=50, blank=False, null=False)
     role = models.CharField(max_length=20, blank=False, null=False)
-
-    def save(self, **kwargs):
-        super(User, self).save(**kwargs)
-        employee = Employee(employee_id=self)
-        employee.save()
-
-    def delete(self, **kwargs):
-        super(User, self).delete(**kwargs)
-        employee = Employee(employee_id=self)
-        employee.delete()
-
-
-class Employee(models.Model):
-    employee_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     salary = models.IntegerField(default=0, blank=False, null=False)
-
-    def __str__(self):
-        return self.employee_id
 
 
 class Supplier(models.Model):
@@ -51,8 +33,8 @@ class Import_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
     total = models.IntegerField(blank=False, null=False)
-    employee_id = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=False, null=False)
-    supplier_id = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=False, null=False)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=False, null=False)
 
 
 class Motor(models.Model):
@@ -72,8 +54,8 @@ class Motor(models.Model):
 
 class Import_Motor(models.Model):
     id = models.AutoField(primary_key=True, blank=False, null=False)
-    invoice_id = models.ForeignKey(Import_Invoice, on_delete=models.CASCADE, blank=False, null=False)
-    motor_id = models.ForeignKey(Motor, on_delete=models.CASCADE, blank=False, null=False)
+    invoice = models.ForeignKey(Import_Invoice, on_delete=models.CASCADE, blank=False, null=False)
+    motor = models.ForeignKey(Motor, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.IntegerField(blank=False, null=False)
 
 
@@ -93,12 +75,12 @@ class Delivery_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
     total = models.IntegerField(blank=False, null=False)
-    employee_id = models.ForeignKey(Employee, on_delete=models.CASCADE, blank=False, null=False)
-    store_id = models.ForeignKey(Store, on_delete=models.CASCADE, blank=False, null=False)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, blank=False, null=False)
 
 
 class Delivery_Motor(models.Model):
     id = models.AutoField(primary_key=True, blank=False, null=False)
-    invoice_id = models.ForeignKey(Delivery_Invoice, on_delete=models.CASCADE, blank=False, null=False)
-    motor_id = models.ForeignKey(Motor, on_delete=models.CASCADE, blank=False, null=False)
+    invoice = models.ForeignKey(Delivery_Invoice, on_delete=models.CASCADE, blank=False, null=False)
+    motor = models.ForeignKey(Motor, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.IntegerField(blank=False, null=False)

@@ -30,21 +30,13 @@ class UserForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'phone'}),
             'email': forms.TextInput(attrs={'class': 'email'}),
             'role': forms.Select(choices=role_choice),
+            'salary': forms.TextInput(attrs={'class': 'salary'}),
             'is_superuser': forms.TextInput(attrs={'value': 0}),
             'first_name': forms.TextInput(attrs={'value': ''}),
             'last_name': forms.TextInput(attrs={'value': ''}),
             'is_staff': forms.TextInput(attrs={'value': 0}),
             'is_active': forms.TextInput(attrs={'value': 1}),
             'date_joined': forms.TextInput(attrs={'value': datetime.now()}),
-        }
-
-
-class EmployeeForm(forms.ModelForm):
-    class Meta:
-        model = Employee
-        fields = ['salary']
-        widgets = {
-            'salary': forms.TextInput(attrs={'class': 'salary'}),
         }
 
 
@@ -94,23 +86,5 @@ class StoreForm(forms.ModelForm):
 
 class ImportForm(forms.Form):
     motor = forms.ModelChoiceField(queryset=Motor.objects.all())
-    quantity = forms.IntegerField()
     supplier = forms.ModelChoiceField(queryset=Supplier.objects.all())
-    # total = forms.DecimalField(disabled=True)
-    #
-    # def clean(self):
-    #     # gọi phương thức clean() của lớp cha
-    #     cleaned_data = super().clean()
-    #     # lấy ra quantity và motor từ form
-    #     quantity = cleaned_data.get("quantity")
-    #     motor = cleaned_data.get("motor")
-    #     # kiểm tra nếu cả hai đều có giá trị
-    #     if quantity and motor:
-    #         # lấy ra import_price của motor từ cơ sở dữ liệu
-    #         import_price = Motor.objects.get(motor_id=motor.motor_id).import_price
-    #         # tính toán total bằng cách nhân quantity với import_price
-    #         total = quantity * import_price
-    #         # gán total vào cleaned_data
-    #         cleaned_data["total"] = total
-    #     # trả về cleaned_data
-    #     return cleaned_data
+    quantity = forms.IntegerField()

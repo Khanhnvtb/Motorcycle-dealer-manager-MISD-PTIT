@@ -43,7 +43,9 @@ def addUser(request):
             if User.objects.filter(username=user_form.cleaned_data['username']).exists():
                 messages.add_message(request, messages.SUCCESS, 'Tài khoản đã tồn tại')
             else:
-                user_form.save()
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password'])
+                user.save()
                 user_form = UserForm()
                 messages.add_message(request, messages.SUCCESS, 'Thêm người dùng thành công')
     else:
@@ -214,15 +216,13 @@ def supplierManager(request):
 @login_required(login_url='/login/')
 def showUser(request):
     user = request.user
-    employee = Employee.objects.filter(employee_id=user.id).first()
-    return render(request, 'show_user.html', {'user': user, 'employee': employee})
+    return render(request, 'show_user.html', {'user': user})
 
 
 @login_required(login_url='/login/')
 def showUser(request, username):
     user = User.objects.filter(username=username).first()
-    employee = Employee.objects.filter(employee_id=user.id).first()
-    return render(request, 'show_user.html', {'user': user, 'employee': employee})
+    return render(request, 'show_user.html', {'user': user})
 
 
 @login_required(login_url='/login/')
@@ -249,20 +249,20 @@ def importMotor(request):
         import_form = ImportForm(request.POST)
         if import_form.is_valid():
             employee = request.user
-            import_invoice = Import_Invoice(total=0,
-                                            # total=import_form.cleaned_data['total'],
-                                            employee_id=employee.user_id,
+            motor = import_form.cleaned_data['motor']
+            quantity = import_form.cleaned_data['quantity']
+            motor.quantity += quantity
+            motor.save()
+            import_invoice = Import_Invoice(total=quantity * motor.import_price,
+                                            employee_id=employee.id,
                                             supplier_id=import_form.cleaned_data['supplier'].supplier_id)
             import_invoice.save()
             import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
-                                        motor_id=import_form.cleaned_data['motor'].motor_id,
-                                        quantity=import_form.cleaned_data['quantity'])
+                                        motor_id=motor.motor_id,
+                                        quantity=quantity)
             import_motor.save()
-            motor = import_form.cleaned_data['motor']
-            motor.quantity += import_form.cleaned_data['quantity']
-            motor.save()
             messages.add_message(request, messages.SUCCESS, 'Nhập hàng thàng công')
-
+            import_form = ()
     else:
         import_form = ImportForm()
     return render(request, 'import_motor.html', {'import_form': import_form})
