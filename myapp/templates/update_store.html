@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Store</title>
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h1>Cập nhật thông tin</h1>
+<form action="/update_store/{{ store_id }}/" method="post">{% csrf_token %}
+    <p style="display: none">Id: {{store_form.store_id}}</p>
+    <li>Tên cửa hàng: {{ store_form.name }}</li>
+    <li>Tên chủ cửa hàng: {{ store_form.owner }}</li>
+    <li>Địa chỉ: {{ store_form.address }}</li>
+    <li>Số điện thoại: {{ store_form.phone }}</li>
+    <li>Email: {{ store.email }}</li>
+    <input type="submit" value="Cập nhật">
+</form>
+</body>
+</html>

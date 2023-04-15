@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Import motor</title>
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<script>
+    // Hàm để lấy ra giá trị của total từ server
+    function get_total(motor_id, quantity) {
+        // Tạo một đối tượng XMLHttpRequest để gửi yêu cầu AJAX
+        var xhr = new XMLHttpRequest();
+        // Mở kết nối với URL của view xử lý yêu cầu, truyền vào motor_id và quantity làm tham số
+        xhr.open("GET", "/get_total/?motor_id=" + motor_id + "&quantity=" + quantity);
+        // Đăng ký hàm xử lý khi nhận được phản hồi từ server
+        xhr.onload = function () {
+            // Kiểm tra nếu mã trạng thái là 200 (thành công)
+            if (xhr.status == 200) {
+                // Lấy ra giá trị của total từ phản hồi (dạng JSON)
+                var total = JSON.parse(xhr.responseText).total;
+                // Gán giá trị đó vào trường total trong form
+                document.getElementById("{{ form.total.id_for_label }}").value = total;
+            }
+        };
+        // Gửi yêu cầu đến server
+        xhr.send();
+    }
+
+    // Hàm để kiểm tra và tính toán giá trị của total khi có sự thay đổi của motor hoặc quantity
+    function calculate_total() {
+        // Lấy ra các phần tử motor và quantity trong form
+        var motor = document.getElementById("{{ form.motor.id_for_label }}");
+        var quantity = document.getElementById("{{ form.quantity.id_for_label }}");
+        // Kiểm tra nếu cả hai đều có giá trị hợp lệ
+        if (motor.value && quantity.value) {
+            // Gọi hàm get_total để lấy ra giá trị của total từ server
+            get_total(motor.value, quantity.value);
+        }
+    }
+
+    // Đăng ký sự kiện thay đổi giá trị của motor và quantity
+    document.getElementById("{{ form.motor.id_for_label }}").addEventListener("change", calculate_total);
+    document.getElementById("{{ form.quantity.id_for_label }}").addEventListener("change", calculate_total);
+</script>
+<form action="/import_motor/" method="POST">
+    {% csrf_token %}
+    <label for="id_motor">Motor:</label>
+    {{import_form.motor}}
+    <br>
+    <label for="id_quantity">Quantity:</label>
+    {{import_form.quantity}}
+    <br>
+    <label for="id_supplier">Supplier:</label>
+    {{import_form.supplier}}
+    <br>
+    <label for="id_total">Total:</label>
+    {{import_form.total}}
+    <br>
+    <input type="submit" value="Nhập xe">
+</form>
+</body>
+</html>

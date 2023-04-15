@@ -17,6 +17,10 @@
 {% endif %}
 {% if user.is_authenticated %}
 <p>Hi, {{user.name}}</a></p>
+<a href="/user_manager/">Quản lý nhân viên</a>
+<a href="/motor_manager/">Quản lý xe</a>
+<a href="/store_manager/">Quản lý cửa hàng</a>
+<a href="/supplier_manager/">Quản lý nhà cung cấp</a>
 <a href="/logout/">Đăng xuất</a>
 {% else %}
 <a href="/login/">Đăng nhập</a>

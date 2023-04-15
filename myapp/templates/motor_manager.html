@@ -6,13 +6,27 @@
 </head>
 <body>
 <h1>Danh sách xe máy</h1>
-<ul>
+<a href="/add_motor/">Thêm</a>
+<table style="width:100%">
+    <tr>
+        <td style="display:none">Ảnh</td>
+        <td style="display: none">Thông tin</td>
+        <td style="display: none">Quản lý</td>
+    </tr>
     {% for motor in motors %}
-    <li>Tên xe máy: {{ motor.name }}</li>
-    <li>Thương hiệu{{ motor.brand }}</li>
-    <li> {{motor.image }}</li>
-    <li>Số lượng {{ motor.quantity }}</li>
-    {% endfor %}
-</ul>
+    <tr>
+        <td><img src="{{ motor.image }}" alt="{{ motor.name }}.image"></td>
+        <td>
+            <li>Tên xe máy: {{ motor.name }}</li>
+            <li>Thương hiệu{{ motor.brand }}</li>
+            <li> {{motor.image }}</li>
+            <li>Số lượng {{ motor.quantity }}</li>
+        </td>
+        <td>
+            <a href="/update_motor/{{ motor.motor_id }}/">Sửa</a>
+            <a href="/delete_motor/{{ motor.motor_id }}/">Xóa</a>
+        </td>
+        {% endfor %}
+</table>
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update motor</title>
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h1>Cập nhật thông tin</h1>
+<form action="/update_motor/{{ motor_id }}/" method="post">{% csrf_token %}
+    <p style="display: none">Id: {{motor_form.motor_id}}}</p>
+    <p style="display: none">Tên xe máy: {{ motor_form.name }}</p>
+    <p style="display: none">Thương hiệu: {{ motor_form.brand }}</p>
+    <p>Ảnh: {{motor_form.image }}</p>
+    <p>Mô tả xe: {{ motor_form.description }}</p>
+    <p>Bảo hành: {{motor_form.assurance }}</p>
+    <p>Số lượng: {{motor_form.quantity }}</p>
+    <p>Giá nhập: {{motor_form.import_price }}</p>
+    <p>Giá bán: {{motor_form.export_price }}</p>
+    <input type="submit" value="Cập nhật">
+</form>
+</body>
+</html>

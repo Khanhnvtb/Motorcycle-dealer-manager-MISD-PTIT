@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.utils import timezone
 
 
 # Create your models here.
-from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -17,10 +17,23 @@ class User(AbstractUser):
     email = models.EmailField(max_length=50, blank=False, null=False)
     role = models.CharField(max_length=20, blank=False, null=False)
 
+    def save(self, **kwargs):
+        super(User, self).save(**kwargs)
+        employee = Employee(employee_id=self)
+        employee.save()
+
+    def delete(self, **kwargs):
+        super(User, self).delete(**kwargs)
+        employee = Employee(employee_id=self)
+        employee.delete()
+
 
 class Employee(models.Model):
     employee_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     salary = models.IntegerField(default=0, blank=False, null=False)
+
+    def __str__(self):
+        return self.employee_id
 
 
 class Supplier(models.Model):
@@ -29,6 +42,9 @@ class Supplier(models.Model):
     address = models.CharField(max_length=100, blank=False, null=False)
     phone = models.CharField(max_length=20, blank=False, null=False)
     email = models.EmailField(max_length=50, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Import_Invoice(models.Model):
@@ -50,6 +66,9 @@ class Motor(models.Model):
     import_price = models.IntegerField(blank=False, null=False)
     export_price = models.IntegerField(blank=False, null=False)
 
+    def __str__(self):
+        return self.name
+
 
 class Import_Motor(models.Model):
     id = models.AutoField(primary_key=True, blank=False, null=False)
@@ -65,6 +84,9 @@ class Store(models.Model):
     address = models.CharField(max_length=100, blank=False, null=False)
     phone = models.CharField(max_length=20, blank=False, null=False)
     email = models.EmailField(max_length=50, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Delivery_Invoice(models.Model):
