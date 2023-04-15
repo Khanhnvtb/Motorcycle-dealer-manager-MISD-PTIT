@@ -9,7 +9,7 @@ from django.utils import timezone
 
 class User(AbstractUser):
     name = models.CharField(max_length=100, blank=False, null=False)
-    avatar = models.CharField(max_length=100, blank=False, null=False)
+    avatar = models.ImageField(upload_to='user_image/')
     dob = models.DateField(blank=False, null=True)
     gender = models.CharField(max_length=50, blank=False, null=False)
     address = models.CharField(max_length=100, blank=False, null=False)

@@ -21,9 +21,9 @@ class UserForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'username': forms.TextInput(attrs={'class': 'username', 'placeholder': 'username'}),
-            'password': forms.TextInput(attrs={'class': 'password', 'type': 'password'}),
+            'password': forms.PasswordInput(attrs={'class': 'password'}),
             'name': forms.TextInput(attrs={'class': 'name', 'placeholder': 'Nguyễn Văn A'}),
-            'avatar': forms.TextInput(attrs={'class': 'avatar'}),
+            'avatar': forms.FileInput(attrs={'class': 'avatar'}),
             'dob': forms.TextInput(attrs={'class': 'dob', 'placeholder': '2001-01-01'}),
             'gender': forms.Select(choices=gender_choice),
             'address': forms.TextInput(attrs={'class': 'address'}),
@@ -96,21 +96,21 @@ class ImportForm(forms.Form):
     motor = forms.ModelChoiceField(queryset=Motor.objects.all())
     quantity = forms.IntegerField()
     supplier = forms.ModelChoiceField(queryset=Supplier.objects.all())
-    total = forms.DecimalField(disabled=True)
-
-    def clean(self):
-        # gọi phương thức clean() của lớp cha
-        cleaned_data = super().clean()
-        # lấy ra quantity và motor từ form
-        quantity = cleaned_data.get("quantity")
-        motor = cleaned_data.get("motor")
-        # kiểm tra nếu cả hai đều có giá trị
-        if quantity and motor:
-            # lấy ra import_price của motor từ cơ sở dữ liệu
-            import_price = Motor.objects.get(motor_id=motor.motor_id).import_price
-            # tính toán total bằng cách nhân quantity với import_price
-            total = quantity * import_price
-            # gán total vào cleaned_data
-            cleaned_data["total"] = total
-        # trả về cleaned_data
-        return cleaned_data
+    # total = forms.DecimalField(disabled=True)
+    #
+    # def clean(self):
+    #     # gọi phương thức clean() của lớp cha
+    #     cleaned_data = super().clean()
+    #     # lấy ra quantity và motor từ form
+    #     quantity = cleaned_data.get("quantity")
+    #     motor = cleaned_data.get("motor")
+    #     # kiểm tra nếu cả hai đều có giá trị
+    #     if quantity and motor:
+    #         # lấy ra import_price của motor từ cơ sở dữ liệu
+    #         import_price = Motor.objects.get(motor_id=motor.motor_id).import_price
+    #         # tính toán total bằng cách nhân quantity với import_price
+    #         total = quantity * import_price
+    #         # gán total vào cleaned_data
+    #         cleaned_data["total"] = total
+    #     # trả về cleaned_data
+    #     return cleaned_data

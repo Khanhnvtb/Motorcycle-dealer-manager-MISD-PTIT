@@ -15,7 +15,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/add_user/" method="post">{% csrf_token %}
+<form action="/add_user/" method="post" enctype="multipart/form-data">{% csrf_token %}
     <p>Tên đăng nhập: {{ user_form.username }}</p>
     <p>Mật khẩu: {{ user_form.password }}</p>
     <p>Tên: {{ user_form.name }}</p>

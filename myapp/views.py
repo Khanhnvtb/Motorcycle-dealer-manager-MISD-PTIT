@@ -38,7 +38,7 @@ def home(request):
 @login_required(login_url='/login/')
 def addUser(request):
     if request.method == "POST":
-        user_form = UserForm(request.POST)
+        user_form = UserForm(request.POST, request.FILES)
         if user_form.is_valid():
             if User.objects.filter(username=user_form.cleaned_data['username']).exists():
                 messages.add_message(request, messages.SUCCESS, 'Tài khoản đã tồn tại')

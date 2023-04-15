@@ -7,7 +7,7 @@
 <body>
 <h1>Danh sách nhân viên</h1>
 <a href="/add_user/">Thêm</a>
-<table style="width:100%" >
+<table style="width:100%">
     <tr>
         <td style="display:none">Ảnh đại diện</td>
         <td style="display: none">Thông tin</td>
@@ -15,7 +15,9 @@
     </tr>
     {% for user in users %}
     <tr>
-        <td><img src="image/{{ user.avatar }}" alt="{{ user.name }}.image"></td>
+        <td>
+            <img src="{{ user.avatar.url }}" alt="{{ user.name }}" width="100" height="100">
+        </td>
         <td>
             <li>Tên nhân viên: {{ user.name }}</li>
             <li>Tuổi: {{user.dob }}</li>
