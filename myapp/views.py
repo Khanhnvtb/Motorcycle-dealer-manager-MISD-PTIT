@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
 from .forms import *
 from .models import *
 
@@ -41,9 +40,11 @@ def addUser(request):
         user_form = UserForm(request.POST)
         if user_form.is_valid():
             if User.objects.filter(username=user_form.cleaned_data['username']).exists():
-                messages.add_message(request, messages.SUCCESS, 'Tài khoản đã tồn tại')
+                messages.add_message(request, messages.ERROR, 'Tài khoản đã tồn tại')
             else:
-                user_form.save()
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password']) # mã hóa password
+                user.save()
                 user_form = UserForm()
                 messages.add_message(request, messages.SUCCESS, 'Thêm người dùng thành công')
     else:
