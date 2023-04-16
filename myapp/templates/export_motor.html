@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Import motor</title>
+    <title>Export motor</title>
 </head>
 <body>
 {% if messages %}
@@ -15,19 +15,19 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/import_motor/" method="POST" enctype="multipart/form-data">
+<form action="/export_motor/" method="POST" enctype="multipart/form-data">
     <!-- Management data of formset -->
     {{ import_forms.management_data }}
 
     <!-- Security token -->
     {% csrf_token %}
 
-    {{ supplier_form.as_p}}
+    {{ store_form.as_p}}
 
     <!-- Using the formset -->
-    {{ import_forms.as_p }}
+    {{ export_forms.as_p }}
 
-    <input type="submit" value="Nhập xe">
+    <input type="submit" value="Xuất xe">
 </form>
 </body>
 </html>

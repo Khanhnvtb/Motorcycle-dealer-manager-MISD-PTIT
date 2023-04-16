@@ -32,7 +32,7 @@ class Supplier(models.Model):
 class Import_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
-    total = models.IntegerField(blank=False, null=False)
+    total = models.BigIntegerField(blank=False, null=False)
     employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=False, null=False)
 
@@ -74,7 +74,7 @@ class Store(models.Model):
 class Delivery_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
-    total = models.IntegerField(blank=False, null=False)
+    total = models.BigIntegerField(blank=False, null=False)
     employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, blank=False, null=False)
 

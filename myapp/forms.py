@@ -84,16 +84,19 @@ class StoreForm(forms.ModelForm):
         }
 
 
+class ImportFromSupplierFrom(forms.Form):
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), label='Nhà cung cấp',
+                                      help_text='Chọn một nhà cung cấp từ danh sách',
+                                      error_messages={
+                                          'required': 'Bạn phải chọn một nhà cung cấp'})
+
+
 class ImportForm(forms.Form):
     motor = forms.ModelChoiceField(queryset=Motor.objects.all(), label='Xe máy',
                                    help_text='Chọn một xe máy từ danh sách',
                                    error_messages={
                                        'required': 'Bạn phải chọn một xe máy'
                                    })
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), label='Nhà cung cấp',
-                                      help_text='Chọn một nhà cung cấp từ danh sách',
-                                      error_messages={
-                                          'required': 'Bạn phải chọn một nhà cung cấp'})
     quantity = forms.IntegerField(validators=[MinValueValidator(1)], label='Số lượng',
                                   help_text='Nhập số lượng xe máy cần nhập',
                                   error_messages={
@@ -103,6 +106,23 @@ class ImportForm(forms.Form):
                                   })
 
 
-class GeeksForm(forms.Form):
-    title = forms.CharField()
-    description = forms.CharField()
+class ExportToStoreForm(forms.Form):
+    store = forms.ModelChoiceField(queryset=Store.objects.all(), label='Cửa hàng',
+                                   help_text='Chọn một nhà cửa hàng từ danh sách',
+                                   error_messages={
+                                       'required': 'Bạn phải chọn một cửa hàng'})
+
+
+class ExportForm(forms.Form):
+    motor = forms.ModelChoiceField(queryset=Motor.objects.all(), label='Xe máy',
+                                   help_text='Chọn một xe máy từ danh sách',
+                                   error_messages={
+                                       'required': 'Bạn phải chọn một xe máy'
+                                   })
+    quantity = forms.IntegerField(validators=[MinValueValidator(1)], label='Số lượng',
+                                  help_text='Nhập số lượng xe máy cần nhập',
+                                  error_messages={
+                                      'required': 'Bạn phải nhập số lượng',
+                                      'invalid': 'Số lượng phải là một số nguyên',
+                                      'min_value': 'Số lượng phải lớn hơn hoặc bằng 1',
+                                  })

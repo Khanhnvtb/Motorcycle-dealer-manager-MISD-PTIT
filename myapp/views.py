@@ -228,25 +228,41 @@ def deleteSupplier(request, supplier_id):
 
 @login_required(login_url='/login/')
 def userManager(request):
-    users = User.objects.all()
+    if request.method == "POST":
+        keyword = request.POST.get('keyword', None)
+        users = User.objects.filter(name__contains=keyword)
+    else:
+        users = User.objects.all()
     return render(request, 'user_manager.html', {'users': users})
 
 
 @login_required(login_url='/login/')
 def storeManager(request):
-    stores = Store.objects.all()
+    if request.method == "POST":
+        keyword = request.POST.get('keyword', None)
+        stores = Store.objects.filter(name__contains=keyword)
+    else:
+        stores = Store.objects.all()
     return render(request, 'store_manager.html', {'stores': stores})
 
 
 @login_required(login_url='/login/')
 def motorManager(request):
-    motors = Motor.objects.all()
+    if request.method == "POST":
+        keyword = request.POST.get('keyword', None)
+        motors = Motor.objects.filter(name__contains=keyword)
+    else:
+        motors = Motor.objects.all()
     return render(request, 'motor_manager.html', {'motors': motors})
 
 
 @login_required(login_url='/login/')
 def supplierManager(request):
-    suppliers = Supplier.objects.all()
+    if request.method == "POST":
+        keyword = request.POST.get('keyword', None)
+        suppliers = Supplier.objects.filter(name__contains=keyword)
+    else:
+        suppliers = Supplier.objects.all()
     return render(request, 'supplier_manager.html', {'suppliers': suppliers})
 
 
@@ -281,36 +297,106 @@ def showStore(request, store_id):
 
 
 @login_required(login_url='/login/')
-def formset_view(request):
+def importMotor(request):
     context = {}
 
     # creating a formset and 5 instances of ImportForm
     ImportFormSet = formset_factory(ImportForm, extra=5)
     import_forms = ImportFormSet(request.POST or None)
+    supplier_form = ImportFromSupplierFrom(request.POST or None)
 
-    # print formset data if it is valid
-    if import_forms.is_valid():
+    if supplier_form.is_valid() and import_forms.is_valid():
+        supplier = supplier_form.cleaned_data['supplier']
+        employee = request.user
+        import_dict = {}
         for import_form in import_forms:
-            employee = request.user
             motor = import_form.cleaned_data.get('motor')
-            supplier = import_form.cleaned_data.get('supplier')
             quantity = import_form.cleaned_data.get('quantity')
-            if motor and supplier and quantity:
-                motor.quantity += quantity
-                motor.save()
-                import_invoice = Import_Invoice(total=quantity * motor.import_price,
-                                                employee_id=employee.id,
-                                                supplier_id=supplier.supplier_id)
-                import_invoice.save()
-                import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
-                                            motor_id=motor.motor_id,
-                                            quantity=quantity)
-                import_motor.save()
-            else:
-                pass
+            if motor and quantity:
+                if motor in import_dict.keys():
+                    import_dict[motor] += quantity
+                else:
+                    import_dict[motor] = quantity
+        for motor in import_dict.keys():
+            quantity = import_dict[motor]
+            motor.quantity += quantity
+            motor.save()
+            import_invoice = Import_Invoice(total=quantity * motor.import_price,
+                                            employee_id=employee.id,
+                                            supplier_id=supplier.supplier_id)
+            import_invoice.save()
+            import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
+                                        motor_id=motor.motor_id,
+                                        quantity=quantity)
+            import_motor.save()
+        if len(import_dict):
             storage = messages.get_messages(request)
             storage.used = True
-        messages.add_message(request, messages.SUCCESS, 'Nhập hàng thàng công')
-        import_forms = ImportFormSet()
+            messages.add_message(request, messages.SUCCESS, 'Nhập hàng thàng công')
+            import_forms = ImportFormSet()
+            supplier_form = ImportFromSupplierFrom()
+        else:
+            storage = messages.get_messages(request)
+            storage.used = True
+            messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần nhập')
     context['import_forms'] = import_forms
+    context['supplier_form'] = supplier_form
     return render(request, "import_motor.html", context)
+
+
+@login_required(login_url='/login/')
+def exportMotor(request):
+    context = {}
+
+    # creating a formset and 5 instances of ExportForm
+    ExportFormSet = formset_factory(ExportForm, extra=5)
+    export_forms = ExportFormSet(request.POST or None)
+    store_form = ExportToStoreForm(request.POST or None)
+
+    if store_form.is_valid() and export_forms.is_valid():
+        store = store_form.cleaned_data['store']
+        employee = request.user
+        export_dict = {}
+        for export_form in export_forms:
+            employee = request.user
+            motor = export_form.cleaned_data.get('motor')
+            quantity = export_form.cleaned_data.get('quantity')
+            if motor and quantity:
+                if motor in export_dict.keys():
+                    export_dict[motor] += quantity
+                else:
+                    export_dict[motor] = quantity
+        for motor in export_dict.keys():
+            quantity = export_dict[motor]
+            if motor.quantity < quantity:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, f'Số lượng {motor} trong kho chỉ còn {motor.quantity}')
+                context['export_forms'] = export_forms
+                context['store_form'] = store_form
+                return render(request, "export_motor.html", context)
+        for motor in export_dict.keys():
+            quantity = export_dict[motor]
+            motor.quantity -= quantity
+            motor.save()
+            delivery_invoice = Delivery_Invoice(total=quantity * motor.export_price,
+                                                employee_id=employee.id,
+                                                store_id=store.store_id)
+            delivery_invoice.save()
+            delivery_motor = Delivery_Motor(invoice_id=delivery_invoice.invoice_id,
+                                            motor_id=motor.motor_id,
+                                            quantity=quantity)
+            delivery_motor.save()
+        if len(export_dict):
+            storage = messages.get_messages(request)
+            storage.used = True
+            messages.add_message(request, messages.SUCCESS, 'Xuất hàng thàng công')
+            export_forms = ExportFormSet()
+            store_form = ExportToStoreForm()
+        else:
+            storage = messages.get_messages(request)
+            storage.used = True
+            messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần xuất')
+    context['export_forms'] = export_forms
+    context['store_form'] = store_form
+    return render(request, "export_motor.html", context)

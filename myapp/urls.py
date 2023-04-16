@@ -31,5 +31,6 @@ urlpatterns = [
     path('update_supplier/<int:supplier_id>/', views.updateSupplier, name='update_supplier'),
     path('delete_supplier/<int:supplier_id>/', views.deleteSupplier, name='delete_supplier'),
 
-    path('import_motor/', views.formset_view, name='import_motor'),
+    path('import_motor/', views.importMotor, name='import_motor'),
+    path('export_motor/', views.exportMotor, name='export_motor')
 ]
