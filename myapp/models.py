@@ -41,7 +41,7 @@ class Motor(models.Model):
     motor_id = models.AutoField(primary_key=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     brand = models.CharField(max_length=100, blank=False, null=False)
-    image = models.CharField(max_length=100, blank=False, null=False)
+    image = models.ImageField(upload_to='motor_image/')
     description = models.CharField(max_length=100, blank=False, null=False)
     assurance = models.CharField(max_length=100, blank=False, null=False)
     quantity = models.IntegerField(blank=False, null=False)

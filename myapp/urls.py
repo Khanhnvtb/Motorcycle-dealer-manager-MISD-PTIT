@@ -25,11 +25,11 @@ urlpatterns = [
     path('update_store/<int:store_id>/', views.updateStore, name='update_store'),
     path('delete_store/<int:store_id>/', views.deleteStore, name='delete_store'),
 
-    path('show_supplier/<int:supplier_id>/', views.addSupplier, name='show_supplier'),
+    path('show_supplier/<int:supplier_id>/', views.showSupplier, name='show_supplier'),
     path('supplier_manager/', views.supplierManager, name='supplier_manager'),
     path('add_supplier/', views.addSupplier, name='add_supplier'),
     path('update_supplier/<int:supplier_id>/', views.updateSupplier, name='update_supplier'),
     path('delete_supplier/<int:supplier_id>/', views.deleteSupplier, name='delete_supplier'),
 
-    path('import_motor/', views.importMotor, name='import_motor'),
+    path('import_motor/', views.formset_view, name='import_motor'),
 ]

@@ -6,16 +6,27 @@
 </head>
 <body>
 <h1>Thông tin nhân viên</h1>
-<ul>
-    <li>Tên nhân viên: {{ user.name }}</li>
-    <li>{{ user.avatar }}</li>
-    <li>Ngày sinh: {{ user.dob }}</li>
-    <li>Giới tính: {{ user.gender }}</li>
-    <li>Địa chỉ: {{ user.address }}</li>
-    <li>Số điện thoại: {{ user.phone }}</li>
-    <li>Email: {{ user.email }}</li>
-    <li>Chức vụ: {{ user.role }}</li>
-    <li>Lương: {{ user.salary }}</li>
-</ul>
+<table style="width:100%">
+    <tr>
+        <td style="display:none">Ảnh đại diện</td>
+        <td style="display: none">Thông tin</td>
+    </tr>
+    <tr>
+        <td>
+            <img src="{{ user.avatar.url }}" alt="{{ user.name }}" height="200">
+        </td>
+        <td>
+            <li>Tên nhân viên: {{ user.name }}</li>
+            <li>Ngày sinh: {{ user.dob }}</li>
+            <li>Giới tính: {{ user.gender }}</li>
+            <li>Địa chỉ: {{ user.address }}</li>
+            <li>Số điện thoại: {{ user.phone }}</li>
+            <li>Email: {{ user.email }}</li>
+            <li>Chức vụ: {{ user.role }}</li>
+            <li>Lương: {{ user.salary }}</li>
+        </td>
+    </tr>
+</table>
+<a href="/user_manager/">Về trang quản lý</a>
 </body>
 </html>

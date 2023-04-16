@@ -15,16 +15,17 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/add_motor/" method="post">{% csrf_token %}
+<form action="/add_motor/" method="post" enctype="multipart/form-data">{% csrf_token %}
     <p>Tên xe: {{motor_form.name}}</p>
     <p>Thương hiệu: {{motor_form.brand}}</p>
     <p>Ảnh: {{motor_form.image}}</p>
     <p>Mô tả: {{motor_form.description}}</p>
     <p>Bảo hành: {{motor_form.assurance}}</p>
-    <p>Số lượng: {{motor_form.quantity}}</p>
+    <p style="display: none">Số lượng: {{motor_form.quantity}}</p>
     <p>Giá nhập: {{motor_form.import_price}}</p>
     <p>Giá bán: {{motor_form.export_price}}</p>
     <input type="submit" value="Thêm">
+    <a href="/motor_manager/">Về trang quản lý</a>
 </form>
 </body>
 </html>

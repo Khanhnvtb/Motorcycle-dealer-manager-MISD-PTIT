@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.datetime_safe import datetime
-
+from django.core.validators import MinValueValidator
 from .models import *
 
 gender_choice = [
@@ -48,10 +48,10 @@ class MotorForm(forms.ModelForm):
             'motor_id': forms.TextInput(),
             'name': forms.TextInput(attrs={'class': 'name'}),
             'brand': forms.TextInput(attrs={'class': 'brand'}),
-            'image': forms.TextInput(attrs={'class': 'image'}),
+            'image': forms.FileInput(attrs={'class': 'image'}),
             'description': forms.TextInput(attrs={'class': 'description'}),
             'assurance': forms.TextInput(attrs={'class': 'assurance'}),
-            'quantity': forms.TextInput(attrs={'class': 'quantity'}),
+            'quantity': forms.TextInput(attrs={'value': 0}),
             'import_price': forms.TextInput(attrs={'class': 'import_price'}),
             'export_price': forms.TextInput(attrs={'class': 'export_price'}),
         }
@@ -85,6 +85,24 @@ class StoreForm(forms.ModelForm):
 
 
 class ImportForm(forms.Form):
-    motor = forms.ModelChoiceField(queryset=Motor.objects.all())
-    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all())
-    quantity = forms.IntegerField()
+    motor = forms.ModelChoiceField(queryset=Motor.objects.all(), label='Xe máy',
+                                   help_text='Chọn một xe máy từ danh sách',
+                                   error_messages={
+                                       'required': 'Bạn phải chọn một xe máy'
+                                   })
+    supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), label='Nhà cung cấp',
+                                      help_text='Chọn một nhà cung cấp từ danh sách',
+                                      error_messages={
+                                          'required': 'Bạn phải chọn một nhà cung cấp'})
+    quantity = forms.IntegerField(validators=[MinValueValidator(1)], label='Số lượng',
+                                  help_text='Nhập số lượng xe máy cần nhập',
+                                  error_messages={
+                                      'required': 'Bạn phải nhập số lượng',
+                                      'invalid': 'Số lượng phải là một số nguyên',
+                                      'min_value': 'Số lượng phải lớn hơn hoặc bằng 1',
+                                  })
+
+
+class GeeksForm(forms.Form):
+    title = forms.CharField()
+    description = forms.CharField()

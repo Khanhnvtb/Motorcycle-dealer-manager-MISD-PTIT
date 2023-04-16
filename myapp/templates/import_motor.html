@@ -15,18 +15,16 @@
     {% endfor %}
 </ul>
 {% endif %}
+<form action="/import_motor/" method="POST" enctype="multipart/form-data">
+    <!-- Management data of formset -->
+    {{ import_forms.management_data }}
 
-<form action="/import_motor/" method="POST">
+    <!-- Security token -->
     {% csrf_token %}
-    <label for="id_motor">Motor:</label>
-    {{import_form.motor}}
-    <br>
-    <label for="id_supplier">Supplier:</label>
-    {{import_form.supplier}}
-    <br>
-    <label for="id_quantity">Quantity:</label>
-    {{import_form.quantity}}
-    <br>
+
+    <!-- Using the formset -->
+    {{ import_forms.as_p }}
+
     <input type="submit" value="Nhập xe">
 </form>
 </body>

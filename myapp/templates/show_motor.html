@@ -6,15 +6,26 @@
 </head>
 <body>
 <h1>Thông tin xe máy</h1>
-<ul>
-    <li>Tên xe máy: {{ motor.name }}</li>
-    <li>Thương hiệu: {{ motor.brand }}</li>
-    <li> {{motor.image }}</li>
-    <li>Mô tả xe: {{ motor.description }}</li>
-    <li>Bảo hành: {{motor.assurance }}</li>
-    <li>Số lượng: {{motor.quantity }}</li>
-    <li>Giá nhập: {{motor.import_price }}</li>
-    <li>Giá bán: {{motor.export_price }}</li>
-</ul>
+<table style="width:100%">
+    <tr>
+        <td style="display:none">Ảnh đại diện</td>
+        <td style="display: none">Thông tin</td>
+    </tr>
+    <tr>
+        <td>
+            <img src="{{ motor.image.url }}" alt="{{ user.name }}" height="200">
+        </td>
+        <td>
+            <li>Tên xe máy: {{ motor.name }}</li>
+            <li>Thương hiệu: {{ motor.brand }}</li>
+            <li>Mô tả xe: {{ motor.description }}</li>
+            <li>Bảo hành: {{motor.assurance }}</li>
+            <li>Số lượng: {{motor.quantity }}</li>
+            <li>Giá nhập: {{motor.import_price }}</li>
+            <li>Giá bán: {{motor.export_price }}</li>
+        </td>
+    </tr>
+</table>
+<a href="/motor_manager/">Về trang quản lý</a>
 </body>
 </html>

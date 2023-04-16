@@ -5,11 +5,37 @@
     <title>Supplier manager</title>
 </head>
 <body>
-    <h1>Danh sách nhà cung cấp</h1>
-<ul>
-    {% for supplier in suppliers %}
-    <li>Tên nhà cung cấp: {{ supplier.name }}</li>
+<h1>Danh sách nhà cung cấp</h1>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
     {% endfor %}
 </ul>
+{% endif %}
+<a href="/add_supplier/">Thêm nhà cung cấp</a>
+<a href="/">Trang chủ</a>
+<table style="width:100%">
+    <tr>
+        <td style="display: none">Thông tin</td>
+        <td style="display: none">Quản lý</td>
+    </tr>
+    {% for supplier in suppliers %}
+    <tr>
+        <td>
+            <li>Tên nhà cung cấp: {{ supplier.name }}</li>
+        </td>
+        <td>
+            <a href="/show_supplier/{{ supplier.supplier_id }}/">Xem</a>
+            <a href="/update_supplier/{{ supplier.supplier_id }}/">Sửa</a>
+            <a href="/delete_supplier/{{ supplier.supplier_id }}/">Xóa</a>
+        </td>
+    </tr>
+    <tr></tr>
+    {% endfor %}
+</table>
 </body>
 </html>
