@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
-
+import os
 from .forms import *
 from .models import *
 
@@ -81,6 +81,7 @@ def updateUser(request, username):
 def deleteUser(request, username):
     user = User.objects.filter(username=username).first()
     user.delete()
+    os.remove(f"myapp/media/{user.avatar}")
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Xoá người dùng thành công')
@@ -127,6 +128,7 @@ def updateMotor(request, motor_id):
 def deleteMotor(request, motor_id):
     motor = Motor.objects.filter(motor_id=motor_id).first()
     motor.delete()
+    os.remove(f"myapp/media/{motor.image}")
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Xoá xe thành công')
