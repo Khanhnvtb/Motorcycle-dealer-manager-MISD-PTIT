@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Report turnover</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/report_turnover.css' %}">
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="/report_turnover/" method="post">{% csrf_token %}
+    <p>Chọn thời gian bắt đầu:</p>
+    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
+    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
+    <p>Chọn thời gian kết thúc:</p>
+    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
+    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
+    <br><br>
+    <input type="submit" value="Submit">
+    <br><br>
+</form>
+{% if request.method == "POST" %}
+<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+    <tr>
+        <th>Thời gian</th>
+        <th>Doanh thu</th>
+    </tr>
+    {% for record in report %}
+    <tr>
+        <td>{{ record.0 }}</td>
+        <td>{{ record.1 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/report_turnover.js' %}"></script>
+</body>
+</html>

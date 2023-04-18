@@ -32,5 +32,9 @@ urlpatterns = [
     path('delete_supplier/<int:supplier_id>/', views.deleteSupplier, name='delete_supplier'),
 
     path('import_motor/', views.importMotor, name='import_motor'),
-    path('export_motor/', views.exportMotor, name='export_motor')
+    path('export_motor/', views.exportMotor, name='export_motor'),
+    path('report/', views.reportView, name='report'),
+    path('report_turnover/', views.reportTurnover, name='report_turnover'),
+    path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
+    path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
 ]

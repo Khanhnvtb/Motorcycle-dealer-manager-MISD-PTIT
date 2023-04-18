@@ -1,0 +1,49 @@
+/* Định dạng cho các phần tử li trong ul có class là messages */
+ul.messages li {
+    color: green;
+    font-weight: bold;
+}
+
+/* Định dạng cho tiêu đề */
+h1 {
+    color: blue;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Định dạng cho form */
+form {
+    border: 1px solid black;
+    padding: 20px;
+    margin: 0 auto;
+    width: 400px;
+}
+
+/* Định dạng cho các phần tử p trong form */
+form p {
+    font-size: 18px;
+}
+
+/* Định dạng cho nút submit */
+input[type=submit] {
+    background-color: blue;
+    color: white;
+    border-radius: 10px;
+}
+
+/* Định dạng cho liên kết */
+a {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    background-color: green;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Thay đổi màu nền khi di chuột qua liên kết */
+a:hover {
+    background-color: lime;
+}

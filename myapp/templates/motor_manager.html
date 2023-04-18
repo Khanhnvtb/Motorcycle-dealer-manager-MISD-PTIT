@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Motor manager</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/motor_manager.css' %}">
 </head>
 <body>
 <h1>Danh sách xe máy</h1>
@@ -32,7 +35,7 @@
     {% for motor in motors %}
     <tr>
         <td>
-            <img src="{{ motor.image.url }}" alt="{{ user.name }}" width="100" height="100">
+            <img src="{{ motor.image.url }}" alt="{{ motor.name }}" width="100" height="100">
         </td>
         <td>
             <li>Tên xe máy: {{ motor.name }}</li>
@@ -46,5 +49,7 @@
         </td>
         {% endfor %}
 </table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/motor_manager.js' %}"></script>
 </body>
 </html>

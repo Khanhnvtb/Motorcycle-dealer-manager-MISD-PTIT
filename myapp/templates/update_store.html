@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Update Store</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/update_store.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -26,5 +29,7 @@
     <input type="submit" value="Cập nhật">
     <a href="/store_manager/">Về trang quản lý</a>
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/update_store.js' %}"></script>
 </body>
 </html>

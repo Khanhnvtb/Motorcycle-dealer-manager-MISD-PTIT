@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}">
 </head>
 <body>
-
 <form action="/login/" method="post">{% csrf_token %}
     <h>Tên đăng nhập: </h>
     <input type="text"  name="username" placeholder="username" {{ username }}>
@@ -14,5 +16,7 @@
     <input type="password" name="password" {{ password }}>
     <input type="submit" value="Đăng nhập">
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/login.js' %}"></script>
 </body>
 </html>

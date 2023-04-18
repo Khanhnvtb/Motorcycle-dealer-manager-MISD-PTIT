@@ -6,6 +6,8 @@ from django.forms import formset_factory
 import os
 from .forms import *
 from .models import *
+from datetime import date, timedelta
+from django.db import connection
 
 
 # Create your views here.
@@ -81,7 +83,7 @@ def updateUser(request, username):
 def deleteUser(request, username):
     user = User.objects.filter(username=username).first()
     user.delete()
-    os.remove(f"myapp/media/{user.avatar}")
+    os.remove(f"myapp/static/media/{user.avatar}")
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Xoá người dùng thành công')
@@ -128,7 +130,7 @@ def updateMotor(request, motor_id):
 def deleteMotor(request, motor_id):
     motor = Motor.objects.filter(motor_id=motor_id).first()
     motor.delete()
-    os.remove(f"myapp/media/{motor.image}")
+    os.remove(f"myapp/static/media/{motor.image}")
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Xoá xe thành công')
@@ -402,3 +404,146 @@ def exportMotor(request):
     context['export_forms'] = export_forms
     context['store_form'] = store_form
     return render(request, "export_motor.html", context)
+
+
+@login_required(login_url='/login/')
+def reportView(request):
+    return render(request, 'report.html')
+
+
+def getStartDate(year, month):
+    # tạo một đối tượng date với năm và tháng đã nhập
+    d = date(year, month, 1)
+
+    # lấy ra ngày bắt đầu của tháng
+    start_date = d.replace(day=1)
+    return start_date
+
+
+def getEndDate(year, month):
+    # tạo một đối tượng date với năm và tháng đã nhập
+    d = date(year, month, 1)
+
+    # lấy ra ngày bắt đầu và ngày kết thúc của tháng
+    end_date = d.replace(month=month + 1, day=1) - timedelta(days=1)
+    return end_date
+
+
+@login_required(login_url='/login/')
+def reportTurnover(request):
+    results = ()
+    if request.method == "POST":
+        date_form = DateForm(request.POST)
+        if date_form.is_valid():
+            start_date = getStartDate(int(date_form.cleaned_data['start_year']),
+                                      int(date_form.cleaned_data['start_month']))
+            end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+            if start_date > end_date:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+            else:
+                # tạo một con trỏ cho cơ sở dữ liệu
+                cursor = connection.cursor()
+
+                query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
+                        "from myapp_delivery_invoice " \
+                        "where time between '{s2}' and '{s3}'" \
+                        "group by month(time) order by Month_sale".format(s1="%Y-%m",
+                                                                          s2=str(start_date),
+                                                                          s3=str(end_date))
+
+                # chạy câu lệnh SQL bằng phương thức execute()
+                cursor.execute(query)
+
+                # lấy ra kết quả bằng phương thức fetchall()
+                results = cursor.fetchall()
+
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thành công')
+    else:
+        date_form = DateForm()
+    return render(request, 'report_turnover.html', {'date_form': date_form, 'report': results})
+
+
+@login_required(login_url='/login/')
+def reportSaleItems(request):
+    report = {}
+    if request.method == "POST":
+        date_form = DateForm(request.POST)
+        if date_form.is_valid():
+            start_date = getStartDate(int(date_form.cleaned_data['start_year']),
+                                      int(date_form.cleaned_data['start_month']))
+            end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+            if start_date > end_date:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+            else:
+                # tạo một con trỏ cho cơ sở dữ liệu
+                cursor = connection.cursor()
+
+                query = "SELECT date_format(Time, '{s1}') as Month_sale, " \
+                        "myapp_Motor.image, myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity " \
+                        "FROM myapp_Motor " \
+                        "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
+                        "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
+                        "WHERE myapp_delivery_invoice.time between '{s2}' AND '{s3}' " \
+                        "GROUP BY Month(time), myapp_Motor.name, myapp_Motor.Image " \
+                        "ORDER BY Month_sale, quantity".format(s1="%Y-%m",
+                                                               s2=str(start_date),
+                                                               s3=str(end_date))
+
+                # chạy câu lệnh SQL bằng phương thức execute()
+                cursor.execute(query)
+
+                # lấy ra kết quả bằng phương thức fetchall()
+                results = cursor.fetchall()
+                for record in results:
+                    key = record[0]
+                    if key not in report.keys():
+                        report[key] = [tuple([record[1], record[2], record[3]])]
+                    else:
+                        report[key].append(tuple([record[1], record[2], record[3]]))
+                report = [(k, v) for k, v in report.items()]
+                for record in report:
+                    print(record[0])
+                    print(record[1])
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thành công')
+    else:
+        date_form = DateForm()
+    return render(request, 'report_sale_items.html', {'date_form': date_form, 'report': report})
+
+
+@login_required(login_url='/login/')
+def reportBestSaleItems(request):
+    year = datetime.now().year
+    month = datetime.now().month
+    start_date = getStartDate(year, month)
+    end_date = getEndDate(year, month)
+
+    # tạo một con trỏ cho cơ sở dữ liệu
+    cursor = connection.cursor()
+
+    query = "SELECT myapp_Motor.motor_id, myapp_Motor.image, myapp_Motor.name " \
+            "FROM myapp_Motor " \
+            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
+            "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
+            "WHERE myapp_Delivery_Invoice.time between '{s1}' and '{s2}'" \
+            "GROUP BY myapp_Motor.name, myapp_Motor.image " \
+            "ORDER BY SUM(myapp_Delivery_Motor.quantity) " \
+            "DESC LIMIT 5".format(s1=str(start_date), s2=str(end_date))
+
+    # chạy câu lệnh SQL bằng phương thức execute()
+    cursor.execute(query)
+
+    # lấy ra kết quả bằng phương thức fetchall()
+    results = cursor.fetchall()
+
+    storage = messages.get_messages(request)
+    storage.used = True
+    messages.add_message(request, messages.SUCCESS, 'Thành công')
+    return render(request, 'report_best_sale_items.html', {'report': results})

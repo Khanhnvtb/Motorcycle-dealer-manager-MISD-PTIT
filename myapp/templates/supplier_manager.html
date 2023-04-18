@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Supplier manager</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/supplier_manager.css' %}">
 </head>
 <body>
 <h1>Danh sách nhà cung cấp</h1>
@@ -42,5 +45,7 @@
     <tr></tr>
     {% endfor %}
 </table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/supplier_manager.js' %}"></script>
 </body>
 </html>

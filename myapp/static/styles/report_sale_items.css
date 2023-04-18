@@ -1,0 +1,20 @@
+/* Định dạng cho các phần tử li trong ul có class là messages */
+ul.messages li {
+    color: green;
+    font-weight: bold;
+}
+
+/* Định dạng cho nút submit */
+input[type=submit] {
+    background-color: blue;
+    color: white;
+    border-radius: 10px;
+}
+
+/* Định dạng cho bảng */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: center;
+    vertical-align: middle;
+}

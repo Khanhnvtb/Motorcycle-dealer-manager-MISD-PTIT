@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Show user</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/user_manager.css' %}">
 </head>
 <body>
 <h1>Danh sách nhân viên</h1>
@@ -47,5 +50,7 @@
     </tr>
     {% endfor %}
 </table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/user_manager.js' %}"></script>
 </body>
 </html>

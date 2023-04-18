@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Store information</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/show_store.css' %}">
 </head>
 <body>
 <h1>Thông tin cửa hàng</h1>
@@ -14,5 +17,7 @@
     <li>Email: {{ store.email }}</li>
 </ul>
 <a href="/store_manager/">Về trang quản lý</a>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/show_store.js' %}"></script>
 </body>
 </html>

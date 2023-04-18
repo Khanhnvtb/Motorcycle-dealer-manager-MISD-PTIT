@@ -14,6 +14,29 @@ role_choice = [
     ('Nhân viên kho', 'Nhân viên kho'),
 ]
 
+month_choice = [
+    ('1', 1),
+    ('2', 2),
+    ('3', 3),
+    ('4', 4),
+    ('5', 5),
+    ('6', 6),
+    ('7', 7),
+    ('8', 8),
+    ('9', 9),
+    ('10', 10),
+    ('11', 11),
+    ('12', 12),
+]
+
+
+def get_year_choices():
+    year_choice = []
+    curr_year = datetime.today().year
+    for i in range(curr_year, -1, -1):
+        year_choice.append(tuple([i, i]))
+    return year_choice
+
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -24,19 +47,19 @@ class UserForm(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'password'}),
             'name': forms.TextInput(attrs={'class': 'name', 'placeholder': 'Nguyễn Văn A'}),
             'avatar': forms.FileInput(attrs={'class': 'avatar'}),
-            'dob': forms.TextInput(attrs={'class': 'dob', 'placeholder': '2001-01-01'}),
+            'dob': forms.DateInput(attrs={'class': 'dob', 'placeholder': '2001-01-01'}),
             'gender': forms.Select(choices=gender_choice),
             'address': forms.TextInput(attrs={'class': 'address'}),
             'phone': forms.TextInput(attrs={'class': 'phone'}),
-            'email': forms.TextInput(attrs={'class': 'email'}),
+            'email': forms.EmailInput(attrs={'class': 'email'}),
             'role': forms.Select(choices=role_choice),
             'salary': forms.TextInput(attrs={'class': 'salary'}),
-            'is_superuser': forms.TextInput(attrs={'value': 0}),
-            'first_name': forms.TextInput(attrs={'value': ''}),
-            'last_name': forms.TextInput(attrs={'value': ''}),
-            'is_staff': forms.TextInput(attrs={'value': 0}),
-            'is_active': forms.TextInput(attrs={'value': 1}),
-            'date_joined': forms.TextInput(attrs={'value': datetime.now()}),
+            'is_superuser': forms.HiddenInput(attrs={'value': 0}),
+            'first_name': forms.HiddenInput(attrs={'value': ''}),
+            'last_name': forms.HiddenInput(attrs={'value': ''}),
+            'is_staff': forms.HiddenInput(attrs={'value': 0}),
+            'is_active': forms.HiddenInput(attrs={'value': 1}),
+            'date_joined': forms.HiddenInput(attrs={'value': datetime.now()}),
         }
 
 
@@ -126,3 +149,16 @@ class ExportForm(forms.Form):
                                       'invalid': 'Số lượng phải là một số nguyên',
                                       'min_value': 'Số lượng phải lớn hơn hoặc bằng 1',
                                   })
+
+
+class DateForm(forms.Form):
+    start_month = forms.ChoiceField(choices=month_choice, label='Tháng bắt đầu: ', help_text='Chọn một tháng từ danh sách', )
+    start_year = forms.ChoiceField(choices=[], label='Năm bắt đầu: ', help_text='Chọn một năm từ danh sách', )
+    end_month = forms.ChoiceField(choices=month_choice, label='Tháng kết thúc: ', help_text='Chọn một tháng từ danh sách', )
+    end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )
+
+    def __init__(self, *args, **kwargs):
+        super(DateForm, self).__init__(*args, **kwargs)
+        # gọi hàm get_year_choices và gán kết quả cho choices
+        self.fields['start_year'].choices = get_year_choices()
+        self.fields['end_year'].choices = get_year_choices()
