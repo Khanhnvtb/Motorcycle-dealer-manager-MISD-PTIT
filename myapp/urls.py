@@ -37,4 +37,6 @@ urlpatterns = [
     path('report_turnover/', views.reportTurnover, name='report_turnover'),
     path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
     path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
+    path('sale_history/<str:username>/', views.saleHistory, name='sale_history'),
+    path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
 ]

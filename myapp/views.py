@@ -547,3 +547,56 @@ def reportBestSaleItems(request):
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Thành công')
     return render(request, 'report_best_sale_items.html', {'report': results})
+
+
+@login_required(login_url='/login/')
+def saleHistory(request, username):
+    name = User.objects.filter(username=username).first().name
+
+    # tạo một con trỏ cho cơ sở dữ liệu
+    cursor = connection.cursor()
+
+    query = "SELECT date_format(myapp_Delivery_invoice.time, '{s1}') AS time, myapp_Motor.motor_Id " \
+            "myapp_Motor.name, myapp_Motor.image, myapp_Delivery_motor.quantity " \
+            "FROM myapp_Motor " \
+            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.Motor_Id " \
+            "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.Invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
+            "JOIN myapp_User ON myapp_Delivery_Invoice.Employee_Id = myapp_User.Id " \
+            "WHERE myapp_User.username = '{s2}' " \
+            "ORDER BY time DESC".format(s1="%d-%m-%Y %T", s2=username)
+
+    # chạy câu lệnh SQL bằng phương thức execute()
+    cursor.execute(query)
+
+    # lấy ra kết quả bằng phương thức fetchall()
+    results = cursor.fetchall()
+
+    storage = messages.get_messages(request)
+    storage.used = True
+    messages.add_message(request, messages.SUCCESS, 'Thành công')
+    return render(request, 'sale_history.html', {'history': results, 'name': name})
+
+
+@login_required(login_url='/login/')
+def reportSaleHistory(request):
+    # tạo một con trỏ cho cơ sở dữ liệu
+    cursor = connection.cursor()
+
+    query = "SELECT date_format(myapp_Delivery_invoice.time, '{s1}') AS time, myapp_Motor.motor_Id, " \
+            "myapp_User.Id, myapp_User.name, myapp_Motor.name, myapp_Motor.image, myapp_Delivery_motor.quantity " \
+            "FROM myapp_Motor " \
+            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.Motor_Id " \
+            "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.Invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
+            "JOIN myapp_User ON myapp_Delivery_Invoice.Employee_Id = myapp_User.Id " \
+            "ORDER BY time DESC".format(s1="%d-%m-%Y %T")
+
+    # chạy câu lệnh SQL bằng phương thức execute()
+    cursor.execute(query)
+
+    # lấy ra kết quả bằng phương thức fetchall()
+    results = cursor.fetchall()
+
+    storage = messages.get_messages(request)
+    storage.used = True
+    messages.add_message(request, messages.SUCCESS, 'Thành công')
+    return render(request, 'report_sale_history.html', {'report': results})
