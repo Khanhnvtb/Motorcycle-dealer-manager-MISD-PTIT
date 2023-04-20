@@ -8,6 +8,7 @@ from .forms import *
 from .models import *
 from datetime import date, timedelta
 from django.db import connection
+import json
 
 
 # Create your views here.
@@ -311,24 +312,23 @@ def importMotor(request):
 
     if supplier_form.is_valid() and import_forms.is_valid():
         supplier = supplier_form.cleaned_data['supplier']
-        employee = request.user
+        total = 0
         import_dict = {}
         for import_form in import_forms:
             motor = import_form.cleaned_data.get('motor')
             quantity = import_form.cleaned_data.get('quantity')
             if motor and quantity:
+                total += quantity * motor.import_price
                 if motor in import_dict.keys():
                     import_dict[motor] += quantity
                 else:
                     import_dict[motor] = quantity
+        import_invoice = Import_Invoice(total=total, employee_id=request.user.id, supplier_id=supplier.supplier_id)
+        import_invoice.save()
         for motor in import_dict.keys():
             quantity = import_dict[motor]
             motor.quantity += quantity
             motor.save()
-            import_invoice = Import_Invoice(total=quantity * motor.import_price,
-                                            employee_id=employee.id,
-                                            supplier_id=supplier.supplier_id)
-            import_invoice.save()
             import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
                                         motor_id=motor.motor_id,
                                         quantity=quantity)
@@ -359,13 +359,13 @@ def exportMotor(request):
 
     if store_form.is_valid() and export_forms.is_valid():
         store = store_form.cleaned_data['store']
-        employee = request.user
+        total = 0
         export_dict = {}
         for export_form in export_forms:
-            employee = request.user
             motor = export_form.cleaned_data.get('motor')
             quantity = export_form.cleaned_data.get('quantity')
             if motor and quantity:
+                total += quantity * motor.export_price
                 if motor in export_dict.keys():
                     export_dict[motor] += quantity
                 else:
@@ -379,14 +379,14 @@ def exportMotor(request):
                 context['export_forms'] = export_forms
                 context['store_form'] = store_form
                 return render(request, "export_motor.html", context)
+        delivery_invoice = Delivery_Invoice(total=total,
+                                            employee_id=request.user.id,
+                                            store_id=store.store_id)
+        delivery_invoice.save()
         for motor in export_dict.keys():
             quantity = export_dict[motor]
             motor.quantity -= quantity
             motor.save()
-            delivery_invoice = Delivery_Invoice(total=quantity * motor.export_price,
-                                                employee_id=employee.id,
-                                                store_id=store.store_id)
-            delivery_invoice.save()
             delivery_motor = Delivery_Motor(invoice_id=delivery_invoice.invoice_id,
                                             motor_id=motor.motor_id,
                                             quantity=quantity)
@@ -654,9 +654,51 @@ def reportImportHistory(request):
 
     # lấy ra kết quả bằng phương thức fetchall()
     results = cursor.fetchall()
-    for record in results:
-        print(record)
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Thành công')
     return render(request, 'report_import_history.html', {'report': results})
+
+
+@login_required(login_url='/login/')
+def visualizationTurnover(request):
+    columns_name = []
+    values = []
+    if request.method == "POST":
+        date_form = DateForm(request.POST)
+        if date_form.is_valid():
+            start_date = getStartDate(int(date_form.cleaned_data['start_year']),
+                                      int(date_form.cleaned_data['start_month']))
+            end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+            if start_date > end_date:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+            else:
+                # tạo một con trỏ cho cơ sở dữ liệu
+                cursor = connection.cursor()
+
+                query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
+                        "from myapp_delivery_invoice " \
+                        "where time between '{s2}' and '{s3}'" \
+                        "group by month(time) order by Month_sale".format(s1="%Y-%m",
+                                                                          s2=str(start_date),
+                                                                          s3=str(end_date))
+
+                # chạy câu lệnh SQL bằng phương thức execute()
+                cursor.execute(query)
+
+                # lấy ra kết quả bằng phương thức fetchall()
+                results = cursor.fetchall()
+
+                for record in results:
+                    columns_name.append(record[0])
+                    values.append(int(record[1]))
+
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thành công')
+    else:
+        date_form = DateForm()
+    return render(request, 'visualization_turnover.html',
+                  {'date_form': date_form, 'columns_name': columns_name, 'values': values})

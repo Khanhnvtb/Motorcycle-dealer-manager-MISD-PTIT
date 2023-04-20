@@ -33,6 +33,7 @@ urlpatterns = [
 
     path('import_motor/', views.importMotor, name='import_motor'),
     path('export_motor/', views.exportMotor, name='export_motor'),
+
     path('report/', views.reportView, name='report'),
     path('report_turnover/', views.reportTurnover, name='report_turnover'),
     path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
@@ -41,4 +42,6 @@ urlpatterns = [
     path('import_history/<str:username>/', views.importHistory, name='import_history'),
     path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
     path('report_import_history/', views.reportImportHistory, name='report_import_history'),
+
+    path('visualization_turnover/', views.visualizationTurnover, name='visualization_turnover'),
 ]
