@@ -38,5 +38,7 @@ urlpatterns = [
     path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
     path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
     path('sale_history/<str:username>/', views.saleHistory, name='sale_history'),
+    path('import_history/<str:username>/', views.importHistory, name='import_history'),
     path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
+    path('report_import_history/', views.reportImportHistory, name='report_import_history'),
 ]

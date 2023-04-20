@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>All sale history</title>
@@ -14,9 +15,10 @@
         <th>Tên nhân viên</th>
         <th>Tên xe</th>
         <th>Ảnh xe</th>
+        <th>Cửa hàng</th>
         <th>Số lượng</th>
     </tr>
-    {% for record in history %}
+    {% for record in report %}
     <tr>
         <td>{{ record.0 }}</td>
         <td><a href="/show_user/{{ record.2 }}/"> {{ record.3}} </a></td>
@@ -24,7 +26,8 @@
         <td style="width:200px">
             {% load static %} <img src="{% static 'media/'|add:record.5 %}" alt="{{ record.4 }}" width="200">
         </td>
-        <td>{{ record.6 }}</td>
+        <td><a href="/show_store/{{ record.7 }}/"> {{ record.6 }}</a></td>
+        <td>{{ record.8 }}</td>
     </tr>
     {% endfor %}
 </table>
