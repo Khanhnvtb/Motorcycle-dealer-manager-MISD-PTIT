@@ -7,50 +7,38 @@
 </head>
 
 <body>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-            {{ message }}
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% if user_form.errors %}
-    <div class="alert alert-danger">
-        <ul>
-            {% for field_errors in user_form.errors.items %}
-            {% for error in field_errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    <form action="/add_user/" method="post">{% csrf_token %}
-        <p>Tên đăng nhập: {{ user_form.username }}</p>
-        <p>Mật khẩu: {{ user_form.password }}</p>
-        <p>Tên: {{ user_form.name }}</p>
-        <p>Ảnh đại diện: {{ user_form.avatar }}</p>
-        <p>Ngày sinh: {{ user_form.dob }}</p>
-        <label for="{{ user_form.gender.id_for_label }}">Giới tính:</label>
-        {{ user_form.gender }}
-        <p>Địa chỉ: {{ user_form.address }}</p>
-        <p>Số điện thoại: {{ user_form.phone }}</p>
-        <p>Email: {{ user_form.email }}</p>
-        <label for="{{ user_form.role.id_for_label }}">Chức vụ:</label>
-        {{ user_form.role }}
-        <p style="display: none"> {{ user_form.is_superuser }}</p>
-        <p style="display: none"> {{ user_form.first_name }}</p>
-        <p style="display: none"> {{ user_form.last_name }}</p>
-        <p style="display: none"> {{ user_form.is_staff }}</p>
-        <p style="display: none"> {{ user_form.is_active }}</p>
-        <p style="display: none"> {{ user_form.date_joined }}</p>
-        <input type="submit" value="Thêm">
-    </form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="/add_user/" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <p>Tên đăng nhập: {{ user_form.username }}</p>
+    <p>Mật khẩu: {{ user_form.password }}</p>
+    <p>Tên: {{ user_form.name }}</p>
+    <p>Ảnh đại diện: {{ user_form.avatar }}</p>
+    <p>Ngày sinh: {{ user_form.dob }}</p>
+    <label for="{{ user_form.gender.id_for_label }}">Giới tính:</label>
+    {{ user_form.gender }}
+    <p>Địa chỉ: {{ user_form.address }}</p>
+    <p>Số điện thoại: {{ user_form.phone }}</p>
+    <p>Email: {{ user_form.email }}</p>
+    <label for="{{ user_form.role.id_for_label }}">Chức vụ:</label>
+    {{ user_form.role }}
+    <p style="display: none"> {{ user_form.is_superuser }}</p>
+    <p style="display: none"> {{ user_form.first_name }}</p>
+    <p style="display: none"> {{ user_form.last_name }}</p>
+    <p style="display: none"> {{ user_form.is_staff }}</p>
+    <p style="display: none"> {{ user_form.is_active }}</p>
+    <p style="display: none"> {{ user_form.date_joined }}</p>
+    <p>Lương: {{ user_form.salary }}</p>
+    <input type="submit" value="Thêm">
+</form>
 </body>
 
 </html>
