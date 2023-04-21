@@ -3,7 +3,7 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Visualization turnover</title>
+    <title>Visualization best sale items</title>
 </head>
 <body>
 {% if messages %}
@@ -16,18 +16,6 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
-    <p>Chọn thời gian bắt đầu:</p>
-    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
-    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
-    <p>Chọn thời gian kết thúc:</p>
-    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
-    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
-    <br><br>
-    <input type="submit" value="Submit">
-    <br><br>
-</form>
-{% if request.method == "POST" %}
 <div>
     <canvas id="myChart" width="400" height="400"></canvas>
 </div>
@@ -36,8 +24,8 @@
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
+    var labels = {{ columns_name | safe}}; // một list chứa các tên cột
+    var data = {{values | safe}}; // một list chứa giá trị là các số nguyên
 
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
@@ -45,7 +33,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Biểu đồ thể hiện số lượng hàng bán ra',
+                label: 'Biểu đồ thể hiện mặt hàng bán chạy',
                 data: data,
                 backgroundColor: 'rgba(99,107,255,0.2)',
                 borderColor: 'rgb(99,143,255)',
@@ -61,6 +49,5 @@
         }
     })
 </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
-{% endif %}
 </body>
 </html>

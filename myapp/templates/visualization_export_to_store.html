@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualization export to store</title>
+</head>
+<body>
+<div>
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    // Tạo biến để lưu trữ dữ liệu từ context của django
+    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
+    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
+
+    // Tạo biểu đồ cột sử dụng chart js
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Biểu đồ thể hiện số lượng xe đã nhập từ các nhà cung cấp',
+                data: data,
+                backgroundColor: 'rgba(99,107,255,0.2)',
+                borderColor: 'rgb(99,143,255)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

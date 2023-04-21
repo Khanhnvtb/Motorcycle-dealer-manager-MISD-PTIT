@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Visualization turnover</title>
+    <title>Visualization kpi user</title>
 </head>
 <body>
 {% if messages %}
@@ -16,7 +15,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
+<form action="/visualization_kpi_user/{{ username }}/" method="post">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -41,14 +40,14 @@
 
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Biểu đồ thể hiện số lượng hàng bán ra',
+                label: 'Biểu đồ thể hiện doanh số của {{ name }}',
                 data: data,
                 backgroundColor: 'rgba(99,107,255,0.2)',
-                borderColor: 'rgb(99,143,255)',
+                borderColor: 'rgb(201,5,80)',
                 borderWidth: 1
             }]
         },
@@ -60,7 +59,7 @@
             }
         }
     })
-</script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
+</script>
 {% endif %}
 </body>
 </html>

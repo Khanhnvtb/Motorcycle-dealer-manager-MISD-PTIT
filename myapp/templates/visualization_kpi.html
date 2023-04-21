@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Visualization turnover</title>
+    <title>Visualization kpi</title>
 </head>
 <body>
 {% if messages %}
@@ -16,13 +15,10 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
-    <p>Chọn thời gian bắt đầu:</p>
-    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
-    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
-    <p>Chọn thời gian kết thúc:</p>
-    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
-    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
+<form action="/visualization_kpi/" method="post">{% csrf_token %}
+    <p>Chọn thời gian:</p>
+    <p>{{ month_form.month.label }} {{ month_form.month }} {{ month_form.month.help_text }}</p>
+    {{ month_form.year.label }} {{ month_form.year }} {{ month_form.year.help_text }}
     <br><br>
     <input type="submit" value="Submit">
     <br><br>
@@ -45,7 +41,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Biểu đồ thể hiện số lượng hàng bán ra',
+                label: 'Biểu đồ thể hiện doanh số của nhân viên',
                 data: data,
                 backgroundColor: 'rgba(99,107,255,0.2)',
                 borderColor: 'rgb(99,143,255)',
@@ -60,7 +56,7 @@
             }
         }
     })
-</script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
+</script>
 {% endif %}
 </body>
 </html>

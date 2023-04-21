@@ -3,7 +3,7 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Visualization turnover</title>
+    <title>Visualization sale items</title>
 </head>
 <body>
 {% if messages %}
@@ -16,7 +16,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
+<form action="/visualization_sale_items/" method="post">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
