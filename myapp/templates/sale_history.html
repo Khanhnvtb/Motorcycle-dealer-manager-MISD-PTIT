@@ -17,18 +17,34 @@
         <th>Cửa hàng</th>
         <th>Số lượng</th>
     </tr>
-    {% for record in history %}
+    {% for record in page_obj %}
     <tr>
         <td>{{ record.0 }}</td>
         <td><a href="/show_motor/{{ record.1 }}/"> {{ record.2 }}</a></td>
         <td style="width:200px">
             {% load static %} <img src="{% static 'media/'|add:record.3 %}" alt="{{ record.2 }}" width="200">
         </td>
-         <td><a href="/show_store/{{ record.5 }}/"> {{ record.4 }}</a></td>
+        <td><a href="/show_store/{{ record.5 }}/"> {{ record.4 }}</a></td>
         <td>{{ record.6 }}</td>
     </tr>
     {% endfor %}
 </table>
+<div class="pagination"> <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    {% endif %}
+
+    <span class="current">
+        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+    {% endif %}
+</span>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/sale_history.js' %}"></script>
 </body>

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 import os
@@ -279,7 +280,11 @@ def userManager(request):
             users = User.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'user_manager.html', {'users': users})
+    paginator = Paginator(users, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'user_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -292,7 +297,11 @@ def storeManager(request):
             stores = Store.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'store_manager.html', {'stores': stores})
+    paginator = Paginator(stores, 20)  # Show 20 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'store_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -305,7 +314,11 @@ def motorManager(request):
             motors = Motor.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'motor_manager.html', {'motors': motors})
+    paginator = Paginator(motors, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'motor_manager.html', {"page_obj": page_obj})
 
 
 @login_required(login_url='/login/')
@@ -318,7 +331,11 @@ def supplierManager(request):
             suppliers = Supplier.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'supplier_manager.html', {'suppliers': suppliers})
+    paginator = Paginator(suppliers, 25)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'supplier_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -527,7 +544,11 @@ def reportTurnover(request):
             date_form = DateForm()
     else:
         return render(request, 'home.html')
-    return render(request, 'report_turnover.html', {'date_form': date_form, 'report': results})
+    paginator = Paginator(results, 25)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'report_turnover.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -575,7 +596,11 @@ def reportSaleItems(request):
                 messages.add_message(request, messages.SUCCESS, 'Thành công')
     else:
         date_form = DateForm()
-    return render(request, 'report_sale_items.html', {'date_form': date_form, 'report': report})
+    paginator = Paginator(list(report), 2)  # Show 2 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'report_sale_items.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -606,7 +631,11 @@ def reportBestSaleItems(request):
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, 'Thành công')
-    return render(request, 'report_best_sale_items.html', {'report': results})
+    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'report_best_sale_items.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -636,7 +665,11 @@ def saleHistory(request, username):
         messages.add_message(request, messages.SUCCESS, 'Thành công')
     else:
         return render(request, 'home.html')
-    return render(request, 'sale_history.html', {'history': results, 'name': name})
+    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'sale_history.html', {'page_obj': page_obj, 'name': name})
 
 
 @login_required(login_url='/login/')
@@ -666,7 +699,11 @@ def reportSaleHistory(request):
         messages.add_message(request, messages.SUCCESS, 'Thành công')
     else:
         return render(request, 'home.html')
-    return render(request, 'report_sale_history.html', {'report': results})
+    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'report_sale_history.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -696,7 +733,11 @@ def importHistory(request, username):
         messages.add_message(request, messages.SUCCESS, 'Thành công')
     else:
         return render(request, 'home.html')
-    return render(request, 'import_history.html', {'history': results, 'name': name})
+    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'import_history.html', {'page_obj': page_obj, 'name': name})
 
 
 @login_required(login_url='/login/')
@@ -729,7 +770,11 @@ def reportImportHistory(request):
         messages.add_message(request, messages.SUCCESS, 'Thành công')
     else:
         return render(request, 'home.html')
-    return render(request, 'report_import_history.html', {'report': results})
+    paginator = Paginator(results, 10)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'report_import_history.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
