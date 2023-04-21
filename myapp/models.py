@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
-
+from rest_framework import serializers
 # Create your models here.
 
 
@@ -32,7 +32,7 @@ class Supplier(models.Model):
 class Import_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
-    total = models.IntegerField(blank=False, null=False)
+    total = models.BigIntegerField(blank=False, null=False)
     employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=False, null=False)
 
@@ -41,9 +41,9 @@ class Motor(models.Model):
     motor_id = models.AutoField(primary_key=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     brand = models.CharField(max_length=100, blank=False, null=False)
-    image = models.CharField(max_length=100, blank=False, null=False)
-    description = models.CharField(max_length=100, blank=False, null=False)
-    assurance = models.CharField(max_length=100, blank=False, null=False)
+    image = models.ImageField(upload_to='motor_image/')
+    description = models.CharField(max_length=1000, blank=False, null=False)
+    assurance = models.CharField(max_length=200, blank=False, null=False)
     quantity = models.IntegerField(blank=False, null=False)
     import_price = models.IntegerField(blank=False, null=False)
     export_price = models.IntegerField(blank=False, null=False)
@@ -74,7 +74,7 @@ class Store(models.Model):
 class Delivery_Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True, blank=False, null=False)
     time = models.DateTimeField(default=timezone.datetime.now())
-    total = models.IntegerField(blank=False, null=False)
+    total = models.BigIntegerField(blank=False, null=False)
     employee = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, blank=False, null=False)
 
@@ -84,3 +84,11 @@ class Delivery_Motor(models.Model):
     invoice = models.ForeignKey(Delivery_Invoice, on_delete=models.CASCADE, blank=False, null=False)
     motor = models.ForeignKey(Motor, on_delete=models.CASCADE, blank=False, null=False)
     quantity = models.IntegerField(blank=False, null=False)
+
+class MotorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Motor
+        fields = '__all__'
+
+class MotorListSerializer(serializers.ListSerializer):
+    child = MotorSerializer()

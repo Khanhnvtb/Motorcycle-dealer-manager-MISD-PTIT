@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Export motor</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}">
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="/export_motor/" method="POST" enctype="multipart/form-data">
+    <!-- Management data of formset -->
+    {{ import_forms.management_data }}
+
+    <!-- Security token -->
+    {% csrf_token %}
+
+    {{ store_form.as_p}}
+
+    <!-- Using the formset -->
+    {{ export_forms.as_p }}
+
+    <input type="submit" value="Xuất xe">
+</form>
+<a href="/">Trang chủ</a>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/export_motor.js' %}"></script>
+</body>
+</html>

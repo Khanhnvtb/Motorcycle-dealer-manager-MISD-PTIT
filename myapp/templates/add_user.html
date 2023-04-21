@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 
 <head>
     <meta charset="UTF-8">
     <title>Add user</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/add_user.css' %}">
 </head>
 
 <body>
@@ -38,7 +41,10 @@
     <p style="display: none"> {{ user_form.date_joined }}</p>
     <p>Lương: {{ user_form.salary }}</p>
     <input type="submit" value="Thêm">
+    <a href="/user_manager/">Về trang quản lý</a>
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/add_user.js' %}"></script>
 </body>
 
 </html>

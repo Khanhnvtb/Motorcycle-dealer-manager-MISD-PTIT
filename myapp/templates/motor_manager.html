@@ -1,32 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Motor manager</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/motor_manager.css' %}">
 </head>
+
 <body>
-<h1>Danh sách xe máy</h1>
-<a href="/add_motor/">Thêm</a>
-<table style="width:100%">
-    <tr>
-        <td style="display:none">Ảnh</td>
-        <td style="display: none">Thông tin</td>
-        <td style="display: none">Quản lý</td>
-    </tr>
-    {% for motor in motors %}
-    <tr>
-        <td><img src="{{ motor.image }}" alt="{{ motor.name }}.image"></td>
-        <td>
-            <li>Tên xe máy: {{ motor.name }}</li>
-            <li>Thương hiệu{{ motor.brand }}</li>
-            <li> {{motor.image }}</li>
-            <li>Số lượng {{ motor.quantity }}</li>
-        </td>
-        <td>
-            <a href="/update_motor/{{ motor.motor_id }}/">Sửa</a>
-            <a href="/delete_motor/{{ motor.motor_id }}/">Xóa</a>
-        </td>
+    <h1>Danh sách xe máy</h1>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
         {% endfor %}
-</table>
+    </ul>
+    {% endif %}
+    <a href="/add_motor/">Thêm xe máy</a>
+    <a href="/">Trang chủ</a>
+    <form action="/motors/" method="GET">
+        {% csrf_token %}
+        <input type="submit" name="submit" value="Tìm kiếm">
+    </form>
+    <input class='search' type="text" name="keyword">
+
+    <div class='search-btn'>Search</div>
+    <table style="width:100%">
+        <th>
+            <tr>
+                <td style="display:none">Ảnh</td>
+                <td style="display: none">Thông tin</td>
+                <td style="display: none">Quản lý</td>
+            </tr>
+        </th>
+        <tbody>
+            {% for motor in motors %}
+            <tr>
+                <td>
+                    <img src="{{ motor.image.url }}" alt="{{ motor.name }}" width="100" height="100">
+                </td>
+                <td>
+                    <li>Tên xe máy: {{ motor.name }}</li>
+                    <li>Thương hiệu{{ motor.brand }}</li>
+                    <li>Số lượng {{ motor.quantity }}</li>
+                </td>
+                <td>
+                    <a href="/show_motor/{{ motor.motor_id }}/">Xem</a>
+                    <a href="/update_motor/{{ motor.motor_id }}/">Sửa</a>
+                    <a href="/delete_motor/{{ motor.motor_id }}/">Xóa</a>
+                </td>
+                {% endfor %}
+        </tbody>
+    </table>
+    <!-- Gọi file js trong folder static -->
+    <script src="{% static 'scripts/motor_manager.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var url = "http://127.0.0.1:8000/motors";
+            $('.search-btn').click(function() {
+                inputData = $('.search').val()
+                console.log(inputData)
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        search: inputData
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>

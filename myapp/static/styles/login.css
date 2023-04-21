@@ -1,0 +1,30 @@
+form {
+    font-family: Arial, sans-serif;
+    width: 400px;
+    margin: 0 auto;
+}
+
+h {
+    display: inline-block;
+    width: 150px;
+}
+
+input[type="text"], input[type="password"] {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+    width: 100px;
+    margin-left: 150px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    opacity: 0.8;
+}

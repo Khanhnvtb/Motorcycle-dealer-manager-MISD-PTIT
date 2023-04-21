@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Report best sale items</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/report_best_sale_items.css' %}">
+</head>
+<body>
+<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+    <tr>
+        <th>Ảnh</th>
+        <th>Tên xe</th>
+    </tr>
+    {% for record in report %}
+    <tr>
+        <td style="width:250px">
+            <img src="{% static 'media/'|add:record.1 %}" alt="{{ record.2 }}" width="250">
+        </td>
+        <td><a href="/show_motor/{{ record.0 }}/">{{ record.2 }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/report_best_sale_items.js' %}"></script>
+</body>
+</html>

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Update Store</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/update_store.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -22,8 +25,11 @@
     <li>Tên chủ cửa hàng: {{ store_form.owner }}</li>
     <li>Địa chỉ: {{ store_form.address }}</li>
     <li>Số điện thoại: {{ store_form.phone }}</li>
-    <li>Email: {{ store.email }}</li>
+    <li>Email: {{ store_form.email }}</li>
     <input type="submit" value="Cập nhật">
+    <a href="/store_manager/">Về trang quản lý</a>
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/update_store.js' %}"></script>
 </body>
 </html>

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Supplier update</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/update_supplier.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -16,13 +19,16 @@
 </ul>
 {% endif %}
 <h1>Cập nhật thông tin</h1>
-<form action="/update_supplier/{{ supplier_form.supplier_id }}/" method="post">{% csrf_token %}
+<form action="/update_supplier/{{supplier_id}}/" method="post">{% csrf_token %}
     <p style="display: none">Id: {{supplier_form.supplier_id}}</p>
     <p>Tên nhà cung cấp: {{ supplier_form.name }}</p>
     <p>Tên cửa hàng: {{ supplier_form.address }}</p>
     <p>Số điện thoại: {{ supplier_form.phone }}</p>
     <p>Email: {{ supplier_form.email }}</p>
     <input type="submit" value="Cập nhật">
+    <a href="/supplier_manager/">Về trang quản lý</a>
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/update_supplier.js' %}"></script>
 </body>
 </html>

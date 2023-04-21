@@ -1,0 +1,40 @@
+/* Định dạng cho tiêu đề */
+h1 {
+    color: blue;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Định dạng cho bảng */
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+/* Định dạng cho các ô trong bảng */
+td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+/* Định dạng cho các phần tử li trong bảng */
+li {
+    list-style-type: none;
+}
+
+/* Định dạng cho liên kết */
+a {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    background-color: green;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Thay đổi màu nền khi di chuột qua liên kết */
+a:hover {
+    background-color: lime;
+}

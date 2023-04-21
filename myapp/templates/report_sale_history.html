@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>All sale history</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/report_sale_history.css' %}">
+</head>
+<body>
+<h1>Lịch sử bán hàng của nhân viên</h1>
+<table border="1">
+    <tr>
+        <th>Thời gian</th>
+        <th>Tên nhân viên</th>
+        <th>Tên xe</th>
+        <th>Ảnh xe</th>
+        <th>Cửa hàng</th>
+        <th>Số lượng</th>
+    </tr>
+    {% for record in report %}
+    <tr>
+        <td>{{ record.0 }}</td>
+        <td><a href="/show_user/{{ record.2 }}/"> {{ record.3}} </a></td>
+        <td><a href="/show_motor/{{ record.1 }}/"> {{ record.4 }}</a></td>
+        <td style="width:200px">
+            {% load static %} <img src="{% static 'media/'|add:record.5 %}" alt="{{ record.4 }}" width="200">
+        </td>
+        <td><a href="/show_store/{{ record.7 }}/"> {{ record.6 }}</a></td>
+        <td>{{ record.8 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/report_sale_history.js' %}"></script>
+</body>
+</html>

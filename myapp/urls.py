@@ -25,11 +25,22 @@ urlpatterns = [
     path('update_store/<int:store_id>/', views.updateStore, name='update_store'),
     path('delete_store/<int:store_id>/', views.deleteStore, name='delete_store'),
 
-    path('show_supplier/<int:supplier_id>/', views.addSupplier, name='show_supplier'),
+    path('show_supplier/<int:supplier_id>/', views.showSupplier, name='show_supplier'),
     path('supplier_manager/', views.supplierManager, name='supplier_manager'),
     path('add_supplier/', views.addSupplier, name='add_supplier'),
     path('update_supplier/<int:supplier_id>/', views.updateSupplier, name='update_supplier'),
     path('delete_supplier/<int:supplier_id>/', views.deleteSupplier, name='delete_supplier'),
 
     path('import_motor/', views.importMotor, name='import_motor'),
+    path('export_motor/', views.exportMotor, name='export_motor'),
+    path('report/', views.reportView, name='report'),
+    path('report_turnover/', views.reportTurnover, name='report_turnover'),
+    path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
+    path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
+    path('sale_history/<str:username>/', views.saleHistory, name='sale_history'),
+    path('import_history/<str:username>/', views.importHistory, name='import_history'),
+    path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
+    path('report_import_history/', views.reportImportHistory, name='report_import_history'),
+
+    path('motors/', views.getMotorByAPI,)
 ]

@@ -1,16 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Store manager</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/store_manager.css' %}">
 </head>
 <body>
 <h1>Danh sách cửa hàng</h1>
-<ul>
-    {% for store in stores %}
-    <li>Tên cửa hàng: {{ store.name }}</li>
-    <li>Tên chủ cửa hàng: {{ store.owner }}</li>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
     {% endfor %}
 </ul>
+{% endif %}
+<a href="/add_store/">Thêm cửa hàng</a>
+<a href="/">Trang chủ</a>
+<form action="/store_manager/" method="POST">
+    {% csrf_token %}
+    <input type="text" name="keyword">
+    <input type="submit" name="submit" value="Tìm kiếm">
+</form>
+<table style="width:100%">
+    <tr>
+        <td style="display: none">Thông tin</td>
+        <td style="display: none">Quản lý</td>
+    </tr>
+    {% for store in stores %}
+    <tr>
+        <td>
+            <li>Tên cửa hàng: {{ store.name }}</li>
+            <li>Tên chủ cửa hàng: {{ store.owner }}</li>
+        </td>
+        <td>
+            <a href="/show_store/{{ store.store_id }}/">Xem</a>
+            <a href="/update_store/{{ store.store_id }}/">Sửa</a>
+            <a href="/delete_store/{{ store.store_id }}/">Xóa</a>
+        </td>
+    </tr>
+    <tr></tr>
+    {% endfor %}
+</table>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/show_manager.js' %}"></script>
 </body>
 </html>

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Add supplier</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/add_supplier.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -21,6 +24,9 @@
     <p>Số điện thoại: {{ supplier_form.phone}}</p>
     <p>Email: {{ supplier_form.email}}</p>
     <input type="submit" value="Thêm">
+    <a href="/supplier_manager/">Về trang quản lý</a>
 </form>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/add_supplier.js' %}"></script>
 </body>
 </html>
