@@ -30,8 +30,21 @@ input[type=submit] {
     background-color: purple;
     color: white;
     border-radius: 10px;
+    width: 220px;
+    padding: 10px;
+    border: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
 }
-
+input[type=submit]:hover {
+    background-color: pink;
+}
+.add {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 /* Định dạng cho liên kết */
 a {
     display: block;
@@ -42,9 +55,28 @@ a {
     text-decoration: none;
     text-align: center;
     padding: 10px;
+    border-radius: 10px;
 }
 
 /* Thay đổi màu nền khi di chuột qua liên kết */
 a:hover {
     background-color: pink;
+}
+
+input[type="text"], input[type="number"], input[type="password"], input[type="email"], textarea {
+    width: 220px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 2px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 0 10px;
+}
+li {
+    display: flex; 
+    justify-content: space-between;
+    margin-bottom: 10px;
 }

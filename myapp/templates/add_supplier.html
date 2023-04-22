@@ -18,14 +18,20 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/add_supplier/" method="post">{% csrf_token %}
-    <p>Tên nhà cung cấp: {{ supplier_form.name}}</p>
-    <p>Địa chỉ: {{ supplier_form.address}}</p>
-    <p>Số điện thoại: {{ supplier_form.phone}}</p>
-    <p>Email: {{ supplier_form.email}}</p>
-    <input type="submit" value="Thêm">
-    <a href="/supplier_manager/">Về trang quản lý</a>
-</form>
+<div class="container">
+    <form action="/add_supplier/" method="post" class="form-container">{% csrf_token %}
+        <p>Tên nhà cung cấp: {{ supplier_form.name}}</p>
+        <p>Địa chỉ: {{ supplier_form.address}}</p>
+        <p>Số điện thoại: {{ supplier_form.phone}}</p>
+        <p>Email: {{ supplier_form.email}}</p>
+        <div class="add-text">
+            <input type="submit" value="Thêm">
+        </div>
+        <div class="add-text">
+            <a href="/supplier_manager/">Về trang quản lý</a>
+        </div>
+    </form>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/add_supplier.js' %}"></script>
 </body>

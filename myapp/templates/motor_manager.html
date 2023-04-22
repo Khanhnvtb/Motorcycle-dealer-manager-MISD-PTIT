@@ -6,6 +6,7 @@
     <title>Motor manager</title>
     <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/motor_manager.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/form_manage.css' %}">
 </head>
 <body>
 <h1>Danh sách xe máy</h1>
@@ -19,9 +20,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-<a href="/add_motor/">Thêm xe máy</a>
-<a href="/">Trang chủ</a>
-<form action="/motor_manager/" method="POST">
+<a class="link-button" href="/add_motor/">Thêm xe máy</a>
+<a class="link-button" href="/">Trang chủ</a>
+<form action="/motor_manager/" method="POST" class="find">
     {% csrf_token %}
     <input type="text" name="keyword">
     <input type="submit" name="submit" value="Tìm kiếm">
@@ -43,9 +44,9 @@
             <li>Số lượng {{ motor.quantity }}</li>
         </td>
         <td>
-            <a href="/show_motor/{{ motor.motor_id }}/">Xem</a>
-            <a href="/update_motor/{{ motor.motor_id }}/">Sửa</a>
-            <a href="/delete_motor/{{ motor.motor_id }}/">Xóa</a>
+            <a class="link-button" href="/show_motor/{{ motor.motor_id }}/">Xem</a>
+            <a class="link-button" href="/update_motor/{{ motor.motor_id }}/">Sửa</a>
+            <a class="link-button" href="/delete_motor/{{ motor.motor_id }}/">Xóa</a>
         </td>
         {% endfor %}
 </table>

@@ -6,13 +6,14 @@
     <title>Report</title>
     <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/report.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/button_form_home.css' %}">
 </head>
 <body>
-<a href="/report_turnover/">Báo cáo doanh thu theo tháng</a>
-<a href="/report_sale_items/">Báo cáo mặt hàng đã bán ra theo tháng</a>
-<a href="/report_best_sale_items/">Báo cáo mặt hàng bán chạy</a>
-<a href="/report_sale_history/">Xem lịch sử bán hàng của nhân viên</a>
-<a href="/report_import_history/">Xem lịch sử nhập hàng của nhân viên</a>
+<a href="/report_turnover/" class="link-button">Báo cáo doanh thu theo tháng</a>
+<a href="/report_sale_items/" class="link-button">Báo cáo mặt hàng đã bán ra theo tháng</a>
+<a href="/report_best_sale_items/" class="link-button">Báo cáo mặt hàng bán chạy</a>
+<a href="/report_sale_history/" class="link-button">Xem lịch sử bán hàng của nhân viên</a>
+<a href="/report_import_history/" class="link-button"   >Xem lịch sử nhập hàng của nhân viên</a>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/report.js' %}"></script>
 </body>

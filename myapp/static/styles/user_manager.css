@@ -11,42 +11,11 @@ h1 {
     font-family: Arial, sans-serif;
 }
 
-/* Định dạng cho các liên kết */
-a {
-    display: inline-block;
-    width: 100px;
-    margin: 10px;
-    background-color: orange;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding: 10px;
-}
-
-/* Thay đổi màu nền khi di chuột qua liên kết */
-a:hover {
-    background-color: yellow;
-}
-
 /* Định dạng cho form */
 form {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Định dạng cho ô nhập liệu */
-input[type=text] {
-    border: 1px solid black;
-    padding: 5px;
-}
-
-/* Định dạng cho nút submit */
-input[type=submit] {
-    background-color: orange;
-    color: white;
-    border-radius: 10px;
-    margin-left: 10px;
 }
 
 /* Định dạng cho bảng */

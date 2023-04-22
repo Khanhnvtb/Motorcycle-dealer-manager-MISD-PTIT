@@ -6,6 +6,7 @@
     <title>Show user</title>
         <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/user_manager.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/form_manage.css' %}">
 </head>
 <body>
 <h1>Danh sách nhân viên</h1>
@@ -19,9 +20,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-<a href="/add_user/">Thêm nhân viên</a>
-<a href="/">Trang chủ</a>
-<form action="/user_manager/" method="POST">
+<a class = "link-button" href="/add_user/">Thêm nhân viên</a>
+<a class = "link-button" href="/">Trang chủ</a>
+<form action="/user_manager/" method="POST" class="find">
     {% csrf_token %}
     <input type="text" name="keyword">
     <input type="submit" name="submit" value="Tìm kiếm">
@@ -43,11 +44,11 @@
             <li>Chức vụ: {{ user.role }}</li>
         </td>
         <td>
-            <a href="/sale_history/{{ user.username }}/">Xem lịch sử bán hàng</a>
-            <a href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
-            <a href="/show_user/{{ user.username }}/">Xem thông tin</a>
-            <a href="/update_user/{{ user.username }}/">Sửa</a>
-            <a href="/delete_user/{{ user.username }}/">Xóa</a>
+            <a class = "link-button" href="/sale_history/{{ user.username }}/">Xem lịch sử bán hàng</a>
+            <a class = "link-button" href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
+            <a class = "link-button" href="/show_user/{{ user.username }}/">Xem thông tin</a>
+            <a class = "link-button" href="/update_user/{{ user.username }}/">Sửa</a>
+            <a class = "link-button" href="/delete_user/{{ user.username }}/">Xóa</a>
         </td>
     </tr>
     {% endfor %}

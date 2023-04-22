@@ -37,10 +37,16 @@ p {
 }
 
 label {
-    width: 100px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 25px;
+    width: auto;
 }
 
-input[type="text"], input[type="number"], textarea {
+input[type="text"], input[type="number"], input[type="password"], input[type="email"], textarea {
     width: 270px;
     height: 32px;
     background: #FFFFFF;
@@ -54,8 +60,61 @@ input[type="text"], input[type="number"], textarea {
 }
 
 input[type="file"] {
-    width: 310px;
+    width: 290px;
 }
+.form-select {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+select {
+    width: 292px;
+    height: 36px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    margin-right: 0px;
+}
+
+input[type="submit"] {
+    width: 255px;
+    height: 56px;
+    background: #4CCEA7;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0 auto;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+
+color: #380A9B;
+}
+
+input[type="submit"]:hover {
+    opacity: 0.8;
+}
+
+a {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+a:hover {
+    opacity: 0.8;
+    color: #380A9B;
+}
+
 .container {
     width: 100%;
     display: flex;
@@ -96,36 +155,4 @@ p {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-}
-input[type="submit"] {
-    width: 255px;
-    height: 56px;
-    background: #4CCEA7;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 0 auto;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 24px;
-
-color: #380A9B;
-}
-
-input[type="submit"]:hover {
-    opacity: 0.8;
-}
-
-a {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 19px;
-    color: #000000;
-}
-
-a:hover {
-    color: blue;
 }

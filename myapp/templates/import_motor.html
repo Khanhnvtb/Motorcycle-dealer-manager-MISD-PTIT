@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Import motor</title>
     <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/import_motor.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -18,21 +18,24 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/import_motor/" method="POST" enctype="multipart/form-data">
-    <!-- Management data of formset -->
-    {{ import_forms.management_data }}
-
-    <!-- Security token -->
-    {% csrf_token %}
-
-    {{ supplier_form.as_p}}
-
-    <!-- Using the formset -->
-    {{ import_forms.as_p }}
-
-    <input type="submit" value="Nhập xe">
-</form>
-<a href="/">Trang chủ</a>
+<div class="container">
+    <form action="/import_motor/" method="POST" enctype="multipart/form-data"  class="form-container">
+        <!-- Management data of formset -->
+        {{ import_forms.management_data }}
+    
+        <!-- Security token -->
+        {% csrf_token %}
+    
+        {{ supplier_form.as_p}}
+    
+        <!-- Using the formset -->
+        {{ import_forms.as_p }}
+        <div class="button-container">
+            <a href="/">Trang chủ</a>
+            <input type="submit" value="Nhập xe">
+        </div>
+    </form>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/import_motor.js' %}"></script>
 </body>

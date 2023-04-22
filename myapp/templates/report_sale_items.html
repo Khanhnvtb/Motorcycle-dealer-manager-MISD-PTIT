@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
-    <meta charset="UTF-8">
-    <title>Report sale items</title>
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/report_sale_items' %}">
+  <meta charset="UTF-8">
+  <title>Report sale items</title>
+  <!-- Gọi file css trong folder static -->
+  <link rel="stylesheet" href="{% static 'styles/report_sale_items.css' %}">
 </head>
+
 <body>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+  {% if messages %}
+  <div class="container">
+    <ul class="messages">
+      {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
         {{ message }}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-<form action="/report_sale_items/" method="post">{% csrf_token %}
-    <p>Chọn thời gian bắt đầu:</p>
-    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
-    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
-    <p>Chọn thời gian kết thúc:</p>
-    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
-    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
-    <br><br>
-    <input type="submit" value="Submit">
-    <br><br>
-</form>
-{% if request.method == "POST" %}
-<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
-    <colgroup span="4"></colgroup>
-    <colgroup span="3"></colgroup>
-    <tr>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  <div class="container">
+    <form action="/report_sale_items/" method="post">{% csrf_token %}
+      <div class="total">Chọn thời gian bắt đầu:</div>
+      <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
+      {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
+      <div class="total">Chọn thời gian kết thúc:</div>
+      <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
+      {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
+      <br><br>
+      <div class="submit">
+        <input type="submit" value="Submit">
+      </div>
+      <br><br>
+    </form>
+  </div>
+  {% if request.method == "POST" %}
+  <div class="container">
+    <table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+      <colgroup span="4"></colgroup>
+      <colgroup span="3"></colgroup>
+      <tr>
         <th rowspan="3">Thời gian</th>
         <th colspan="3">Sản phẩm bán ra</th>
-    </tr>
-    <tr></tr>
-    <tr>
+      </tr>
+      <tr></tr>
+      <tr>
         <th>Ảnh</th>
         <th>Tên xe</th>
         <th>Số lượng</th>
-    </tr>
-    {% for record in report %}
-    <tr colspan="4">
+      </tr>
+      {% for record in report %}
+      <tr colspan="4">
         <td rowspan="{{ record.1|length }}">{{ record.0 }}</td>
         {% for sale_item in record.1 %}
         <td style="width:250px">
-            {% load static %} <img src="{% static 'media/'|add:sale_item.0 %}" alt="{{ sale_item.1 }}" width="250">
+          {% load static %} <img src="{% static 'media/'|add:sale_item.0 %}" alt="{{ sale_item.1 }}" width="250">
         </td>
         <td style="width:200px">{{ sale_item.1 }}</td>
         <td style="width:150px">{{ sale_item.2 }}</td>
-    </tr>
-    {% endfor %} {% endfor %}
-</table>
-{% endif %}
-<!-- Gọi file js trong folder static -->
-<script src="{% static 'scripts/report_sale_items.js' %}"></script>
+      </tr>
+      {% endfor %} {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+  <!-- Gọi file js trong folder static -->
+  <script src="{% static 'scripts/report_sale_items.js' %}"></script>
 </body>
+
 </html>

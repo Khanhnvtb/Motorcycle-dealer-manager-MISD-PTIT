@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
-    <meta charset="UTF-8">
-    <title>Add store</title>
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/add_store.css' %}">
+  <meta charset="UTF-8">
+  <title>Add store</title>
+  <!-- Gọi file css trong folder static -->
+  <link rel="stylesheet" href="{% static 'styles/add_store.css' %}">
 </head>
+
 <body>
-{% if messages %}
-<ul class="messages">
+  {% if messages %}
+  <ul class="messages">
     {% for message in messages %}
     <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+      {{ message }}
     </li>
     {% endfor %}
-</ul>
-{% endif %}
-<form action="/add_store/" method="post">{% csrf_token %}
-    <p>Tên cửa hàng: {{ store_form.name}}</p>
-    <p>Tên chủ cửa hàng: {{ store_form.owner}}</p>
-    <p>Địa chỉ: {{ store_form.address}}</p>
-    <p>Số điện thoại: {{ store_form.phone}}</p>
-    <p>Email: {{ store_form.email}}</p>
-    <input type="submit" value="Thêm">
-    <a href="/store_manager/">Về trang quản lý</a>
-</form>
-<!-- Gọi file js trong folder static -->
-<script src="{% static 'scripts/add_store.js' %}"></script>
+  </ul>
+  {% endif %}
+  <div class="container">
+    <form action="/add_store/" method="post" class="form-container">{% csrf_token %}
+      <p>Tên cửa hàng: {{ store_form.name}}</p>
+      <p>Tên chủ cửa hàng: {{ store_form.owner}}</p>
+      <p>Địa chỉ: {{ store_form.address}}</p>
+      <p>Số điện thoại: {{ store_form.phone}}</p>
+      <p>Email: {{ store_form.email}}</p>
+      <div class="add-form">
+        <input type="submit" value="Thêm">
+      </div>
+      <div class="add-form">
+        <a href="/store_manager/">Về trang quản lý</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Gọi file js trong folder static -->
+  <script src="{% static 'scripts/add_store.js' %}"></script>
 </body>
+
 </html>

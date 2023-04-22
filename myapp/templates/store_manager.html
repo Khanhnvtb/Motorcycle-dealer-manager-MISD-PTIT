@@ -6,6 +6,7 @@
     <title>Store manager</title>
         <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/store_manager.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/form_manage.css' %}">
 </head>
 <body>
 <h1>Danh sách cửa hàng</h1>
@@ -19,9 +20,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-<a href="/add_store/">Thêm cửa hàng</a>
-<a href="/">Trang chủ</a>
-<form action="/store_manager/" method="POST">
+<a class="link-button" href="/add_store/">Thêm cửa hàng</a>
+<a class="link-button" href="/">Trang chủ</a>
+<form action="/store_manager/" method="POST" class="find">
     {% csrf_token %}
     <input type="text" name="keyword">
     <input type="submit" name="submit" value="Tìm kiếm">
@@ -38,9 +39,9 @@
             <li>Tên chủ cửa hàng: {{ store.owner }}</li>
         </td>
         <td>
-            <a href="/show_store/{{ store.store_id }}/">Xem</a>
-            <a href="/update_store/{{ store.store_id }}/">Sửa</a>
-            <a href="/delete_store/{{ store.store_id }}/">Xóa</a>
+            <a class="link-button" href="/show_store/{{ store.store_id }}/">Xem</a>
+            <a class="link-button" href="/update_store/{{ store.store_id }}/">Sửa</a>
+            <a class="link-button" href="/delete_store/{{ store.store_id }}/">Xóa</a>
         </td>
     </tr>
     <tr></tr>

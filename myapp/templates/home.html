@@ -6,6 +6,7 @@
     <title>Home</title>
     <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/button_form_home.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -20,17 +21,17 @@
 {% endif %}
 {% if user.is_authenticated %}
 <p>Hi, {{user.name}}</a></p>
-<a href="/user_manager/">Quản lý nhân viên</a>
-<a href="/motor_manager/">Quản lý xe</a>
-<a href="/store_manager/">Quản lý cửa hàng</a>
-<a href="/supplier_manager/">Quản lý nhà cung cấp</a>
-<a href="/import_motor/">Nhập hàng</a>
-<a href="/export_motor/">Xuất hàng</a>
-<a href="/report/">Báo cáo thống kê</a>
-<a href="/visualization/">Trực quan hóa</a>
-<a href="/logout/">Đăng xuất</a>
+<a href="/user_manager/" class="link-button">Quản lý nhân viên</a>
+<a href="/motor_manager/" class="link-button">Quản lý xe</a>
+<a href="/store_manager/" class="link-button">Quản lý cửa hàng</a>
+<a href="/supplier_manager/" class="link-button">Quản lý nhà cung cấp</a>
+<a href="/import_motor/" class="link-button">Nhập hàng</a>
+<a href="/export_motor/" class="link-button">Xuất hàng</a>
+<a href="/report/" class="link-button">Báo cáo thống kê</a>
+<a href="/visualization/" class="link-button">Trực quan hóa</a>
+<a href="/logout/" class="link-button">Đăng xuất</a>
 {% else %}
-<a href="/login/">Đăng nhập</a>
+<a href="/login/" class="link-button">Đăng nhập</a>
 {% endif %}
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/home.js' %}"></script>
