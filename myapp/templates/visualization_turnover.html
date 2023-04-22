@@ -16,7 +16,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
+<form action="/visualization_balance_sheet/" method="post">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -37,8 +37,18 @@
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
+    var labels = {
+    {
+        columns_name | safe
+    }
+    }
+    ; // một list chứa các tên cột
+    var data = {
+    {
+        values | safe
+    }
+    }
+    ; // một list chứa giá trị là các số nguyên
     console.log(data);
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
@@ -59,10 +69,10 @@
                     beginAtZero: true
                 },
                 xAxes: [{
-                    barThickness : 10
+                    barThickness: 10
                 }]
             },
-            
+
         }
     })
 </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->

@@ -1,8 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 import os
@@ -10,10 +8,9 @@ from .forms import *
 from .models import *
 from datetime import date, timedelta
 from django.db import connection
-from django.db.models.functions import TruncMonth
-from django.db.models import Sum
 from django.core.paginator import Paginator
-from django.db.models import Q
+import calendar
+
 
 # Create your views here.
 def loginUser(request):
@@ -54,18 +51,17 @@ def addUser(request):
         if request.method == "POST":
             user_form = UserForm(request.POST, request.FILES)
             if user_form.is_valid():
-                if User.objects.filter(username=user_form.cleaned_data['username']).exists():
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Tài khoản đã tồn tại')
-                else:
-                    user = user_form.save(commit=False)
-                    user.set_password(user_form.cleaned_data['password'])
-                    user.save()
-                    user_form = UserForm()
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thêm người dùng thành công')
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password'])
+                user.save()
+                user_form = UserForm()
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thêm người dùng thành công')
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Tài khoản đã có người sử dụng')
         else:
             user_form = UserForm()
     else:
@@ -118,16 +114,15 @@ def addMotor(request):
         if request.method == "POST":
             motor_form = MotorForm(request.POST, request.FILES)
             if motor_form.is_valid():
-                if Motor.objects.filter(name=motor_form.cleaned_data['name']).exists():
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.ERROR, 'Xe đã tồn tại')
-                else:
-                    motor_form.save()
-                    motor_form = MotorForm()
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thêm xe thành công')
+                motor_form.save()
+                motor_form = MotorForm()
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thêm xe thành công')
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Xe đã tồn tại trong hệ thống')
         else:
             motor_form = MotorForm()
     else:
@@ -146,6 +141,10 @@ def updateMotor(request, motor_id):
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.SUCCESS, 'Sửa thông tin xe thành công')
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Xe đã tồn tại trong hệ thống')
         else:
             motor_form = MotorForm(instance=motor)
     else:
@@ -178,16 +177,15 @@ def addStore(request):
         if request.method == "POST":
             store_form = StoreForm(request.POST)
             if store_form.is_valid():
-                if Store.objects.filter(name=store_form.cleaned_data['name']).exists():
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.ERROR, 'Cửa hàng đã tồn tại')
-                else:
-                    store_form.save()
-                    store_form = StoreForm()
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thêm cửa hàng thành công')
+                store_form.save()
+                store_form = StoreForm()
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thêm cửa hàng thành công')
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Cửa hàng đã tồn tại trong hệ thống')
         else:
             store_form = StoreForm()
     else:
@@ -206,6 +204,10 @@ def updateStore(request, store_id):
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.SUCCESS, 'Sửa thông tin cửa hàng thành công', )
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Cửa hàng đã tồn tại trong hệ thống')
         else:
             store_form = StoreForm(instance=store)
     else:
@@ -237,16 +239,15 @@ def addSupplier(request):
         if request.method == "POST":
             supplier_form = SupplierForm(request.POST)
             if supplier_form.is_valid():
-                if Supplier.objects.filter(name=supplier_form.cleaned_data['name']).exists():
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.ERROR, 'Nhà cung cấp đã tồn tại')
-                else:
-                    supplier_form.save()
-                    supplier_form = SupplierForm()
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thêm nhà cung cấp thành công')
+                supplier_form.save()
+                supplier_form = SupplierForm()
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thêm nhà cung cấp thành công')
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Nhà cung cấp đã tồn tại trong hệ thống')
         else:
             supplier_form = SupplierForm()
     else:
@@ -265,6 +266,10 @@ def updateSupplier(request, supplier_id):
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.SUCCESS, 'Sửa thông tin nhà cung cấp thành công', )
+            else:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.ERROR, 'Nhà cung cấp đã tồn tại trong hệ thống')
         else:
             supplier_form = SupplierForm(instance=supplier)
     else:
@@ -418,7 +423,7 @@ def importMotor(request):
             if total == 0:
                 storage = messages.get_messages(request)
                 storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần nhập')
+                messages.add_message(request, messages.ERROR, 'Bạn chưa chọn các sản phẩm cần nhập')
             else:
                 import_invoice = Import_Invoice(total=total, employee_id=request.user.id,
                                                 supplier_id=supplier.supplier_id,
@@ -472,14 +477,14 @@ def exportMotor(request):
             if total == 0:
                 storage = messages.get_messages(request)
                 storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần xuất')
+                messages.add_message(request, messages.ERROR, 'Bạn chưa chọn các sản phẩm cần xuất')
             else:
                 for motor in export_dict.keys():
                     quantity = export_dict[motor]
                     if motor.quantity < quantity:
                         storage = messages.get_messages(request)
                         storage.used = True
-                        messages.add_message(request, messages.SUCCESS,
+                        messages.add_message(request, messages.ERROR,
                                              f'Số lượng {motor} trong kho chỉ còn {motor.quantity}')
                         context['export_forms'] = export_forms
                         context['store_form'] = store_form
@@ -516,25 +521,16 @@ def reportView(request):
 
 
 def getStartDate(year, month):
-    # tạo một đối tượng date với năm và tháng đã nhập
-    d = date(year, month, 1)
-
-    # lấy ra ngày bắt đầu của tháng
-    start_date = d.replace(day=1)
-    return start_date
+    return date(year, month, calendar.monthrange(2002, 1)[0])
 
 
 def getEndDate(year, month):
-    # tạo một đối tượng date với năm và tháng đã nhập
-    d = date(year, month, 1)
-
-    # lấy ra ngày bắt đầu và ngày kết thúc của tháng
-    end_date = d.replace(month=month + 1, day=1) - timedelta(days=1)
-    return end_date
+    return date(year, month, calendar.monthrange(2002, 1)[1])
 
 
+# admin
 @login_required(login_url='/login/')
-def reportTurnover(request):
+def reportBalanceSheet(request):
     if request.user.role == 'admin':
         results = ()
         if request.method == "POST":
@@ -546,7 +542,7 @@ def reportTurnover(request):
                 if start_date > end_date:
                     storage = messages.get_messages(request)
                     storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                    messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
                 else:
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
@@ -561,8 +557,41 @@ def reportTurnover(request):
                     # chạy câu lệnh SQL bằng phương thức execute()
                     cursor.execute(query)
 
+                    results = []
                     # lấy ra kết quả bằng phương thức fetchall()
-                    results = cursor.fetchall()
+                    for record in cursor.fetchall():
+                        results.append(list(record))
+
+                    query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
+                            "from myapp_import_invoice " \
+                            "where time between '{s2}' and '{s3}'" \
+                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
+                                                                              s2=str(start_date),
+                                                                              s3=str(end_date))
+
+                    # chạy câu lệnh SQL bằng phương thức execute()
+                    cursor.execute(query)
+
+                    i = 0
+                    for record in cursor.fetchall():
+                        results[i].append(record[1])
+                        i += 1
+
+                    query = "select date_format(time, '{s1}') as Month_sale, SUM(money) " \
+                            "from myapp_expense " \
+                            "where time between '{s2}' and '{s3}' " \
+                            "group by month(time) " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
+
+                    # chạy câu lệnh SQL bằng phương thức execute()
+                    cursor.execute(query)
+
+                    i = 0
+                    for record in cursor.fetchall():
+                        results[i][2] += record[1]
+                        i += 1
 
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -578,51 +607,55 @@ def reportTurnover(request):
     return render(request, 'report_turnover.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
+# admin
 @login_required(login_url='/login/')
 def reportSaleItems(request):
     report = {}
-    if request.method == "POST":
-        date_form = DateForm(request.POST)
-        if date_form.is_valid():
-            start_date = getStartDate(int(date_form.cleaned_data['start_year']),
-                                      int(date_form.cleaned_data['start_month']))
-            end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
-            if start_date > end_date:
-                storage = messages.get_messages(request)
-                storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
-            else:
-                # tạo một con trỏ cho cơ sở dữ liệu
-                cursor = connection.cursor()
+    if request.user.role == 'admin':
+        if request.method == "POST":
+            date_form = DateForm(request.POST)
+            if date_form.is_valid():
+                start_date = getStartDate(int(date_form.cleaned_data['start_year']),
+                                          int(date_form.cleaned_data['start_month']))
+                end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+                if start_date > end_date:
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                else:
+                    # tạo một con trỏ cho cơ sở dữ liệu
+                    cursor = connection.cursor()
 
-                query = "SELECT date_format(Time, '{s1}') as Month_sale, " \
-                        "myapp_Motor.image, myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity " \
-                        "FROM myapp_Motor " \
-                        "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
-                        "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
-                        "WHERE myapp_delivery_invoice.time between '{s2}' AND '{s3}' " \
-                        "GROUP BY Month(time), myapp_Motor.name, myapp_Motor.Image " \
-                        "ORDER BY Month_sale, quantity".format(s1="%Y-%m",
-                                                               s2=str(start_date),
-                                                               s3=str(end_date))
+                    query = "SELECT date_format(Time, '{s1}') as Month_sale, " \
+                            "myapp_Motor.image, myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity " \
+                            "FROM myapp_Motor " \
+                            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
+                            "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
+                            "WHERE myapp_delivery_invoice.time between '{s2}' AND '{s3}' " \
+                            "GROUP BY Month(time), myapp_Motor.name, myapp_Motor.Image " \
+                            "ORDER BY Month_sale, quantity".format(s1="%Y-%m",
+                                                                   s2=str(start_date),
+                                                                   s3=str(end_date))
 
-                # chạy câu lệnh SQL bằng phương thức execute()
-                cursor.execute(query)
+                    # chạy câu lệnh SQL bằng phương thức execute()
+                    cursor.execute(query)
 
-                # lấy ra kết quả bằng phương thức fetchall()
-                results = cursor.fetchall()
-                for record in results:
-                    key = record[0]
-                    if key not in report.keys():
-                        report[key] = [tuple([record[1], record[2], record[3]])]
-                    else:
-                        report[key].append(tuple([record[1], record[2], record[3]]))
-                report = [(k, v) for k, v in report.items()]
-                storage = messages.get_messages(request)
-                storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Thành công')
+                    # lấy ra kết quả bằng phương thức fetchall()
+                    results = cursor.fetchall()
+                    for record in results:
+                        key = record[0]
+                        if key not in report.keys():
+                            report[key] = [tuple([record[1], record[2], record[3]])]
+                        else:
+                            report[key].append(tuple([record[1], record[2], record[3]]))
+                    report = [(k, v) for k, v in report.items()]
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.SUCCESS, 'Thành công')
+        else:
+            date_form = DateForm()
     else:
-        date_form = DateForm()
+        return render(request, 'home.html')
     paginator = Paginator(list(report), 2)  # Show 2 contacts per page.
 
     page_number = request.GET.get("page", 1)
@@ -630,6 +663,7 @@ def reportSaleItems(request):
     return render(request, 'report_sale_items.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
+# admin, bán hàng
 @login_required(login_url='/login/')
 def reportBestSaleItems(request):
     year = datetime.now().year
@@ -665,9 +699,11 @@ def reportBestSaleItems(request):
     return render(request, 'report_best_sale_items.html', {'page_obj': page_obj})
 
 
+# admin, bán hàng trùng username
 @login_required(login_url='/login/')
 def saleHistory(request, username):
-    if request.user.role == 'admin':
+    if request.user.role == 'admin' or (
+            request.user.role == 'Nhân viên bán hàng' and request.user.username == username):
         name = User.objects.filter(username=username).first().name
         # tạo một con trỏ cho cơ sở dữ liệu
         cursor = connection.cursor()
@@ -699,6 +735,7 @@ def saleHistory(request, username):
     return render(request, 'sale_history.html', {'page_obj': page_obj, 'name': name})
 
 
+# admin
 @login_required(login_url='/login/')
 def reportSaleHistory(request):
     if request.user.role == 'admin':
@@ -733,9 +770,10 @@ def reportSaleHistory(request):
     return render(request, 'report_sale_history.html', {'page_obj': page_obj})
 
 
+# admin, kho trùng username
 @login_required(login_url='/login/')
 def importHistory(request, username):
-    if request.user.role != 'Nhân viên bán hàng':
+    if request.user.role == 'admin' or (request.user.role == 'Nhân viên kho' and request.user.username == username):
         name = User.objects.filter(username=username).first().name
         # tạo một con trỏ cho cơ sở dữ liệu
         cursor = connection.cursor()
@@ -767,6 +805,7 @@ def importHistory(request, username):
     return render(request, 'import_history.html', {'page_obj': page_obj, 'name': name})
 
 
+# admin
 @login_required(login_url='/login/')
 def reportImportHistory(request):
     if request.user.role == 'admin':
@@ -809,11 +848,13 @@ def visualization(request):
     return render(request, 'visualization.html')
 
 
+# admin
 @login_required(login_url='/login/')
-def visualizationTurnover(request):
+def visualizationBalanceSheet(request):
     if request.user.role == 'admin':
         columns_name = []
-        values = []
+        one_values = []
+        two_values = []
         if request.method == "POST":
             date_form = DateForm(request.POST)
             if date_form.is_valid():
@@ -823,7 +864,7 @@ def visualizationTurnover(request):
                 if start_date > end_date:
                     storage = messages.get_messages(request)
                     storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                    messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
                 else:
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
@@ -843,7 +884,36 @@ def visualizationTurnover(request):
 
                     for record in results:
                         columns_name.append(record[0])
-                        values.append(int(record[1]))
+                        one_values.append(int(record[1]))
+
+                    query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
+                            "from myapp_import_invoice " \
+                            "where time between '{s2}' and '{s3}'" \
+                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
+                                                                              s2=str(start_date),
+                                                                              s3=str(end_date))
+
+                    # chạy câu lệnh SQL bằng phương thức execute()
+                    cursor.execute(query)
+
+                    for record in cursor.fetchall():
+                        two_values.append(int(record[1]))
+
+                    query = "select date_format(time, '{s1}') as Month_sale, SUM(money) " \
+                            "from myapp_expense " \
+                            "where time between '{s2}' and '{s3}' " \
+                            "group by month(time) " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
+
+                    # chạy câu lệnh SQL bằng phương thức execute()
+                    cursor.execute(query)
+
+                    i = 0
+                    for record in cursor.fetchall():
+                        two_values[i] += int(record[1])
+                        i += 1
 
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -853,9 +923,11 @@ def visualizationTurnover(request):
     else:
         return render(request, 'home.html')
     return render(request, 'visualization_turnover.html',
-                  {'date_form': date_form, 'columns_name': columns_name, 'values': values})
+                  {'date_form': date_form, 'columns_name': columns_name, 'one_values': one_values,
+                   'two_values': two_values})
 
 
+# admin, bán hàng
 @login_required(login_url='/login/')
 def visualizationSaleItems(request):
     columns_name = []
@@ -901,6 +973,7 @@ def visualizationSaleItems(request):
                   {'date_form': date_form, 'columns_name': columns_name, 'values': values})
 
 
+# admin, bán hàng
 @login_required(login_url='/login/')
 def visualizationBestSaleItems(request):
     columns_name = []
@@ -939,9 +1012,11 @@ def visualizationBestSaleItems(request):
     return render(request, 'visualization_best_sale_items.html', {'columns_name': columns_name, 'values': values})
 
 
+# admin, bán hàng trùng username
 @login_required(login_url='/login/')
 def visualizationKpiUser(request, username):
-    if request.user.role == 'admin':
+    if request.user.role == 'admin' or (
+            request.user.role == 'Nhân viên bán hàng' and request.user.username == username):
         user = User.objects.filter(username=username).first()
         columns_name = []
         values = []
@@ -954,7 +1029,7 @@ def visualizationKpiUser(request, username):
                 if start_date > end_date:
                     storage = messages.get_messages(request)
                     storage.used = True
-                    messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                    messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
                 else:
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
@@ -990,6 +1065,7 @@ def visualizationKpiUser(request, username):
                                                            'columns_name': columns_name, 'values': values})
 
 
+# admin
 @login_required(login_url='/login/')
 def visualizationKpi(request):
     if request.user.role == 'admin':
@@ -1029,6 +1105,7 @@ def visualizationKpi(request):
                   {'month_form': month_form, 'columns_name': columns_name, 'values': values})
 
 
+# admin, kho
 @login_required(login_url='/login/')
 def visualizationImportFromSupplier(request):
     columns_name = []
@@ -1056,6 +1133,7 @@ def visualizationImportFromSupplier(request):
     return render(request, 'visualization_import_from_supplier.html', {'columns_name': columns_name, 'values': values})
 
 
+# admin, bán hàng
 @login_required(login_url='/login/')
 def visualizationExportToStore(request):
     columns_name = []
@@ -1083,6 +1161,7 @@ def visualizationExportToStore(request):
     return render(request, 'visualization_export_to_store.html', {'columns_name': columns_name, 'values': values})
 
 
+# kho
 @login_required(login_url='/login/')
 def importReceipt(request):
     if request.user.role == "Nhân viên kho":
@@ -1098,7 +1177,7 @@ def importReceipt(request):
                 if money > max_money:
                     storage = messages.get_messages(request)
                     storage.used = True
-                    messages.add_message(request, messages.SUCCESS, f'Số tiền không được lớn hơn {max_money}')
+                    messages.add_message(request, messages.ERROR, f'Số tiền không được lớn hơn {max_money}')
                     return render(request, 'import_receipt.html', {'import_receipt_form': import_form})
                 else:
                     import_receipt = ImportReceipt(employee_id=employee_id, invoice_id=import_invoice.invoice_id,
@@ -1117,6 +1196,7 @@ def importReceipt(request):
     return render(request, 'import_receipt.html', {'import_receipt_form': import_form})
 
 
+# bán hàng
 @login_required(login_url='/login/')
 def exportReceipt(request):
     if request.user.role == "Nhân viên bán hàng":
@@ -1132,7 +1212,7 @@ def exportReceipt(request):
                 if money > max_money:
                     storage = messages.get_messages(request)
                     storage.used = True
-                    messages.add_message(request, messages.SUCCESS, f'Số tiền không được lớn hơn {max_money}')
+                    messages.add_message(request, messages.ERROR, f'Số tiền không được lớn hơn {max_money}')
                     return render(request, 'export_receipt.html', {'export_receipt_form': export_form})
                 else:
                     delivery_receipt = DeliveryReceipt(employee_id=employee_id, invoice_id=export_invoice.invoice_id,

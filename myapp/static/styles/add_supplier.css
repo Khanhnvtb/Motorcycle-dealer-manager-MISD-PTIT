@@ -41,23 +41,77 @@ label {
 }
 
 input[type="text"], input[type="number"], textarea {
-    width: 300px;
-    padding: 5px;
-    border: 1px solid #ccc;
+    width: 270px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 0 10px;
 }
 
 input[type="file"] {
-    width: auto;
+    width: 310px;
 }
-
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.form-container {
+    width: 420px;
+    padding: 0 40px;
+    background: #CBECE2;
+    border: 2px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+.add-text {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: #380A9B;
+}
+p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 25px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between
+}
+.add-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 input[type="submit"] {
-    width: 100px;
-    margin-left: 100px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
+    width: 255px;
+    height: 56px;
+    background: #4CCEA7;
+    border-radius: 10px;
     cursor: pointer;
+    margin: 0 auto;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+
+color: #380A9B;
 }
 
 input[type="submit"]:hover {
@@ -65,14 +119,14 @@ input[type="submit"]:hover {
 }
 
 a {
-    display: inline-block;
-    margin-left: 100px;
-    padding: 10px;
-    background-color: #2196F3;
-    color: white;
-    text-decoration: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
 }
 
 a:hover {
-    opacity: 0.8;
+    color: blue;
 }

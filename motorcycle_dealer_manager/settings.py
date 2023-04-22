@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'myapp.apps.MyappConfig',
 ]
 
@@ -80,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'motorcycle_manager',
         'USER': 'root',
-        'PASSWORD': 'phuy2712',
+        'PASSWORD': 'khanhnvtb',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {

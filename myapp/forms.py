@@ -39,6 +39,7 @@ def get_year_choices():
         year_choice.append(tuple([i, i]))
     return year_choice
 
+
 month_choice = [
     ('1', 1),
     ('2', 2),
@@ -184,7 +185,8 @@ class DateForm(forms.Form):
     start_year = forms.ChoiceField(choices=[], label='Năm bắt đầu: ', help_text='Chọn một năm từ danh sách', )
     end_month = forms.ChoiceField(choices=month_choice, label='Tháng kết thúc: ',
                                   help_text='Chọn một tháng từ danh sách', )
-    end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )   
+    end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )
+
     def __init__(self, *args, **kwargs):
         super(DateForm, self).__init__(*args, **kwargs)
         # gọi hàm get_year_choices và gán kết quả cho choices
@@ -214,9 +216,9 @@ class DebtForm(forms.Form):
 
 class ImportReceiptForm(forms.Form):
     import_invoice = forms.ModelChoiceField(queryset=Import_Invoice.objects.all(), label='Đơn nhập',
-                                     help_text='Chọn một nhà đơn nhập từ danh sách',
-                                     error_messages={
-                                         'required': 'Bạn phải chọn đơn nhập'})
+                                            help_text='Chọn một nhà đơn nhập từ danh sách',
+                                            error_messages={
+                                                'required': 'Bạn phải chọn đơn nhập'})
     money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
@@ -226,9 +228,9 @@ class ImportReceiptForm(forms.Form):
 
 class ExportReceiptForm(forms.Form):
     delivery_invoice = forms.ModelChoiceField(queryset=Delivery_Invoice.objects.all(), label='Đơn nhập',
-                                            help_text='Chọn một nhà đơn nhập từ danh sách',
-                                            error_messages={
-                                                'required': 'Bạn phải chọn đơn nhập'})
+                                              help_text='Chọn một nhà đơn nhập từ danh sách',
+                                              error_messages={
+                                                  'required': 'Bạn phải chọn đơn nhập'})
     money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',

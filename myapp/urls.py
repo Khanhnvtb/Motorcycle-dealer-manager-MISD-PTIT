@@ -35,7 +35,7 @@ urlpatterns = [
     path('export_motor/', views.exportMotor, name='export_motor'),
 
     path('report/', views.reportView, name='report'),
-    path('report_turnover/', views.reportTurnover, name='report_turnover'),
+    path('report_balance_sheet/', views.reportBalanceSheet, name='report_balance_sheet'),
     path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
     path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
     path('sale_history/<str:username>/', views.saleHistory, name='sale_history'),
@@ -43,10 +43,8 @@ urlpatterns = [
     path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
     path('report_import_history/', views.reportImportHistory, name='report_import_history'),
 
-    # path('motors/', views.getMotorByAPI,),
-    
     path('visualization/', views.visualization, name='visualization'),
-    path('visualization_turnover/', views.visualizationTurnover, name='visualization_turnover'),
+    path('visualization_balance_sheet/', views.visualizationBalanceSheet, name='visualization_balance_sheet'),
     path('visualization_sale_items/', views.visualizationSaleItems, name='visualization_sale_items'),
     path('visualization_best_sale_items/', views.visualizationBestSaleItems, name='visualization_best_sale_items'),
     path('visualization_kpi_user/<str:username>/', views.visualizationKpiUser, name='visualization_kpi_user'),
