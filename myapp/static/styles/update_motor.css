@@ -6,44 +6,85 @@ ul.messages li {
 
 /* Định dạng cho tiêu đề */
 h1 {
-    color: blue;
+    color: orange;
     text-align: center;
-    font-family: Arial, sans-serif;
+    font-family: Verdana, sans-serif;
 }
 
 /* Định dạng cho form */
 form {
-    border: 1px solid black;
+    border: 2px dashed orange;
     padding: 20px;
     margin: 0 auto;
     width: 400px;
 }
 
-/* Định dạng cho các phần tử p trong form */
-form p {
+/* Định dạng cho các phần tử li trong form */
+form li {
     font-size: 18px;
+    line-height: 1.5;
 }
 
 /* Định dạng cho nút submit */
 input[type=submit] {
-    background-color: blue;
+    background-color: orange;
     color: white;
     border-radius: 10px;
+    width: 220px;
+    padding: 10px;
+    border: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
 }
-
+input[type=submit]:hover {
+    background-color: pink;
+}
+.add {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 /* Định dạng cho liên kết */
 a {
     display: block;
     width: 200px;
     margin: 20px auto;
-    background-color: green;
+    background-color: orange;
     color: white;
     text-decoration: none;
     text-align: center;
     padding: 10px;
+    border-radius: 10px;
 }
 
 /* Thay đổi màu nền khi di chuột qua liên kết */
 a:hover {
-    background-color: lime;
+    background-color: pink;
+}
+input[type="file"] {
+    width: 290px;
+}
+input[type="text"], input[type="number"], input[type="password"], input[type="email"], textarea {
+    width: 270px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 0 10px;
+}
+p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.update {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }

@@ -18,7 +18,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/report_turnover/" method="post">{% csrf_token %}
+<form action="/report_balance_sheet/" method="post">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -34,11 +34,13 @@
     <tr>
         <th>Thời gian</th>
         <th>Doanh thu</th>
+        <th>Tổng chi</th>
     </tr>
     {% for record in page_obj %}
     <tr>
         <td>{{ record.0 }}</td>
         <td>{{ record.1 }}</td>
+        <td>{{ record.2 }}</td>
     </tr>
     {% endfor %}
 </table>

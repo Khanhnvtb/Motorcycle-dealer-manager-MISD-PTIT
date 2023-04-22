@@ -16,7 +16,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_turnover/" method="post">{% csrf_token %}
+<form action="/visualization_balance_sheet/" method="post">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -35,36 +35,62 @@
 
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
-
-    // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
-    console.log(data);
-    // Tạo biểu đồ cột sử dụng chart js
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Biểu đồ thể hiện số lượng hàng bán ra',
-                data: data,
-                backgroundColor: 'rgba(99,107,255,0.2)',
-                borderColor: 'rgb(99,143,255)',
-                borderWidth: 1,
-            }]
+    console.log({{one_value | safe}});
+    var data = {
+        labels: {{columns_name | safe}}, // tên cột
+        datasets: [
+        {
+            label: "Thu", // tên dataset
+            data: {{one_values | safe}}, // list data cho thu
+            backgroundColor: "rgba(255, 99, 132, 0.2)", // màu nền
+            borderColor: "rgba(255, 99, 132, 1)", // màu viền
+            borderWidth: 1, // độ dày viền
+            {% comment %} yAxisID: "y1", // id của trục y cho thu {% endcomment %}
         },
+        {
+            label: "Chi", // tên dataset
+            data:{{two_values | safe}}, // list data cho chi
+            backgroundColor: "rgba(54, 162, 235, 0.2)", // màu nền
+            borderColor: "rgba(54, 162, 235, 1)", // màu viền
+            borderWidth: 1, // độ dày viền
+            {% comment %} yAxisID: "y2", // id của trục y cho chi {% endcomment %}
+        },
+    ],
+    };
+    var options = {
+        type: "bar", // loại biểu đồ
+        data: data, // dữ liệu
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                },
-                xAxes: [{
-                    barThickness : 10
-                }]
+            responsive: true, // tự điều chỉnh kích thước
+            plugins: {
+            legend: {
+                display: true, // hiển thị chú thích
             },
-            
-        }
-    })
+            title: {
+                display: true, // hiển thị tiêu đề
+                text: "Biểu đồ thu chi", // nội dung tiêu đề
+            },
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true, // hiển thị tên trục x
+                        text: "Tháng", // nội dung tên trục x
+                    },
+                },
+                y: {
+                    title: {
+                        display: true, // hiển thị tên trục y1
+                        text: "Tiền", // nội dung tên trục y1
+                    },
+                    position: "left", // vị trí bên trái của biểu đồ
+                    beginAtZero: true,
+                },
+            },
+        },
+    };
+
+    var myChart = new Chart(ctx, options);
 </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
 {% endif %}
 </body>

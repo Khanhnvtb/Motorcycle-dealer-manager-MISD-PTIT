@@ -6,9 +6,15 @@ ul.messages li {
 
 /* Định dạng cho nút submit */
 input[type=submit] {
-    background-color: blue;
-    color: white;
+    width: 100px;
+    height: 40px;
+    background: #98a09e;
     border-radius: 10px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
 }
 
 /* Định dạng cho bảng */
@@ -17,4 +23,44 @@ table {
     border-spacing: 0;
     text-align: center;
     vertical-align: middle;
+}
+
+body {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+select {
+    width: 400px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin: 5px 0px;
+}
+.total {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+}
+form {
+    width: 400px;
+}
+.submit {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }

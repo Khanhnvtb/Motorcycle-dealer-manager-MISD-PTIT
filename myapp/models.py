@@ -126,11 +126,3 @@ class Expense(models.Model):
     money = models.BigIntegerField(default=0, blank=False, null=False)
     type = models.CharField(max_length=100, blank=False, null=False)
     note = models.CharField(max_length=100, blank=True, null=True)
-
-class MotorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Motor
-        fields = '__all__'
-
-class MotorListSerializer(serializers.ListSerializer):
-    child = MotorSerializer()

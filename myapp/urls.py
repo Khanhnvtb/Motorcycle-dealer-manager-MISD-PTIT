@@ -35,22 +35,14 @@ urlpatterns = [
     path('export_motor/', views.exportMotor, name='export_motor'),
 
     path('report/', views.reportView, name='report'),
-    # Admin
-    path('report_turnover/', views.reportTurnover, name='report_turnover'),
+    path('report_balance_sheet/', views.reportBalanceSheet, name='report_balance_sheet'),
     path('report_sale_items/', views.reportSaleItems, name='report_sale_items'),
     path('report_best_sale_items/', views.reportBestSaleItems, name='report_best_sale_items'),
 
-    # Admin, Bán hàng
-    path('sale_history/<str:username>/', views.saleHistory, name='sale_history'),
-    path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
-
-    # Admin, Kho
-    path('import_history/<str:username>/', views.importHistory, name='import_history'),
-    path('report_import_history/', views.reportImportHistory, name='report_import_history'),
-    
     path('visualization/', views.visualization, name='visualization'),
-    # Admin
-    path('visualization_turnover/', views.visualizationTurnover, name='visualization_turnover'),
+    path('visualization_balance_sheet/', views.visualizationBalanceSheet, name='visualization_balance_sheet'),
+    path('visualization_sale_items/', views.visualizationSaleItems, name='visualization_sale_items'),
+    path('visualization_best_sale_items/', views.visualizationBestSaleItems, name='visualization_best_sale_items'),
     path('visualization_kpi_user/<str:username>/', views.visualizationKpiUser, name='visualization_kpi_user'),
     path('visualization_kpi/', views.visualizationKpi, name='visualization_kpi'),
 
