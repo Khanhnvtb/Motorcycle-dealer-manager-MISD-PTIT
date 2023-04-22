@@ -43,7 +43,7 @@
         <th>Tên xe</th>
         <th>Số lượng</th>
     </tr>
-    {% for record in report %}
+    {% for record in page_obj %}
     <tr colspan="4">
         <td rowspan="{{ record.1|length }}">{{ record.0 }}</td>
         {% for sale_item in record.1 %}
@@ -56,6 +56,22 @@
     {% endfor %} {% endfor %}
 </table>
 {% endif %}
+<div class="pagination"> <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    {% endif %}
+
+    <span class="current">
+        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+    {% endif %}
+</span>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/report_sale_items.js' %}"></script>
 </body>

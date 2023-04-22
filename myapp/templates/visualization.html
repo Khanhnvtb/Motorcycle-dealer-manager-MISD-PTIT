@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Visualization</title>
+        <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
+</head>
+<body>
+<a href="/visualization_turnover/">Trực quan doanh thu theo tháng</a>
+<a href="/visualization_sale_items/">Trực quan mặt hàng đã bán ra theo tháng</a>
+<a href="/visualization_best_sale_items/">Trực quan mặt hàng bán chạy</a>
+<a href="/visualization_kpi/">Trực quan doanh số bán ra của nhân viên</a>
+<a href="/visualization_import_from_supplier/">Trực quan số lượng hàng đã nhập của từng nhà cung cấp</a>
+<a href="/visualization_export_to_store/">Trực quan số lượng hàng đã bán cho từng cửa hàng</a>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/visualization.js' %}"></script>
+</body>
+</html>

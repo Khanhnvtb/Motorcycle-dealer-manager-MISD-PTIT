@@ -37,3 +37,8 @@ a {
 a:hover {
     opacity: 0.8;
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}

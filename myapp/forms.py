@@ -37,6 +37,29 @@ def get_year_choices():
         year_choice.append(tuple([i, i]))
     return year_choice
 
+month_choice = [
+    ('1', 1),
+    ('2', 2),
+    ('3', 3),
+    ('4', 4),
+    ('5', 5),
+    ('6', 6),
+    ('7', 7),
+    ('8', 8),
+    ('9', 9),
+    ('10', 10),
+    ('11', 11),
+    ('12', 12),
+]
+
+
+def get_year_choices():
+    year_choice = []
+    curr_year = datetime.today().year
+    for i in range(curr_year, -1, -1):
+        year_choice.append(tuple([i, i]))
+    return year_choice
+
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -57,7 +80,7 @@ class UserForm(forms.ModelForm):
             'is_superuser': forms.HiddenInput(attrs={'value': 0}),
             'first_name': forms.HiddenInput(attrs={'value': ''}),
             'last_name': forms.HiddenInput(attrs={'value': ''}),
-            'is_staff': forms.HiddenInput(attrs={'value': 0}),
+            'is_staff': forms.HiddenInput(attrs={'value': 1}),
             'is_active': forms.HiddenInput(attrs={'value': 1}),
             'date_joined': forms.HiddenInput(attrs={'value': datetime.now()}),
         }
@@ -152,9 +175,11 @@ class ExportForm(forms.Form):
 
 
 class DateForm(forms.Form):
-    start_month = forms.ChoiceField(choices=month_choice, label='Tháng bắt đầu: ', help_text='Chọn một tháng từ danh sách', )
+    start_month = forms.ChoiceField(choices=month_choice, label='Tháng bắt đầu: ',
+                                    help_text='Chọn một tháng từ danh sách', )
     start_year = forms.ChoiceField(choices=[], label='Năm bắt đầu: ', help_text='Chọn một năm từ danh sách', )
-    end_month = forms.ChoiceField(choices=month_choice, label='Tháng kết thúc: ', help_text='Chọn một tháng từ danh sách', )
+    end_month = forms.ChoiceField(choices=month_choice, label='Tháng kết thúc: ',
+                                  help_text='Chọn một tháng từ danh sách', )
     end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )
 
     def __init__(self, *args, **kwargs):
@@ -162,3 +187,13 @@ class DateForm(forms.Form):
         # gọi hàm get_year_choices và gán kết quả cho choices
         self.fields['start_year'].choices = get_year_choices()
         self.fields['end_year'].choices = get_year_choices()
+
+
+class MonthForm(forms.Form):
+    month = forms.ChoiceField(choices=month_choice, label='Tháng: ', help_text='Chọn một tháng từ danh sách', )
+    year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách', )
+
+    def __init__(self, *args, **kwargs):
+        super(MonthForm, self).__init__(*args, **kwargs)
+        # gọi hàm get_year_choices và gán kết quả cho choices
+        self.fields['year'].choices = get_year_choices()

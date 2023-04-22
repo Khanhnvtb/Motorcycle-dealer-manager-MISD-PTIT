@@ -16,6 +16,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=50, blank=False, null=False)
     role = models.CharField(max_length=20, blank=False, null=False)
     salary = models.IntegerField(default=0, blank=False, null=False)
+    is_staff = models.IntegerField(default=1, blank=False, null=False)
 
 
 class Supplier(models.Model):
