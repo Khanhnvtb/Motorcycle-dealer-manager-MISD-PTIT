@@ -1,7 +1,9 @@
 from django import forms
 from django.utils.datetime_safe import datetime
 from django.core.validators import MinValueValidator
+
 from .models import *
+from datetime import date
 
 gender_choice = [
     ('Nam', 'Nam'),
@@ -113,6 +115,8 @@ class SupplierForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'address'}),
             'phone': forms.TextInput(attrs={'class': 'phone'}),
             'email': forms.TextInput(attrs={'class': 'email'}),
+            'transport_price': forms.TextInput(attrs={'class': 'transport_price'}),
+            'delivery_day': forms.TextInput(attrs={'class': 'delivery_day'}),
         }
 
 
@@ -196,3 +200,37 @@ class MonthForm(forms.Form):
         super(MonthForm, self).__init__(*args, **kwargs)
         # gọi hàm get_year_choices và gán kết quả cho choices
         self.fields['year'].choices = get_year_choices()
+
+
+class DebtForm(forms.Form):
+    debt_term = forms.DateField(validators=[MinValueValidator(date.today())], label='Ngày hết hạn: ',
+                                help_text='Chọn ngày hết hạn',
+                                error_messages={
+                                    'required': 'Bạn phải nhập vào một ngày',
+                                    'invalid': 'Bạn phải nhập theo định dạng ngày',
+                                    'min_value': 'Không được nhập ngày nhỏ hơn hôm nay',
+                                })
+
+
+class ImportReceiptForm(forms.Form):
+    import_invoice = forms.ModelChoiceField(queryset=Import_Invoice.objects.all(), label='Đơn nhập',
+                                     help_text='Chọn một nhà đơn nhập từ danh sách',
+                                     error_messages={
+                                         'required': 'Bạn phải chọn đơn nhập'})
+    money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
+                               error_messages={
+                                   'required': 'Bạn phải nhập vào số tiền',
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', })
+    note = forms.CharField(label='Ghi chú: ', required=False)
+
+
+class ExportReceiptForm(forms.Form):
+    delivery_invoice = forms.ModelChoiceField(queryset=Delivery_Invoice.objects.all(), label='Đơn nhập',
+                                            help_text='Chọn một nhà đơn nhập từ danh sách',
+                                            error_messages={
+                                                'required': 'Bạn phải chọn đơn nhập'})
+    money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
+                               error_messages={
+                                   'required': 'Bạn phải nhập vào số tiền',
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', })
+    note = forms.CharField(label='Ghi chú: ', required=False)

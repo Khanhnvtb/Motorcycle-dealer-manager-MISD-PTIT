@@ -103,9 +103,13 @@ def deleteUser(request, username):
         storage.used = True
         messages.add_message(request, messages.SUCCESS, 'Xoá người dùng thành công')
         users = User.objects.all()
+        paginator = Paginator(users, 10)  # Show 10 contacts per page.
+
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
     else:
         return render(request, 'home.html')
-    return render(request, 'user_manager.html', {'users': users})
+    return render(request, 'user_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -161,7 +165,11 @@ def deleteMotor(request, motor_id):
         motors = Motor.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'motor_manager.html', {'motors': motors})
+    paginator = Paginator(motors, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'motor_manager.html', {"page_obj": page_obj})
 
 
 @login_required(login_url='/login/')
@@ -216,7 +224,11 @@ def deleteStore(request, store_id):
         messages.add_message(request, messages.SUCCESS, 'Xóa cửa hàng thành công', )
     else:
         return render(request, 'home.html')
-    return render(request, 'store_manager.html', {'stores': stores})
+    paginator = Paginator(stores, 20)  # Show 20 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'store_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -271,7 +283,11 @@ def deleteSupplier(request, supplier_id):
         suppliers = Supplier.objects.all()
     else:
         return render(request, 'home.html')
-    return render(request, 'supplier_manager.html', {'suppliers': suppliers})
+    paginator = Paginator(suppliers, 25)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'supplier_manager.html', {'page_obj': page_obj})
 
 
 @login_required(login_url='/login/')
@@ -384,9 +400,10 @@ def importMotor(request):
         ImportFormSet = formset_factory(ImportForm, extra=5)
         import_forms = ImportFormSet(request.POST or None)
         supplier_form = ImportFromSupplierFrom(request.POST or None)
-
-        if supplier_form.is_valid() and import_forms.is_valid():
+        debt_form = DebtForm(request.POST or None)
+        if supplier_form.is_valid() and debt_form.is_valid() and import_forms.is_valid():
             supplier = supplier_form.cleaned_data['supplier']
+            debt_term = debt_form.cleaned_data['debt_term']
             total = 0
             import_dict = {}
             for import_form in import_forms:
@@ -398,28 +415,31 @@ def importMotor(request):
                         import_dict[motor] += quantity
                     else:
                         import_dict[motor] = quantity
-            import_invoice = Import_Invoice(total=total, employee_id=request.user.id, supplier_id=supplier.supplier_id)
-            import_invoice.save()
-            for motor in import_dict.keys():
-                quantity = import_dict[motor]
-                motor.quantity += quantity
-                motor.save()
-                import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
-                                            motor_id=motor.motor_id,
-                                            quantity=quantity)
-                import_motor.save()
-            if len(import_dict):
+            if total == 0:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần nhập')
+            else:
+                import_invoice = Import_Invoice(total=total, employee_id=request.user.id,
+                                                supplier_id=supplier.supplier_id,
+                                                debt_term=debt_term)
+                import_invoice.save()
+                for motor in import_dict.keys():
+                    quantity = import_dict[motor]
+                    motor.quantity += quantity
+                    motor.save()
+                    import_motor = Import_Motor(invoice_id=import_invoice.invoice_id,
+                                                motor_id=motor.motor_id,
+                                                quantity=quantity)
+                    import_motor.save()
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.SUCCESS, 'Nhập hàng thàng công')
                 import_forms = ImportFormSet()
-                supplier_form = ImportFromSupplierFrom()
-            else:
-                storage = messages.get_messages(request)
-                storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần nhập')
+
         context['import_forms'] = import_forms
         context['supplier_form'] = supplier_form
+        context['debt_form'] = debt_form
     else:
         return render(request, 'home.html')
     return render(request, "import_motor.html", context)
@@ -434,9 +454,10 @@ def exportMotor(request):
         ExportFormSet = formset_factory(ExportForm, extra=5)
         export_forms = ExportFormSet(request.POST or None)
         store_form = ExportToStoreForm(request.POST or None)
-
-        if store_form.is_valid() and export_forms.is_valid():
+        debt_form = DebtForm(request.POST or None)
+        if store_form.is_valid() and debt_form.is_valid() and export_forms.is_valid():
             store = store_form.cleaned_data['store']
+            debt_term = debt_form.cleaned_data['debt_term']
             total = 0
             export_dict = {}
             for export_form in export_forms:
@@ -448,40 +469,42 @@ def exportMotor(request):
                         export_dict[motor] += quantity
                     else:
                         export_dict[motor] = quantity
-            for motor in export_dict.keys():
-                quantity = export_dict[motor]
-                if motor.quantity < quantity:
-                    storage = messages.get_messages(request)
-                    storage.used = True
-                    messages.add_message(request, messages.SUCCESS,
-                                         f'Số lượng {motor} trong kho chỉ còn {motor.quantity}')
-                    context['export_forms'] = export_forms
-                    context['store_form'] = store_form
-                    return render(request, "export_motor.html", context)
-            delivery_invoice = Delivery_Invoice(total=total,
-                                                employee_id=request.user.id,
-                                                store_id=store.store_id)
-            delivery_invoice.save()
-            for motor in export_dict.keys():
-                quantity = export_dict[motor]
-                motor.quantity -= quantity
-                motor.save()
-                delivery_motor = Delivery_Motor(invoice_id=delivery_invoice.invoice_id,
-                                                motor_id=motor.motor_id,
-                                                quantity=quantity)
-                delivery_motor.save()
-            if len(export_dict):
+            if total == 0:
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần xuất')
+            else:
+                for motor in export_dict.keys():
+                    quantity = export_dict[motor]
+                    if motor.quantity < quantity:
+                        storage = messages.get_messages(request)
+                        storage.used = True
+                        messages.add_message(request, messages.SUCCESS,
+                                             f'Số lượng {motor} trong kho chỉ còn {motor.quantity}')
+                        context['export_forms'] = export_forms
+                        context['store_form'] = store_form
+                        return render(request, "export_motor.html", context)
+                delivery_invoice = Delivery_Invoice(total=total,
+                                                    employee_id=request.user.id,
+                                                    store_id=store.store_id, debt_term=debt_term)
+                delivery_invoice.save()
+                for motor in export_dict.keys():
+                    quantity = export_dict[motor]
+                    motor.quantity -= quantity
+                    motor.save()
+                    delivery_motor = Delivery_Motor(invoice_id=delivery_invoice.invoice_id,
+                                                    motor_id=motor.motor_id,
+                                                    quantity=quantity)
+                    delivery_motor.save()
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.SUCCESS, 'Xuất hàng thàng công')
                 export_forms = ExportFormSet()
                 store_form = ExportToStoreForm()
-            else:
-                storage = messages.get_messages(request)
-                storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Bạn chưa chọn các sản phẩm cần xuất')
+
         context['export_forms'] = export_forms
         context['store_form'] = store_form
+        context['debt_form'] = debt_form
     else:
         return render(request, 'home.html')
     return render(request, "export_motor.html", context)
@@ -1058,3 +1081,71 @@ def visualizationExportToStore(request):
         values.append(int(record[1]))
 
     return render(request, 'visualization_export_to_store.html', {'columns_name': columns_name, 'values': values})
+
+
+@login_required(login_url='/login/')
+def importReceipt(request):
+    if request.user.role == "Nhân viên kho":
+        if request.method == "POST":
+            import_form = ImportReceiptForm(request.POST)
+            if import_form.is_valid():
+                employee_id = request.user.id
+                import_invoice = import_form.cleaned_data.get('import_invoice')
+                time = date.today()
+                money = import_form.cleaned_data.get('money')
+                note = import_form.cleaned_data.get('note')
+                max_money = import_invoice.total - import_invoice.payment
+                if money > max_money:
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.SUCCESS, f'Số tiền không được lớn hơn {max_money}')
+                    return render(request, 'import_receipt.html', {'import_receipt_form': import_form})
+                else:
+                    import_receipt = ImportReceipt(employee_id=employee_id, invoice_id=import_invoice.invoice_id,
+                                                   time=time, money=money, note=note)
+                    import_receipt.save()
+                    import_invoice.payment += money
+                    import_invoice.save()
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.SUCCESS, 'Thanh toán thành công')
+                    import_form = ImportReceiptForm()
+        else:
+            import_form = ImportReceiptForm()
+    else:
+        return render(request, 'home.html')
+    return render(request, 'import_receipt.html', {'import_receipt_form': import_form})
+
+
+@login_required(login_url='/login/')
+def exportReceipt(request):
+    if request.user.role == "Nhân viên bán hàng":
+        if request.method == "POST":
+            export_form = ExportReceiptForm(request.POST)
+            if export_form.is_valid():
+                employee_id = request.user.id
+                export_invoice = export_form.cleaned_data.get('delivery_invoice')
+                time = date.today()
+                money = export_form.cleaned_data.get('money')
+                note = export_form.cleaned_data.get('note')
+                max_money = export_invoice.total - export_invoice.payment
+                if money > max_money:
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.SUCCESS, f'Số tiền không được lớn hơn {max_money}')
+                    return render(request, 'export_receipt.html', {'export_receipt_form': export_form})
+                else:
+                    delivery_receipt = DeliveryReceipt(employee_id=employee_id, invoice_id=export_invoice.invoice_id,
+                                                       time=time, money=money, note=note)
+                    delivery_receipt.save()
+                    export_invoice.payment += money
+                    export_invoice.save()
+                    storage = messages.get_messages(request)
+                    storage.used = True
+                    messages.add_message(request, messages.SUCCESS, 'Thanh toán thành công')
+                    export_form = ExportReceiptForm()
+        else:
+            export_form = ExportReceiptForm()
+    else:
+        return render(request, 'home.html')
+    return render(request, 'export_receipt.html', {'export_receipt_form': export_form})

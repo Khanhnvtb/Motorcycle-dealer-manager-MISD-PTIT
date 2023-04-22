@@ -54,4 +54,7 @@ urlpatterns = [
     path('visualization_import_from_supplier/', views.visualizationImportFromSupplier,
          name='visualization_import_from_supplier'),
     path('visualization_export_to_store/', views.visualizationExportToStore, name='visualization_export_to_store'),
+
+    path('import_receipt/', views.importReceipt, name='import_receipt'),
+    path('export_receipt/', views.exportReceipt, name='export_receipt'),
 ]
