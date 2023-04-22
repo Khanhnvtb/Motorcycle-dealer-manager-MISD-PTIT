@@ -180,8 +180,7 @@ class DateForm(forms.Form):
     start_year = forms.ChoiceField(choices=[], label='Năm bắt đầu: ', help_text='Chọn một năm từ danh sách', )
     end_month = forms.ChoiceField(choices=month_choice, label='Tháng kết thúc: ',
                                   help_text='Chọn một tháng từ danh sách', )
-    end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )
-
+    end_year = forms.ChoiceField(choices=[], label='Năm kết thúc: ', help_text='Chọn một năm từ danh sách', )   
     def __init__(self, *args, **kwargs):
         super(DateForm, self).__init__(*args, **kwargs)
         # gọi hàm get_year_choices và gán kết quả cho choices

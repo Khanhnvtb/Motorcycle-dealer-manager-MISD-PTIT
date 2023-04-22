@@ -32,13 +32,14 @@
     <canvas id="myChart" height="90"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
     var labels = {{ columns_name | safe }}; // một list chứa các tên cột
     var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
-
+    console.log(data);
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -56,8 +57,12 @@
             scales: {
                 y: {
                     beginAtZero: true
-                }
-            }
+                },
+                xAxes: [{
+                    barThickness : 10
+                }]
+            },
+            
         }
     })
 </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->

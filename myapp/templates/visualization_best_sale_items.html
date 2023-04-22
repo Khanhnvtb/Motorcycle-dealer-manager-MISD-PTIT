@@ -1,54 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Visualization best sale items</title>
+    <style>
+        .chart {
+            width: 700px;
+            max-width: 700px;
+            overflow-x: scroll;
+        }
+        .chart-body {
+            height: 500px;
+            width: 1500px;
+        }
+    </style>
 </head>
+
 <body>
-<div style="width: 600px;height: 500px;">
-    <canvas id="myChart"  ></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2 "></script>
+    <div class='chart'>
+        <div class='chart-body'>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2 "></script>
 
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
 
-    // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe}}; // một list chứa các tên cột
-    var data = {{values | safe}}; // một list chứa giá trị là các số nguyên
+        // Tạo biến để lưu trữ dữ liệu từ context của django
+        var labels = {{ columns_name | safe }}; // một list chứa các tên cột
+        var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
 
-    // Tạo biểu đồ cột sử dụng chart js
-    var myChart = new Chart(ctx, {
+        labels = labels.map(function (item) {
+            return item.split(' ');
+        });
+        console.log(labels);
+        // Tạo biểu đồ cột sử dụng chart js
+        var myChart = new Chart(ctx, {
         type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Biểu đồ thể hiện mặt hàng bán chạy',
-                data: data,
-                backgroundColor: 'rgba(99,107,255,0.2)',
-                borderColor: 'rgb(99,143,255)',
-                borderWidth: 1,
-                barPercentage: 0.4,
-                datalabels: {
-                    color: 'red',
-                    anchor: 'end',
-                    align: 'top',
-                }
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượng',
+                    data: data,
+                    backgroundColor: 'rgba(99,107,255,0.2)',
+                    borderColor: 'rgb(99,143,255)',
+                    borderWidth: 1,
+                    barThickness: 50
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true
                 }
-            },
-        },
-        plugins: [ChartDataLabels]
-    })
-</script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
+            }
+        }
+        })
+
+        {% comment %} var chart_body = document.query('').getContext('2d'); {% endcomment %}
+    </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
 </body>
+
 </html>
