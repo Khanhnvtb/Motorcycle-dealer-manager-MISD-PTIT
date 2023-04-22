@@ -4,18 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization sale items</title>
-        <style>
-            .chart {
-                width: 700px;
-                max-width: 700px;
-                overflow-x: scroll;
-                border: 1px solid #ccc;
-            }
-
-            .chart-body {
-                height: 500px;
-            }
-        </style>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -81,14 +71,34 @@
         },
         options: {
             maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true, // hiển thị chú thích
+                },
+                title: {
+                    display: true, // hiển thị tiêu đề
+                    text: "Biểu đồ doanh số sản phẩm", // nội dung tiêu đề
+                },
+            },
             scales: {
+                x: {
+                    title: {
+                    display: true, // hiển thị tên trục x
+                    text: "Tháng", // nội dung tên trục x
+                    },
+                },
                 y: {
-                    beginAtZero: true
-                }
+                    title: {
+                        display: true, // hiển thị tên trục y1
+                        text: "Tiền", // nội dung tên trục y1
+                    },
+                    position: "left", // vị trí bên trái của biểu đồ
+                    beginAtZero: true,
+                },
             },
         },
-        plugins: [ChartDataLabels]
-    })
+        plugins: [ChartDataLabels],
+    });
 
     var chartBody = document.querySelector('.chart-body');
     const totalLabels = labels.length;

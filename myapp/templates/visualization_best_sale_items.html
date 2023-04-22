@@ -5,17 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization best sale items</title>
-    <style>
-        .chart {
-            width: 700px;
-            max-width: 700px;
-            overflow-x: scroll;
-        }
-        .chart-body {
-            height: 500px;
-            width: 1500px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
 </head>
 
 <body>
@@ -31,16 +22,16 @@
         var ctx = document.getElementById('myChart').getContext('2d');
 
         // Tạo biến để lưu trữ dữ liệu từ context của django
-        var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-        var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
+    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
+    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
 
-        labels = labels.map(function (item) {
+        labels = labels.map(function(item) {
             return item.split(' ');
         });
         console.log(labels);
         // Tạo biểu đồ cột sử dụng chart js
         var myChart = new Chart(ctx, {
-        type: 'bar',
+            type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
@@ -49,19 +40,39 @@
                     backgroundColor: 'rgba(99,107,255,0.2)',
                     borderColor: 'rgb(99,143,255)',
                     borderWidth: 1,
-                    barThickness: 50
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+                    barPercentage: 0.5,
+                    barThickness: 100,
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                    }
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true, // hiển thị chú thích
+                    },
+                    title: {
+                        display: true, // hiển thị tiêu đề
+                        text: "Biểu đồ sản phẩm bán chạy", // nội dung tiêu đề
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-            }
-        }
+            },
+            plugins: [ChartDataLabels],
         })
 
-        {% comment %} var chart_body = document.query('').getContext('2d'); {% endcomment %}
+        var chartBody = document.querySelector('.chart-body');
+        const totalLabels = labels.length;
+        if (totalLabels > 10) {
+            chartBody.style.width = totalLabels * 100 + 'px';
+        }
     </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
 </body>
 

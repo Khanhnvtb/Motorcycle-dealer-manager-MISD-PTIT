@@ -6,26 +6,35 @@ ul.messages li {
 
 /* Định dạng cho tiêu đề */
 h1 {
-    color: orange;
     text-align: center;
     font-family: Arial, sans-serif;
 }
 
 /* Định dạng cho các liên kết */
+td div {
+    display: flex;
+    justify-content: center;
+}
+
 a {
-    display: inline-block;
-    width: 100px;
     margin: 10px;
-    background-color: orange;
+    background-color: var(--blue);
     color: white;
     text-decoration: none;
     text-align: center;
     padding: 10px;
+    border-radius: 4px;
 }
 
 /* Thay đổi màu nền khi di chuột qua liên kết */
 a:hover {
-    background-color: yellow;
+    background-color: var(--light-blue);
+}
+
+.search {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 /* Định dạng cho form */
@@ -36,25 +45,36 @@ form {
 }
 
 /* Định dạng cho ô nhập liệu */
-input[type=text] {
+input[type="text"] {
     border: 1px solid black;
     padding: 5px;
+    border-radius: 4px;
+    width: 250px;
 }
 
 /* Định dạng cho nút submit */
-input[type=submit] {
-    background-color: orange;
+input[type="submit"] {
+    background-color: var(--blue);
     color: white;
-    border-radius: 10px;
+    border-radius: 4px;
+    border: none;
+    padding: 6px 16px;
     margin-left: 10px;
 }
-
+input[type="submit"]:hover {
+    background-color: var(--light-blue);
+    cursor: pointer;
+}
 /* Định dạng cho bảng */
 table {
     border-collapse: collapse;
-    margin: 0 auto;
+    margin: 16px 0;
+    border-radius: 8px;
 }
 
+tbody {
+    border-radius: 8px;
+}
 /* Định dạng cho các ô trong bảng */
 td {
     border: 1px solid black;

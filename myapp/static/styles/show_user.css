@@ -1,6 +1,6 @@
 /* Định dạng cho tiêu đề */
 h1 {
-    color: orange;
+    color: rgb(251, 167, 49);
     text-align: center;
     font-family: Arial, sans-serif;
 }
@@ -27,7 +27,7 @@ a {
     display: block;
     width: 200px;
     margin: 20px auto;
-    background-color: orange;
+    background-color: #ff6200;
     color: white;
     text-decoration: none;
     text-align: center;

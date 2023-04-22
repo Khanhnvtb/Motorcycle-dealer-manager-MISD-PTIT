@@ -1,62 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Visualization kpi</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
 </head>
-<body>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-<form action="/visualization_kpi/" method="post">{% csrf_token %}
-    <p>Chọn thời gian:</p>
-    <p>{{ month_form.month.label }} {{ month_form.month }} {{ month_form.month.help_text }}</p>
-    {{ month_form.year.label }} {{ month_form.year }} {{ month_form.year.help_text }}
-    <br><br>
-    <input type="submit" value="Submit">
-    <br><br>
-</form>
-{% if request.method == "POST" %}
-<div>
-    <canvas id="myChart" height="100"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
 
-    // Tạo biến để lưu trữ dữ liệu từ context của django
+<body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form action="/visualization_kpi/" method="post">{% csrf_token %}
+        <p>Chọn thời gian:</p>
+        <p>{{ month_form.month.label }} {{ month_form.month }} {{ month_form.month.help_text }}</p>
+        {{ month_form.year.label }} {{ month_form.year }} {{ month_form.year.help_text }}
+        <br><br>
+        <input type="submit" value="Submit">
+        <br><br>
+    </form>
+    {% if request.method == "POST" %}
+    <div class='chart'>
+        <div class='chart-body'>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Tạo biến để lưu trữ dữ liệu từ context của django
     var labels = {{ columns_name | safe }}; // một list chứa các tên cột
     var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
-
-    // Tạo biểu đồ cột sử dụng chart js
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Biểu đồ thể hiện doanh số của nhân viên',
-                data: data,
-                backgroundColor: 'rgba(99,107,255,0.2)',
-                borderColor: 'rgb(99,143,255)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        // Tạo biểu đồ cột sử dụng chart js
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh số',
+                    data: data,
+                    backgroundColor: 'rgba(99,107,255,0.2)',
+                    borderColor: 'rgb(99,143,255)',
+                    borderWidth: 1,
+                    barPercentage: 0.5,
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                    }
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true, // hiển thị chú thích
+                    },
+                    title: {
+                        display: true, // hiển thị tiêu đề
+                        text: "Biểu đồ doanh số nhân viên", // nội dung tiêu đề
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true, // hiển thị tên trục x
+                            text: "Nhân viên", // nội dung tên trục x
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true, // hiển thị tên trục y1
+                            text: "Doanh số", // nội dung tên trục y1
+                        },
+                        position: "left", // vị trí bên trái của biểu đồ
+                        beginAtZero: true,
+                    },
+                },
             }
-        }
-    })
-</script>
-{% endif %}
+        })
+    </script>
+    {% endif %}
 </body>
+
 </html>

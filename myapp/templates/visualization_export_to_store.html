@@ -1,43 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Visualization export to store</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
+
 </head>
+
 <body>
-<div>
-    <canvas id="myChart" height="150"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
+    <div class='chart'>
+        <div class='chart-body'>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
-    // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
 
-    // Tạo biểu đồ cột sử dụng chart js
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Biểu đồ thể hiện số lượng xe đã nhập từ các nhà cung cấp',
-                data: data,
-                backgroundColor: 'rgba(99,107,255,0.2)',
-                borderColor: 'rgb(99,143,255)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Tạo biến để lưu trữ dữ liệu từ context của django
+        var labels = {{ columns_name | safe}} // một list chứa các tên cột
+        var data = {{values | safe}}; // một list chứa giá trị là các số nguyên
+         labels = labels.map(function (label) {
+            return label.split(' ');
+         });
+        // Tạo biểu đồ cột sử dụng chart js
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượng',
+                    data: data,
+                    backgroundColor: 'rgba(99,107,255,0.2)',
+                    borderColor: 'rgb(99,143,255)',
+                    borderWidth: 1,
+                    barPercentage: 0.5,
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                    }
+                }]
             },
-            barThickness: 0.2
+            plugins: [ChartDataLabels],
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true, // hiển thị tên trục x
+                            text: "Cửa hàng", // nội dung tên trục x
+                        },
+                    },
+                    y: {
+                        title: {
+                            display: true, // hiển thị tên trục x
+                            text: "Số lượng", // nội dung tên trục x
+                        },
+                        beginAtZero: true
+                    }
+                },
+            }
+        })
+
+        var chartBody = document.querySelector('.chart-body');
+        const totalLabels = labels.length;
+        if (totalLabels > 10) {
+            chartBody.style.width = totalLabels * 100 + 'px';
         }
-    })
-</script>
+    </script>
 </body>
+
 </html>
