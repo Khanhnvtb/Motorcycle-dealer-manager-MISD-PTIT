@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Import Receipt</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/import_receipt.css' %}">
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form action="/import_receipt/" method="POST">
+    {% csrf_token %}
+
+    {{ import_receipt_form.as_p }}
+
+    <input type="submit" value="Thanh toán">
+</form>
+<a href="/">Trang chủ</a>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/import_receipt.js' %}"></script>
+</body>
+</html>

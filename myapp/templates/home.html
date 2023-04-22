@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'styles/home.css' %}">
     <link rel="stylesheet" href="{% static 'styles/button_form_home.css' %}">
 </head>
+
 <body>
 {% if messages %}
 <ul class="messages">
@@ -20,20 +22,30 @@
 </ul>
 {% endif %}
 {% if user.is_authenticated %}
-<p>Hi, {{user.name}}</a></p>
-<a href="/user_manager/" class="link-button">Quản lý nhân viên</a>
+<div class='header'>
+    <a href="/home/">Trang chủ</a>
+    <div style="display: flex;">
+        <p>Hi, {{user.name}}</a></p>
+        <a href="/logout/">Đăng xuất</a>
+    </div>
+</div>
+{% if user.role ==  'Nhân viên kho' %}
 <a href="/motor_manager/" class="link-button">Quản lý xe</a>
-<a href="/store_manager/" class="link-button">Quản lý cửa hàng</a>
 <a href="/supplier_manager/" class="link-button">Quản lý nhà cung cấp</a>
 <a href="/import_motor/" class="link-button">Nhập hàng</a>
+{% elif user.role ==  'Nhân viên bán hàng' %}
+<a href="/store_manager/" class="link-button">Quản lý cửa hàng</a>
 <a href="/export_motor/" class="link-button">Xuất hàng</a>
+{% else %}
+<a href="/user_manager/" class="link-button">Quản lý nhân viên</a>
+{% endif %}
 <a href="/report/" class="link-button">Báo cáo thống kê</a>
 <a href="/visualization/" class="link-button">Trực quan hóa</a>
-<a href="/logout/" class="link-button">Đăng xuất</a>
 {% else %}
 <a href="/login/" class="link-button">Đăng nhập</a>
 {% endif %}
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/home.js' %}"></script>
 </body>
+
 </html>

@@ -43,5 +43,18 @@ urlpatterns = [
     path('report_sale_history/', views.reportSaleHistory, name='report_sale_history'),
     path('report_import_history/', views.reportImportHistory, name='report_import_history'),
 
+    # path('motors/', views.getMotorByAPI,),
+    
+    path('visualization/', views.visualization, name='visualization'),
     path('visualization_turnover/', views.visualizationTurnover, name='visualization_turnover'),
+    path('visualization_sale_items/', views.visualizationSaleItems, name='visualization_sale_items'),
+    path('visualization_best_sale_items/', views.visualizationBestSaleItems, name='visualization_best_sale_items'),
+    path('visualization_kpi_user/<str:username>/', views.visualizationKpiUser, name='visualization_kpi_user'),
+    path('visualization_kpi/', views.visualizationKpi, name='visualization_kpi'),
+    path('visualization_import_from_supplier/', views.visualizationImportFromSupplier,
+         name='visualization_import_from_supplier'),
+    path('visualization_export_to_store/', views.visualizationExportToStore, name='visualization_export_to_store'),
+
+    path('import_receipt/', views.importReceipt, name='import_receipt'),
+    path('export_receipt/', views.exportReceipt, name='export_receipt'),
 ]

@@ -40,3 +40,28 @@ td {
     border: 1px solid #ccc;
     padding: 10px;
 }
+
+/* Định dạng cho khung phân trang */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* Định dạng cho các liên kết phân trang */
+.pagination a {
+    text-decoration: none;
+    color: black;
+    padding: 10px;
+}
+
+/* Định dạng cho liên kết phân trang khi di chuột qua */
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+/* Định dạng cho trang hiện tại */
+.pagination .current {
+    font-weight: bold;
+}

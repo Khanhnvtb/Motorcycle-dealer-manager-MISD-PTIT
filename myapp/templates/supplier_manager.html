@@ -32,7 +32,7 @@
         <td style="display: none">Thông tin</td>
         <td style="display: none">Quản lý</td>
     </tr>
-    {% for supplier in suppliers %}
+    {% for supplier in page_obj %}
     <tr>
         <td>
             <li>Tên nhà cung cấp: {{ supplier.name }}</li>
@@ -46,6 +46,22 @@
     <tr></tr>
     {% endfor %}
 </table>
+<div class="pagination"> <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    {% endif %}
+
+    <span class="current">
+        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+    {% endif %}
+</span>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/supplier_manager.js' %}"></script>
 </body>

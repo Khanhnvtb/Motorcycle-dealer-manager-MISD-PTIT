@@ -7,6 +7,7 @@
     <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/login.css' %}">
 </head>
+
 <body>
 <div class="login-page">
     <form action="/login/" method="post" class="form">{% csrf_token %}
@@ -20,4 +21,5 @@
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/login.js' %}"></script>
 </body>
+
 </html>
