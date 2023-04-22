@@ -21,12 +21,11 @@
 <form action="/import_motor/" method="POST" enctype="multipart/form-data">
     <!-- Management data of formset -->
     {{ import_forms.management_data }}
-
     <!-- Security token -->
     {% csrf_token %}
 
     {{ supplier_form.as_p}}
-
+    {{ debt_form.as_p }}
     <!-- Using the formset -->
     {{ import_forms.as_p }}
 
