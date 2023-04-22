@@ -590,7 +590,7 @@ def reportSaleItems(request):
             if start_date > end_date:
                 storage = messages.get_messages(request)
                 storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
             else:
                 # tạo một con trỏ cho cơ sở dữ liệu
                 cursor = connection.cursor()
