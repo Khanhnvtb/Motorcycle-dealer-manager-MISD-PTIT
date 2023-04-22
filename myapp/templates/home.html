@@ -40,8 +40,8 @@
 {% else %}
 <a href="/user_manager/">Quản lý nhân viên</a>
 {% endif %}
-<a href="/report/">Báo cáo thống kê</a>
-<a href="/visualization/">Trực quan hóa</a>
+<a href="/report/{{ user.username }}/">Báo cáo thống kê</a>
+<a href="/visualization/{{ user.username }}">Trực quan hóa</a>
 
 
 {% else %}

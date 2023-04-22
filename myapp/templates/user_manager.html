@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Show user</title>
-        <!-- Gọi file css trong folder static -->
+    <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/user_manager.css' %}">
 </head>
 <body>
@@ -43,12 +43,18 @@
             <li>Chức vụ: {{ user.role }}</li>
         </td>
         <td>
+            {% if user.role == 'Nhân viên bán hàng' %}
             <a href="/sale_history/{{ user.username }}/">Xem lịch sử bán hàng</a>
-            <a href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
             <a href="/visualization_kpi_user/{{ user.username }}/">Xem biểu đồ doanh số</a>
+            {% endif %}
+            {% if user.role == 'Nhân viên kho' %}
+            <a href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
+            {% endif %}
             <a href="/show_user/{{ user.username }}/">Xem thông tin</a>
             <a href="/update_user/{{ user.username }}/">Sửa</a>
+            {% if user.role != 'admin' %}
             <a href="/delete_user/{{ user.username }}/">Xóa</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}

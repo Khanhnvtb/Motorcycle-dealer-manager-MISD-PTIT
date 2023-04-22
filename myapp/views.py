@@ -6,7 +6,7 @@ from django.forms import formset_factory
 import os
 from .forms import *
 from .models import *
-from datetime import date, timedelta
+from datetime import date
 from django.db import connection
 from django.core.paginator import Paginator
 import calendar
@@ -516,8 +516,8 @@ def exportMotor(request):
 
 
 @login_required(login_url='/login/')
-def reportView(request):
-    return render(request, 'report.html')
+def reportView(request, username):
+    return render(request, 'report.html', {'username': username})
 
 
 def getStartDate(year, month):
@@ -609,17 +609,18 @@ def reportBalanceSheet(request):
     return render(request, 'report_turnover.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
-# admin
+# admin, bán hàng
 @login_required(login_url='/login/')
 def reportSaleItems(request):
     report = {}
-    if request.user.role == 'admin':
+    if request.user.role != 'Nhân viên kho':
         if request.method == "POST":
             date_form = DateForm(request.POST)
             if date_form.is_valid():
                 start_date = getStartDate(int(date_form.cleaned_data['start_year']),
                                           int(date_form.cleaned_data['start_month']))
-                end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+                end_date = getEndDate(int(date_form.cleaned_data['end_year']),
+                                      int(date_form.cleaned_data['end_month']))
                 if start_date > end_date:
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -662,42 +663,46 @@ def reportSaleItems(request):
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
+
     return render(request, 'report_sale_items.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
 # admin, bán hàng
 @login_required(login_url='/login/')
 def reportBestSaleItems(request):
-    year = datetime.now().year
-    month = datetime.now().month
-    start_date = getStartDate(year, month)
-    end_date = getEndDate(year, month)
+    if request.user.role != 'Nhân viên kho':
+        year = datetime.now().year
+        month = datetime.now().month
+        start_date = getStartDate(year, month)
+        end_date = getEndDate(year, month)
 
-    # tạo một con trỏ cho cơ sở dữ liệu
-    cursor = connection.cursor()
+        # tạo một con trỏ cho cơ sở dữ liệu
+        cursor = connection.cursor()
 
-    query = "SELECT myapp_Motor.motor_id, myapp_Motor.image, myapp_Motor.name " \
-            "FROM myapp_Motor " \
-            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
-            "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
-            "WHERE myapp_Delivery_Invoice.time between '{s1}' and '{s2}'" \
-            "GROUP BY myapp_Motor.name, myapp_Motor.image " \
-            "ORDER BY SUM(myapp_Delivery_Motor.quantity) " \
-            "DESC LIMIT 5".format(s1=str(start_date), s2=str(end_date))
+        query = "SELECT myapp_Motor.motor_id, myapp_Motor.image, myapp_Motor.name " \
+                "FROM myapp_Motor " \
+                "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
+                "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
+                "WHERE myapp_Delivery_Invoice.time between '{s1}' and '{s2}'" \
+                "GROUP BY myapp_Motor.name, myapp_Motor.image " \
+                "ORDER BY SUM(myapp_Delivery_Motor.quantity) " \
+                "DESC LIMIT 5".format(s1=str(start_date), s2=str(end_date))
 
-    # chạy câu lệnh SQL bằng phương thức execute()
-    cursor.execute(query)
+        # chạy câu lệnh SQL bằng phương thức execute()
+        cursor.execute(query)
 
-    # lấy ra kết quả bằng phương thức fetchall()
-    results = cursor.fetchall()
+        # lấy ra kết quả bằng phương thức fetchall()
+        results = cursor.fetchall()
 
-    storage = messages.get_messages(request)
-    storage.used = True
-    messages.add_message(request, messages.SUCCESS, 'Thành công')
-    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+        storage = messages.get_messages(request)
+        storage.used = True
+        messages.add_message(request, messages.SUCCESS, 'Thành công')
+        paginator = Paginator(results, 10)  # Show 10 contacts per page.
 
-    page_number = request.GET.get("page", 1)
-    page_obj = paginator.get_page(page_number)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+    else:
+        return render(request, 'home.html')
     return render(request, 'report_best_sale_items.html', {'page_obj': page_obj})
 
 
@@ -846,8 +851,8 @@ def reportImportHistory(request):
 
 
 @login_required(login_url='/login/')
-def visualization(request):
-    return render(request, 'visualization.html')
+def visualization(request, username):
+    return render(request, 'visualization.html', {'username': username})
 
 
 # admin
@@ -906,7 +911,7 @@ def visualizationBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(money) " \
                             "from myapp_expense " \
                             "where time between '{s2}' and '{s3}' " \
-                            "group by month(time) " \
+                            "group by Month_sale " \
                             "order by Month_sale".format(s1="%Y-%m",
                                                          s2=str(start_date),
                                                          s3=str(end_date))

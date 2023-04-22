@@ -26,6 +26,9 @@
     <a href="/visualization_import_from_supplier/">Trực quan số lượng hàng đã nhập của từng nhà cung cấp</a>
     {% endif %}
 
+    {% if user.role == 'Nhân viên bán hàng' %}
+    <a href="/visualization_kpi_user/{{ username }}">Trực quan kpi</a>
+    {% endif %}
 
 
     <!-- Gọi file js trong folder static -->

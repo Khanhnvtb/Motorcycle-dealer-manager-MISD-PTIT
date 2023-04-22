@@ -10,7 +10,7 @@
 <body>
 
     {% if user.role == 'admin' %}
-    <a href="/report_turnover/">Báo cáo doanh thu theo tháng</a>
+    <a href="/report_balance_sheet/">Báo cáo doanh thu theo tháng</a>
     <a href="/report_sale_history/">Xem lịch sử bán hàng của nhân viên</a>
     {% endif %}
 
@@ -19,8 +19,14 @@
     <a href="/report_best_sale_items/">Báo cáo mặt hàng bán chạy</a>
     {% endif %}
     
-    {% if user.role != "Nhân viên bán hàng" %}
+    {% if user.role == "Nhân viên kho" %}
+    <a href="/import_history/{{ username }}/">Xem lịch sử bán hàng</a>
+    {% endif %}
+    {% if user.role == "admin" %}
     <a href="/report_import_history/">Xem lịch sử nhập hàng của nhân viên</a>
+    {% endif %}
+    {% if user.role == "Nhân viên bán hàng" %}
+    <a href="/sale_history/{{ username }}/">Xem lịch sử nhập hàng</a>
     {% endif %}
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/report.js' %}"></script>
