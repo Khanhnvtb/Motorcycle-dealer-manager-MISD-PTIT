@@ -521,11 +521,11 @@ def reportView(request):
 
 
 def getStartDate(year, month):
-    return date(year, month, calendar.monthrange(2002, 1)[0])
+    return date(year, month, calendar.monthrange(year, month)[0])
 
 
 def getEndDate(year, month):
-    return date(year, month, calendar.monthrange(2002, 1)[1])
+    return date(year, month, calendar.monthrange(year, month)[1])
 
 
 # admin
@@ -550,9 +550,10 @@ def reportBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_delivery_invoice " \
                             "where time between '{s2}' and '{s3}'" \
-                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
-                                                                              s2=str(start_date),
-                                                                              s3=str(end_date))
+                            "group by Month_sale " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
 
                     # chạy câu lệnh SQL bằng phương thức execute()
                     cursor.execute(query)
@@ -565,9 +566,10 @@ def reportBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_import_invoice " \
                             "where time between '{s2}' and '{s3}'" \
-                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
-                                                                              s2=str(start_date),
-                                                                              s3=str(end_date))
+                            "group by Month_sale " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
 
                     # chạy câu lệnh SQL bằng phương thức execute()
                     cursor.execute(query)
@@ -580,7 +582,7 @@ def reportBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(money) " \
                             "from myapp_expense " \
                             "where time between '{s2}' and '{s3}' " \
-                            "group by month(time) " \
+                            "group by Month_sale " \
                             "order by Month_sale".format(s1="%Y-%m",
                                                          s2=str(start_date),
                                                          s3=str(end_date))
@@ -632,7 +634,7 @@ def reportSaleItems(request):
                             "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
                             "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
                             "WHERE myapp_delivery_invoice.time between '{s2}' AND '{s3}' " \
-                            "GROUP BY Month(time), myapp_Motor.name, myapp_Motor.Image " \
+                            "GROUP BY Month_sale, myapp_Motor.name, myapp_Motor.Image " \
                             "ORDER BY Month_sale, quantity".format(s1="%Y-%m",
                                                                    s2=str(start_date),
                                                                    s3=str(end_date))
@@ -872,9 +874,10 @@ def visualizationBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_delivery_invoice " \
                             "where time between '{s2}' and '{s3}'" \
-                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
-                                                                              s2=str(start_date),
-                                                                              s3=str(end_date))
+                            "group by Month_sale " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
 
                     # chạy câu lệnh SQL bằng phương thức execute()
                     cursor.execute(query)
@@ -889,9 +892,10 @@ def visualizationBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_import_invoice " \
                             "where time between '{s2}' and '{s3}'" \
-                            "group by month(time) order by Month_sale".format(s1="%Y-%m",
-                                                                              s2=str(start_date),
-                                                                              s3=str(end_date))
+                            "group by Month_sale " \
+                            "order by Month_sale".format(s1="%Y-%m",
+                                                         s2=str(start_date),
+                                                         s3=str(end_date))
 
                     # chạy câu lệnh SQL bằng phương thức execute()
                     cursor.execute(query)
