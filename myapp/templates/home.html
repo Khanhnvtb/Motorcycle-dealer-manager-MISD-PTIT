@@ -32,18 +32,17 @@
 {% if user.role == 'Nhân viên kho' %}
 <a href="/motor_manager/">Quản lý xe</a>
 <a href="/supplier_manager/">Quản lý nhà cung cấp</a>
-<a href="/import_motor/">Nhập hàng</a>
 
 {% elif user.role == 'Nhân viên bán hàng' %}
 <a href="/store_manager/">Quản lý cửa hàng</a>
-<a href="/export_motor/">Xuất hàng</a>
 {% else %}
 <a href="/user_manager/">Quản lý nhân viên</a>
 {% endif %}
-<a href="/report/">Báo cáo thống kê</a>
-<a href="/visualization/">Trực quan hóa</a>
-
-
+<a href="/report/{{ user.username }}/">Báo cáo thống kê</a>
+<a href="/visualization/{{ user.username }}">Trực quan hóa</a>
+{% if user.role != 'admin' %}
+<a href="/invoice_manager/">Quản lý hóa đơn</a>
+{% endif %}
 {% else %}
 <a href="/login/">Đăng nhập</a>
 {% endif %}

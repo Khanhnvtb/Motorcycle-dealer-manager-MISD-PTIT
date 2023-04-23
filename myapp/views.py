@@ -6,7 +6,7 @@ from django.forms import formset_factory
 import os
 from .forms import *
 from .models import *
-from datetime import date, timedelta
+from datetime import date
 from django.db import connection
 from django.core.paginator import Paginator
 import calendar
@@ -516,8 +516,8 @@ def exportMotor(request):
 
 
 @login_required(login_url='/login/')
-def reportView(request):
-    return render(request, 'report.html')
+def reportView(request, username):
+    return render(request, 'report.html', {'username': username})
 
 
 def getStartDate(year, month):
@@ -609,17 +609,18 @@ def reportBalanceSheet(request):
     return render(request, 'report_turnover.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
-# admin
+# admin, bán hàng
 @login_required(login_url='/login/')
 def reportSaleItems(request):
     report = {}
-    if request.user.role == 'admin':
-        if request.method == "POST":
-            date_form = DateForm(request.POST)
+    if request.user.role != 'Nhân viên kho':
+        if request.method == "GET":
+            date_form = DateForm(request.GET)
             if date_form.is_valid():
                 start_date = getStartDate(int(date_form.cleaned_data['start_year']),
                                           int(date_form.cleaned_data['start_month']))
-                end_date = getEndDate(int(date_form.cleaned_data['end_year']), int(date_form.cleaned_data['end_month']))
+                end_date = getEndDate(int(date_form.cleaned_data['end_year']),
+                                      int(date_form.cleaned_data['end_month']))
                 if start_date > end_date:
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -660,44 +661,48 @@ def reportSaleItems(request):
         return render(request, 'home.html')
     paginator = Paginator(list(report), 2)  # Show 2 contacts per page.
 
-    page_number = request.GET.get("page", 1)
+    page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
     return render(request, 'report_sale_items.html', {'date_form': date_form, 'page_obj': page_obj})
 
 
 # admin, bán hàng
 @login_required(login_url='/login/')
 def reportBestSaleItems(request):
-    year = datetime.now().year
-    month = datetime.now().month
-    start_date = getStartDate(year, month)
-    end_date = getEndDate(year, month)
+    if request.user.role != 'Nhân viên kho':
+        year = datetime.now().year
+        month = datetime.now().month
+        start_date = getStartDate(year, month)
+        end_date = getEndDate(year, month)
 
-    # tạo một con trỏ cho cơ sở dữ liệu
-    cursor = connection.cursor()
+        # tạo một con trỏ cho cơ sở dữ liệu
+        cursor = connection.cursor()
 
-    query = "SELECT myapp_Motor.motor_id, myapp_Motor.image, myapp_Motor.name " \
-            "FROM myapp_Motor " \
-            "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
-            "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
-            "WHERE myapp_Delivery_Invoice.time between '{s1}' and '{s2}'" \
-            "GROUP BY myapp_Motor.name, myapp_Motor.image " \
-            "ORDER BY SUM(myapp_Delivery_Motor.quantity) " \
-            "DESC LIMIT 5".format(s1=str(start_date), s2=str(end_date))
+        query = "SELECT myapp_Motor.motor_id, myapp_Motor.image, myapp_Motor.name " \
+                "FROM myapp_Motor " \
+                "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
+                "JOIN myapp_Delivery_Invoice ON myapp_Delivery_Motor.invoice_Id = myapp_Delivery_Invoice.invoice_Id " \
+                "WHERE myapp_Delivery_Invoice.time between '{s1}' and '{s2}'" \
+                "GROUP BY myapp_Motor.name, myapp_Motor.image " \
+                "ORDER BY SUM(myapp_Delivery_Motor.quantity) " \
+                "DESC LIMIT 5".format(s1=str(start_date), s2=str(end_date))
 
-    # chạy câu lệnh SQL bằng phương thức execute()
-    cursor.execute(query)
+        # chạy câu lệnh SQL bằng phương thức execute()
+        cursor.execute(query)
 
-    # lấy ra kết quả bằng phương thức fetchall()
-    results = cursor.fetchall()
+        # lấy ra kết quả bằng phương thức fetchall()
+        results = cursor.fetchall()
 
-    storage = messages.get_messages(request)
-    storage.used = True
-    messages.add_message(request, messages.SUCCESS, 'Thành công')
-    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+        storage = messages.get_messages(request)
+        storage.used = True
+        messages.add_message(request, messages.SUCCESS, 'Thành công')
+        paginator = Paginator(results, 10)  # Show 10 contacts per page.
 
-    page_number = request.GET.get("page", 1)
-    page_obj = paginator.get_page(page_number)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+    else:
+        return render(request, 'home.html')
     return render(request, 'report_best_sale_items.html', {'page_obj': page_obj})
 
 
@@ -846,8 +851,8 @@ def reportImportHistory(request):
 
 
 @login_required(login_url='/login/')
-def visualization(request):
-    return render(request, 'visualization.html')
+def visualization(request, username):
+    return render(request, 'visualization.html', {'username': username})
 
 
 # admin
@@ -906,7 +911,7 @@ def visualizationBalanceSheet(request):
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(money) " \
                             "from myapp_expense " \
                             "where time between '{s2}' and '{s3}' " \
-                            "group by month(time) " \
+                            "group by Month_sale " \
                             "order by Month_sale".format(s1="%Y-%m",
                                                          s2=str(start_date),
                                                          s3=str(end_date))
@@ -1167,13 +1172,13 @@ def visualizationExportToStore(request):
 
 # kho
 @login_required(login_url='/login/')
-def importReceipt(request):
+def importReceipt(request, invoice_id):
     if request.user.role == "Nhân viên kho":
         if request.method == "POST":
             import_form = ImportReceiptForm(request.POST)
             if import_form.is_valid():
                 employee_id = request.user.id
-                import_invoice = import_form.cleaned_data.get('import_invoice')
+                import_invoice = Import_Invoice.objects.get(invoice_id=invoice_id)
                 time = date.today()
                 money = import_form.cleaned_data.get('money')
                 note = import_form.cleaned_data.get('note')
@@ -1197,18 +1202,18 @@ def importReceipt(request):
             import_form = ImportReceiptForm()
     else:
         return render(request, 'home.html')
-    return render(request, 'import_receipt.html', {'import_receipt_form': import_form})
+    return render(request, 'import_receipt.html', {'import_receipt_form': import_form, 'invoice_id': invoice_id})
 
 
 # bán hàng
 @login_required(login_url='/login/')
-def exportReceipt(request):
+def exportReceipt(request, invoice_id):
     if request.user.role == "Nhân viên bán hàng":
         if request.method == "POST":
             export_form = ExportReceiptForm(request.POST)
             if export_form.is_valid():
                 employee_id = request.user.id
-                export_invoice = export_form.cleaned_data.get('delivery_invoice')
+                export_invoice = Delivery_Invoice.objects.get(invoice_id=invoice_id)
                 time = date.today()
                 money = export_form.cleaned_data.get('money')
                 note = export_form.cleaned_data.get('note')
@@ -1232,4 +1237,105 @@ def exportReceipt(request):
             export_form = ExportReceiptForm()
     else:
         return render(request, 'home.html')
-    return render(request, 'export_receipt.html', {'export_receipt_form': export_form})
+    return render(request, 'export_receipt.html', {'export_receipt_form': export_form, 'invoice_id': invoice_id})
+
+
+@login_required(login_url='/login/')
+def invoiceManager(request):
+    if request.user.role == "Nhân viên bán hàng":
+        if request.method == "POST":
+            keyword = request.POST.get('keyword', None)
+            invoices = Delivery_Invoice.objects.filter(invoice_id__contains=keyword).extra(
+                select={'balance': 'total - payment'}).order_by('-balance')
+        else:
+            invoices = Delivery_Invoice.objects.extra(select={'balance': 'total - payment'}).order_by('-balance')
+    elif request.user.role == "Nhân viên kho":
+        if request.method == "POST":
+            keyword = request.POST.get('keyword', None)
+            invoices = Import_Invoice.objects.filter(invoice_id__contains=keyword).extra(
+                select={'balance': 'total - payment'}).order_by('-balance')
+        else:
+            invoices = Import_Invoice.objects.extra(select={'balance': 'total - payment'}).order_by('-balance')
+    else:
+        return render(request, 'home.html')
+    paginator = Paginator(invoices, 20)  # Show 20 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'invoice_manager.html', {'page_obj': page_obj})
+
+
+@login_required(login_url='/login/')
+def showInvoice(request, invoice_id):
+    if request.user.role != 'admin':
+        # tạo một con trỏ cho cơ sở dữ liệu
+        cursor = connection.cursor()
+        if request.user.role == 'Nhân viên bán hàng':
+            invoice = Delivery_Invoice.objects.get(invoice_id=invoice_id)
+            query = "select myapp_motor.name, myapp_delivery_motor.quantity " \
+                    "from myapp_motor " \
+                    "join myapp_delivery_motor on myapp_delivery_motor.motor_id = myapp_motor.motor_id " \
+                    "where myapp_delivery_motor.invoice_id = {s1}".format(s1=invoice_id)
+            customer = Store.objects.get(store_id=invoice.store_id)
+        else:
+            invoice = Import_Invoice.objects.get(invoice_id=invoice_id)
+            query = "select myapp_motor.name, myapp_import_motor.quantity " \
+                    "from myapp_motor " \
+                    "join myapp_import_motor on myapp_import_motor.motor_id = myapp_motor.motor_id " \
+                    "where myapp_import_motor.invoice_id = {s1}".format(s1=invoice_id)
+            customer = Supplier.objects.get(supplier_id=invoice.supplier_id)
+        # chạy câu lệnh SQL bằng phương thức execute()
+        cursor.execute(query)
+
+        # lấy ra kết quả bằng phương thức fetchall()
+        results = cursor.fetchall()
+
+        name = User.objects.get(id=invoice.employee_id).name
+    else:
+        return render(request, 'home.html')
+    paginator = Paginator(results, 25)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'show_invoice.html',
+                  {'page_obj': page_obj, 'invoice': invoice, 'name': name, 'customer': customer})
+
+
+@login_required(login_url='/login/')
+def receiptHistory(request, invoice_id):
+    if request.user.role != 'admin':
+        # tạo một con trỏ cho cơ sở dữ liệu
+        cursor = connection.cursor()
+        if request.user.role == 'Nhân viên bán hàng':
+            invoice = Delivery_Invoice.objects.get(invoice_id=invoice_id)
+            query = "select myapp_deliveryreceipt.time, myapp_deliveryreceipt.money, myapp_deliveryreceipt.note, " \
+                    "myapp_user.name " \
+                    "from myapp_delivery_invoice " \
+                    "join myapp_deliveryreceipt on myapp_delivery_invoice.invoice_id = myapp_deliveryreceipt.invoice_id " \
+                    "join myapp_user on myapp_deliveryreceipt.employee_id = myapp_user.id " \
+                    "where myapp_delivery_invoice.invoice_id = {s1}".format(s1=invoice_id)
+            customer = Store.objects.get(store_id=invoice.store_id)
+        else:
+            invoice = Import_Invoice.objects.get(invoice_id=invoice_id)
+            query = "select myapp_importreceipt.time, myapp_importreceipt.money, myapp_importreceipt.note, " \
+                    "myapp_user.name " \
+                    "from myapp_import_invoice " \
+                    "join myapp_importreceipt on myapp_import_invoice.invoice_id = myapp_importreceipt.invoice_id " \
+                    "join myapp_user on myapp_importreceipt.employee_id = myapp_user.id " \
+                    "where myapp_import_invoice.invoice_id = {s1}".format(s1=invoice_id)
+            customer = Supplier.objects.get(supplier_id=invoice.supplier_id)
+        # chạy câu lệnh SQL bằng phương thức execute()
+        cursor.execute(query)
+
+        # lấy ra kết quả bằng phương thức fetchall()
+        results = cursor.fetchall()
+
+        name = User.objects.get(id=invoice.employee_id).name
+    else:
+        return render(request, 'home.html')
+    paginator = Paginator(results, 10)  # Show 10 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'receipt_history.html',
+                  {'page_obj': page_obj, 'invoice': invoice, 'name': name, 'customer': customer})

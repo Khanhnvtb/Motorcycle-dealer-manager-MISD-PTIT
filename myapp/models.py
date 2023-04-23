@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-from rest_framework import serializers
+
+
 # Create your models here.
-
-
 class User(AbstractUser):
     name = models.CharField(max_length=100, blank=False, null=False)
     avatar = models.ImageField(upload_to='user_image/')

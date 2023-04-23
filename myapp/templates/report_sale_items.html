@@ -18,7 +18,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/report_sale_items/" method="post">{% csrf_token %}
+<form action="/report_sale_items/" method="get">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -29,7 +29,7 @@
     <input type="submit" value="Submit">
     <br><br>
 </form>
-{% if request.method == "POST" %}
+{% if page_obj %}
 <table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
     <colgroup span="4"></colgroup>
     <colgroup span="3"></colgroup>
@@ -56,10 +56,11 @@
     {% endfor %} {% endfor %}
 </table>
 {% endif %}
+
 <div class="pagination"> <span class="step-links">
     {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    <a href="{{ request.GET.urlencode }}&?page=1">« Đầu tiên</a>
+    <a href="{{ request.GET.urlencode }}&?page={{ page_obj.previous_page_number }}">Trước</a>
     {% endif %}
 
     <span class="current">
@@ -67,8 +68,8 @@
     </span>
 
     {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
     {% endif %}
 </span>
 </div>
