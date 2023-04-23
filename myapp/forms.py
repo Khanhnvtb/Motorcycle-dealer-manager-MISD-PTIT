@@ -215,10 +215,6 @@ class DebtForm(forms.Form):
 
 
 class ImportReceiptForm(forms.Form):
-    import_invoice = forms.ModelChoiceField(queryset=Import_Invoice.objects.all(), label='Đơn nhập',
-                                            help_text='Chọn một nhà đơn nhập từ danh sách',
-                                            error_messages={
-                                                'required': 'Bạn phải chọn đơn nhập'})
     money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
@@ -227,10 +223,6 @@ class ImportReceiptForm(forms.Form):
 
 
 class ExportReceiptForm(forms.Form):
-    delivery_invoice = forms.ModelChoiceField(queryset=Delivery_Invoice.objects.all(), label='Đơn nhập',
-                                              help_text='Chọn một nhà đơn nhập từ danh sách',
-                                              error_messages={
-                                                  'required': 'Bạn phải chọn đơn nhập'})
     money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Show invoice</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/show_invoice.css' %}">
+</head>
+<body>
+<h1>Thông tin hóa đơn</h1>
+<ul>
+    <li>Mã hóa đơn: {{ invoice.invoice_id }}</li>
+    <li>Ngày lâp: {{ invoice.time }}</li>
+    <li>Tổng tiền: {{ invoice.total }}</li>
+    <li>Số tiền đã thanh toán: {{ invoice.payment }}</li>
+    <li>Hạn thanh toán: {{ invoice.debt_term }}</li>
+    <li>Người lập: {{ name }}</li>
+    <li>Tên khách hàng: {{ customer }}</li>
+</ul>
+<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+    <tr>
+        <th>Tên xe</th>
+        <th>Số lượng</th>
+    </tr>
+    {% for record in page_obj %}
+    <tr>
+        <td>{{ record.0 }}</td>
+        <td>{{ record.1 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination"> <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    {% endif %}
+
+    <span class="current">
+        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+    {% endif %}
+</span>
+</div>
+<a href="/invoice_manager/">Về trang quản lý</a>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/show_invoice.js' %}"></script>
+</body>
+</html>

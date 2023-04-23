@@ -18,7 +18,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/export_receipt/" method="POST">
+<form action="/export_receipt/{{ invoice_id }}/" method="POST">
     {% csrf_token %}
 
     {{ export_receipt_form.as_p }}
