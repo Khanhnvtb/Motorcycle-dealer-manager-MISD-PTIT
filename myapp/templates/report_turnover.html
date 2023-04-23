@@ -18,7 +18,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/report_balance_sheet/" method="post">{% csrf_token %}
+<form action="/report_balance_sheet/" method="get">{% csrf_token %}
     <p>Chọn thời gian bắt đầu:</p>
     <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
     {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
@@ -47,8 +47,8 @@
 {% endif %}
 <div class="pagination"> <span class="step-links">
     {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    <a href="?page=1{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Trước</a>
     {% endif %}
 
     <span class="current">
@@ -56,8 +56,8 @@
     </span>
 
     {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+        <a href="?page={{ page_obj.next_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Cuối cùng »</a>
     {% endif %}
 </span>
 </div>

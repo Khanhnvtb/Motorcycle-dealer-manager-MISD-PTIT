@@ -59,8 +59,8 @@
 
 <div class="pagination"> <span class="step-links">
     {% if page_obj.has_previous %}
-    <a href="{{ request.GET.urlencode }}&?page=1">« Đầu tiên</a>
-    <a href="{{ request.GET.urlencode }}&?page={{ page_obj.previous_page_number }}">Trước</a>
+    <a href="?page=1{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Trước</a>
     {% endif %}
 
     <span class="current">
@@ -68,8 +68,8 @@
     </span>
 
     {% if page_obj.has_next %}
-        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?{{ request.GET.urlencode }}&page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+        <a href="?page={{ page_obj.next_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Cuối cùng »</a>
     {% endif %}
 </span>
 </div>

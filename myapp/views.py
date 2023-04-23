@@ -533,8 +533,8 @@ def getEndDate(year, month):
 def reportBalanceSheet(request):
     if request.user.role == 'admin':
         results = ()
-        if request.method == "POST":
-            date_form = DateForm(request.POST)
+        if request.method == "GET":
+            date_form = DateForm(request.GET)
             if date_form.is_valid():
                 start_date = getStartDate(int(date_form.cleaned_data['start_year']),
                                           int(date_form.cleaned_data['start_month']))
@@ -602,7 +602,7 @@ def reportBalanceSheet(request):
             date_form = DateForm()
     else:
         return render(request, 'home.html')
-    paginator = Paginator(results, 25)  # Show 25 contacts per page.
+    paginator = Paginator(results, 12)  # Show 25 contacts per page.
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
