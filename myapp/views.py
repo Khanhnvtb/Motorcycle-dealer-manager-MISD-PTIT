@@ -1346,9 +1346,9 @@ def expenseManager(request):
     if request.user.role == "Nhân viên bán hàng":
         if request.method == "POST":
             keyword = request.POST.get('keyword', None)
-            expense = Expense.objects.filter(time__contains=keyword).order_by('time')
+            expense = Expense.objects.filter(time__contains=keyword).order_by('-time')
         else:
-            expense = Expense.objects.all().order_by('time')
+            expense = Expense.objects.all().order_by('-time')
     else:
         return render(request, 'home.html')
     paginator = Paginator(expense, 15)  # Show 25 contacts per page.
