@@ -228,3 +228,15 @@ class ExportReceiptForm(forms.Form):
                                    'required': 'Bạn phải nhập vào số tiền',
                                    'invalid': 'Bạn phải nhập giá trị là số nguyên', })
     note = forms.CharField(label='Ghi chú: ', required=False)
+
+
+class ExpenseForm(forms.Form):
+    money = forms.IntegerField(label='Số tiền: ', help_text='Nhập vào số tiền',
+                               error_messages={
+                                   'required': 'Bạn phải nhập vào số tiền',
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', })
+    type = forms.CharField(label='Loại chi phí: ', help_text='Nhập vào loại chi phí',
+                           error_messages={
+                               'required': 'Bạn phải nhập chuỗi ký tự',
+                           })
+    note = forms.CharField(label='Ghi chú: ', required=False)

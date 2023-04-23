@@ -1339,3 +1339,40 @@ def receiptHistory(request, invoice_id):
     page_obj = paginator.get_page(page_number)
     return render(request, 'receipt_history.html',
                   {'page_obj': page_obj, 'invoice': invoice, 'name': name, 'customer': customer})
+
+
+@login_required(login_url='/login/')
+def expenseManager(request):
+    if request.user.role == "Nhân viên bán hàng":
+        if request.method == "POST":
+            keyword = request.POST.get('keyword', None)
+            expense = Expense.objects.filter(time__contains=keyword).order_by('time')
+        else:
+            expense = Expense.objects.all().order_by('time')
+    else:
+        return render(request, 'home.html')
+    paginator = Paginator(expense, 15)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'expense_manager.html', {'page_obj': page_obj})
+
+
+@login_required(login_url='/login/')
+def addExpense(request):
+    if request.user.role == 'Nhân viên bán hàng':
+        if request.method == "POST":
+            expense_form = ExpenseForm(request.POST)
+            if expense_form.is_valid():
+                expense = Expense(employee=request.user, time=datetime.now(),
+                                  money=expense_form.cleaned_data['money'], type=expense_form.cleaned_data['type'],
+                                  note=expense_form.cleaned_data['note'])
+                expense.save()
+                storage = messages.get_messages(request)
+                storage.used = True
+                messages.add_message(request, messages.SUCCESS, 'Thành công')
+        else:
+            expense_form = ExpenseForm()
+    else:
+        return render(request, 'home.html')
+    return render(request, 'add_expense.html', {'expense_form': expense_form})

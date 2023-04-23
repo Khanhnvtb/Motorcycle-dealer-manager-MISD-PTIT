@@ -64,4 +64,6 @@ urlpatterns = [
     path('export_receipt/<int:invoice_id>/', views.exportReceipt, name='export_receipt'),
     path('show_invoice/<int:invoice_id>/', views.showInvoice, name='show_invoice'),
     path('receipt_history/<int:invoice_id>/', views.receiptHistory, name='receipt_history'),
+    path('expense_manager/', views.expenseManager, name='expense_manager'),
+    path('add_expense/', views.addExpense, name='add_expense'),
 ]
