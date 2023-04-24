@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Sale predict</title>
+    <!-- Gọi file css trong folder static -->
+    <link rel="stylesheet" href="{% static 'styles/sale_predict.css' %}">
+</head>
+<body>
+<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+    <tr>
+        <th>Ảnh xe</th>
+        <th>Tên xe</th>
+        <th>Dự đoán</th>
+    </tr>
+    {% for record in page_obj %}
+    <tr>
+        <td style="width:250px">
+            <img src="{% static 'media/'|add:record.2 %}" alt="{{ record.1 }}" width="250">
+        </td>
+        <td><a href="/show_motor/{{ record.0 }}/">{{ record.1 }}</a></td>
+        <td>
+            {% if record.3 == 0 %}
+            <p>Khả năng bán chạy, có thể cân nhắc nhập thêm</p>
+            {% else %}
+            <p>Khả năng tồn kho, nên sale {{ record.3 }}% </p>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination"> <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">« Đầu tiên</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
+    {% endif %}
+
+    <span class="current">
+        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
+    {% endif %}
+</span>
+</div>
+<!-- Gọi file js trong folder static -->
+<script src="{% static 'scripts/sale_predict.js' %}"></script>
+</body>
+</html>

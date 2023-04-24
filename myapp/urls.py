@@ -66,4 +66,5 @@ urlpatterns = [
     path('receipt_history/<int:invoice_id>/', views.receiptHistory, name='receipt_history'),
     path('expense_manager/', views.expenseManager, name='expense_manager'),
     path('add_expense/', views.addExpense, name='add_expense'),
+    path('sale_predict/', views.salePredict, name='sale_predict'),
 ]
