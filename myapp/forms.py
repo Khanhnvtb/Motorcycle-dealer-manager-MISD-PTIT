@@ -73,7 +73,7 @@ class UserForm(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'password'}),
             'name': forms.TextInput(attrs={'class': 'name', 'placeholder': 'Nguyễn Văn A'}),
             'avatar': forms.FileInput(attrs={'class': 'avatar'}),
-            'dob': forms.DateInput(attrs={'class': 'dob', 'placeholder': '2001-01-01'}),
+            'dob': forms.DateInput(attrs={'type': 'date', 'class': 'dob', 'placeholder': '2001-01-01'}),
             'gender': forms.Select(choices=gender_choice),
             'address': forms.TextInput(attrs={'class': 'address'}),
             'phone': forms.TextInput(attrs={'class': 'phone'}),
