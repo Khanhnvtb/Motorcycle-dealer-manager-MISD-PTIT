@@ -50,7 +50,7 @@
     </tr>
     {% endfor %}
 </table>
-<nav class='d-flex ' aria-label="Page navigation example">
+<nav class='d-flex justify-content-center' aria-label="Page navigation example">
     <ul class="pagination align-items-center justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item"><a class="page-link" href="?page=1{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">« Đầu tiên</a></li>

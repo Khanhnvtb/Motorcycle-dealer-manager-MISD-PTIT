@@ -23,7 +23,7 @@
     <form action="/motor_manager/" method="get">
         <div class='d-flex gap-3'>
             {% csrf_token %}
-            <input class='form-control' type="text" name="keyword" value={{keyword}}>
+            <input class='form-control' type="text" name="keyword" value={{ keyword|default:'' }}>
             <input class='btn btn-primary' type="submit" name="submit" value="Tìm kiếm">
         </div>
     </form>
@@ -79,6 +79,7 @@
 {% endif %}
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/pagination.js' %}"></script>
+
 {% endblock content %}
 
 {% block script %}

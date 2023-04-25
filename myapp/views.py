@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 import calendar
 import joblib
 import pandas as pd
-import sklearn
+# import sklearn
 
 
 # Create your views here.
@@ -41,7 +41,7 @@ def logoutUser(request):
     storage = messages.get_messages(request)
     storage.used = True
     messages.add_message(request, messages.SUCCESS, "Đăng xuất thành công")
-    return render(request, 'home.html')
+    return redirect('/login/')
 
 
 def home(request):
@@ -533,7 +533,7 @@ def reportView(request, username):
 
 
 def getStartDate(year, month):
-    return date(year, month, calendar.monthrange(year, month)[0])
+    return date(year, month, 1)
 
 
 def getEndDate(year, month):
