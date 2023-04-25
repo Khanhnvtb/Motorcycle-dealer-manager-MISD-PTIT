@@ -25,7 +25,7 @@
             <div class="card-title ">
                 <h3 class='text-center'>Thêm nhân viên</h3>
             </div>
-            <form action="/add_user/" method="post">{% csrf_token %}
+            <form action="/add_user/" method="post" enctype="multipart/form-data">{% csrf_token %}
                 {{ user_form.as_p }}
                 <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm"></div>
             </form>

@@ -24,7 +24,7 @@
             <div class="card-title ">
                 <h3 class='text-center'>Thêm xe</h3>
             </div>
-            <form action="/add_motor/" method="post">{% csrf_token %}
+            <form action="/add_motor/" method="post" enctype="multipart/form-data">{% csrf_token %}
                 {{ motor_form.as_p }}
                 <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm"></div>
             </form>

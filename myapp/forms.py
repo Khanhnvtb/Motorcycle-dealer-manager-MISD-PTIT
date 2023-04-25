@@ -67,25 +67,21 @@ def get_year_choices():
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'password', 'name', 'avatar', 'dob', 'gender', 'address', 'phone', 'email', 'role', 'salary']
+        fields = ['username', 'password', 'name', 'avatar', 'dob', 'gender', 'address', 'phone', 'email', 'role',
+                  'salary']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'username form-control', 'placeholder': 'Tài khoản'}),
-            'password': forms.PasswordInput(attrs={'class': 'password form-control', 'placeholder': 'Mật khẩu', 'type': 'password'}),
+            'password': forms.PasswordInput(
+                attrs={'class': 'password form-control', 'placeholder': 'Mật khẩu', 'type': 'password'}),
             'name': forms.TextInput(attrs={'class': 'name form-control', 'placeholder': 'Nguyễn Văn A'}),
             'avatar': forms.FileInput(attrs={'class': 'avatar form-control', 'type': 'file'}),
             'dob': forms.DateInput(attrs={'class': 'dob form-control', 'type': 'date'}),
-            'gender': forms.Select(choices=gender_choice, attrs={'class':'form-select'}),
+            'gender': forms.Select(choices=gender_choice, attrs={'class': 'form-select'}),
             'address': forms.TextInput(attrs={'class': 'address form-control'}),
             'phone': forms.TextInput(attrs={'class': 'phone form-control'}),
             'email': forms.EmailInput(attrs={'class': 'email form-control', 'type': 'email'}),
-            'role': forms.Select(choices=role_choice, attrs={'class':'form-select'}),
+            'role': forms.Select(choices=role_choice, attrs={'class': 'form-select'}),
             'salary': forms.TextInput(attrs={'class': 'salary form-control', 'type': 'number'}),
-            # 'is_superuser': forms.HiddenInput(attrs={'value': 0}),
-            # 'first_name': forms.HiddenInput(attrs={'value': ''}),
-            # 'last_name': forms.HiddenInput(attrs={'value': ''}),
-            # 'is_staff': forms.HiddenInput(attrs={'value': 1}),
-            # 'is_active': forms.HiddenInput(attrs={'value': 1}),
-            # 'date_joined': forms.HiddenInput(attrs={'value': datetime.now()}),
         }
         labels = {
             'username': 'Tài khoản',
@@ -102,7 +98,6 @@ class UserForm(forms.ModelForm):
         }
 
 
-
 class MotorForm(forms.ModelForm):
     class Meta:
         model = Motor
@@ -114,7 +109,7 @@ class MotorForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'image form-control', 'type': 'file'}),
             'description': forms.Textarea(attrs={'class': 'description form-control', 'rows': 5}),
             'assurance': forms.TextInput(attrs={'class': 'assurance form-control'}),
-            'quantity': forms.TextInput(attrs={'value': 0, 'class': 'quantity form-control', 'type': 'number'}),
+            'quantity': forms.TextInput(attrs={'value': 0, 'class': 'quantity form-control', 'type': 'hidden'}),
             'import_price': forms.TextInput(attrs={'class': 'import_price form-control', 'type': 'number'}),
             'export_price': forms.TextInput(attrs={'class': 'export_price form-control', 'type': 'number'}),
         }
@@ -182,7 +177,7 @@ class ImportFromSupplierFrom(forms.Form):
                                       help_text='Chọn một nhà cung cấp từ danh sách',
                                       error_messages={
                                           'required': 'Bạn phải chọn một nhà cung cấp'},
-                                          widget=forms.Select(attrs={'class': 'form-select'}))
+                                      widget=forms.Select(attrs={'class': 'form-select'}))
 
 
 class ImportForm(forms.Form):
@@ -199,7 +194,8 @@ class ImportForm(forms.Form):
                                       'invalid': 'Số lượng phải là một số nguyên',
                                       'min_value': 'Số lượng phải lớn hơn hoặc bằng 1',
                                   },
-                                  widget=forms.TextInput(attrs={'class': 'form-control', 'type':'number', 'placeholder':'Nhập vào số lượng'}))
+                                  widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
+                                                                'placeholder': 'Nhập vào số lượng'}))
 
 
 class ExportToStoreForm(forms.Form):
@@ -207,7 +203,7 @@ class ExportToStoreForm(forms.Form):
                                    help_text='Chọn một nhà cửa hàng từ danh sách',
                                    error_messages={
                                        'required': 'Bạn phải chọn một cửa hàng'},
-                                    widget=forms.Select(attrs={'class': 'form-select'}))
+                                   widget=forms.Select(attrs={'class': 'form-select'}))
 
 
 class ExportForm(forms.Form):
@@ -215,7 +211,7 @@ class ExportForm(forms.Form):
                                    help_text='Chọn một xe máy từ danh sách',
                                    error_messages={
                                        'required': 'Bạn phải chọn một xe máy'
-                                   ,
+                                       ,
                                    },
                                    widget=forms.Select(attrs={'class': 'form-select'}))
     quantity = forms.IntegerField(validators=[MinValueValidator(1)], label='Số lượng',
@@ -225,16 +221,21 @@ class ExportForm(forms.Form):
                                       'invalid': 'Số lượng phải là một số nguyên',
                                       'min_value': 'Số lượng phải lớn hơn hoặc bằng 1',
                                   },
-                                  widget=forms.TextInput(attrs={'class': 'form-control', 'type':'number', 'placeholder':'Nhập vào số lượng'}))
+                                  widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
+                                                                'placeholder': 'Nhập vào số lượng'}))
 
 
 class DateForm(forms.Form):
     start_month = forms.ChoiceField(choices=month_choice, label='Tháng: ',
-                                    help_text='Chọn một tháng từ danh sách', widget=forms.Select(attrs={'class': 'form-select'}) )
-    start_year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách', widget=forms.Select(attrs={'class': 'form-select'}))
+                                    help_text='Chọn một tháng từ danh sách',
+                                    widget=forms.Select(attrs={'class': 'form-select'}))
+    start_year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách',
+                                   widget=forms.Select(attrs={'class': 'form-select'}))
     end_month = forms.ChoiceField(choices=month_choice, label='Tháng: ',
-                                  help_text='Chọn một tháng từ danh sách', widget=forms.Select(attrs={'class': 'form-select'}))
-    end_year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách',widget=forms.Select(attrs={'class': 'form-select'}) )
+                                  help_text='Chọn một tháng từ danh sách',
+                                  widget=forms.Select(attrs={'class': 'form-select'}))
+    end_year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách',
+                                 widget=forms.Select(attrs={'class': 'form-select'}))
 
     def __init__(self, *args, **kwargs):
         super(DateForm, self).__init__(*args, **kwargs)
@@ -244,8 +245,10 @@ class DateForm(forms.Form):
 
 
 class MonthForm(forms.Form):
-    month = forms.ChoiceField(choices=month_choice, label='Tháng: ', help_text='Chọn một tháng từ danh sách', widget=forms.Select(attrs={'class': 'form-select'}))
-    year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách', widget=forms.Select(attrs={'class': 'form-select'}))
+    month = forms.ChoiceField(choices=month_choice, label='Tháng: ', help_text='Chọn một tháng từ danh sách',
+                              widget=forms.Select(attrs={'class': 'form-select'}))
+    year = forms.ChoiceField(choices=[], label='Năm: ', help_text='Chọn một năm từ danh sách',
+                             widget=forms.Select(attrs={'class': 'form-select'}))
 
     def __init__(self, *args, **kwargs):
         super(MonthForm, self).__init__(*args, **kwargs)
@@ -261,7 +264,7 @@ class DebtForm(forms.Form):
                                     'invalid': 'Bạn phải nhập theo định dạng ngày',
                                     'min_value': 'Không được nhập ngày nhỏ hơn hôm nay',
                                 },
-                                    widget=forms.TextInput(attrs={'class': 'form-control', 'type':'date'}))
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}))
 
 
 class ImportReceiptForm(forms.Form):
@@ -269,8 +272,10 @@ class ImportReceiptForm(forms.Form):
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
                                    'invalid': 'Bạn phải nhập giá trị là số nguyên', },
-                                   widget=forms.TextInput(attrs={'class': 'form-control', 'type':'number', 'placeholder':'Nhập vào số tiền'}))
-    note = forms.CharField(label='Ghi chú: ', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'type':'text'}))
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
+                                                             'placeholder': 'Nhập vào số tiền'}))
+    note = forms.CharField(label='Ghi chú: ', required=False,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
 
 
 class ExportReceiptForm(forms.Form):
@@ -278,8 +283,10 @@ class ExportReceiptForm(forms.Form):
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
                                    'invalid': 'Bạn phải nhập giá trị là số nguyên', },
-                                   widget=forms.TextInput(attrs={'class': 'form-control', 'type':'number', 'placeholder':'Nhập vào số tiền'}))
-    note = forms.CharField(label='Ghi chú: ', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'type':'text'}))
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
+                                                             'placeholder': 'Nhập vào số tiền'}))
+    note = forms.CharField(label='Ghi chú: ', required=False,
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
 
 
 class ExpenseForm(forms.Form):
@@ -287,11 +294,13 @@ class ExpenseForm(forms.Form):
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
                                    'invalid': 'Bạn phải nhập giá trị là số nguyên', },
-                                   widget=forms.TextInput(attrs={'class': 'form-control', 'type':'number', 'placeholder':'Nhập vào số tiền'}))
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
+                                                             'placeholder': 'Nhập vào số tiền'}))
     type = forms.CharField(label='Loại chi phí: ',
                            error_messages={
                                'required': 'Bạn phải nhập chuỗi ký tự',
                            },
-                           widget=forms.TextInput(attrs={'class': 'form-control', 'type':'text', 'placeholder':'Nhập vào loại chi phí'}))
+                           widget=forms.TextInput(
+                               attrs={'class': 'form-control', 'type': 'text', 'placeholder': 'Nhập vào loại chi phí'}))
     note = forms.CharField(label='Ghi chú: ', required=False,
-                           widget=forms.TextInput(attrs={'class': 'form-control', 'type':'text'}))
+                           widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
