@@ -28,3 +28,8 @@ a {
 a:hover {
     color: #005a9e;
 }
+
+table img {
+    width: 200px;
+
+}

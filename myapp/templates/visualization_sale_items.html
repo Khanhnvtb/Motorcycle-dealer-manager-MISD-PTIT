@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Visualization sale items</title>
+{% extends 'base.html' %}
+
+{% block style %}
         {% load static %}
         <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
-</head>
-<body>
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -19,34 +18,40 @@
 </ul>
 {% endif %}
 <form action="/visualization_sale_items/" method="post">{% csrf_token %}
-    <p>Chọn thời gian bắt đầu:</p>
-    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
-    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
-    <p>Chọn thời gian kết thúc:</p>
-    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
-    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
-    <br><br>
-    <input type="submit" value="Submit">
+    <div class='d-flex gap-5 align-items-center'>
+        <div class='d-flex gap-3 align-items-center'>
+            <div>Từ</div>
+            <div class='d-flex align-items-center'>{{ date_form.start_month.label }} {{ date_form.start_month }}</div>
+            <div class='d-flex align-items-center'>{{ date_form.start_year.label }} {{ date_form.start_year }}</div>
+        </div>
+        <div class='d-flex gap-3 align-items-center'>
+            <div>Đến</div>
+            <div class='d-flex align-items-center'>{{ date_form.end_month.label }} {{ date_form.end_month }}</div>
+            <div class='d-flex align-items-center'>{{ date_form.end_year.label }} {{ date_form.end_year }}</div>
+            <br><br>
+        </div>
+        <input class='btn btn-primary align-middle' type="submit" value="Thống kê">
+    </div>
     <br><br>
 </form>
 {% if request.method == "POST" %}
-    <div class='chart'>
-        <div class='chart-body'>
-            <canvas id="myChart"></canvas>
-        </div>
+<div class='chart'>
+    <div class='chart-body'>
+        <canvas id="myChart"></canvas>
     </div>
-    <div class="title">Biểu đồ thể hiện số lượng hàng bán ra</div>
+</div>
+<div class="title">Biểu đồ thể hiện số lượng hàng bán ra</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
-     labels = labels.map(function (item) {
-                    return item.split(' ');
-                    }); 
+    var labels = {{columns_name | safe}}
+    var data = {{values | safe}}
+    labels = labels.map(function(item) {
+        return item.split(' ');
+    });
     console.log(labels);
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
@@ -64,8 +69,8 @@
                     anchor: 'end',
                     align: 'top',
                     formatter: function(value) {
-                    return value;
-                }
+                        return value;
+                    }
                 }
             }]
         },
@@ -83,8 +88,8 @@
             scales: {
                 x: {
                     title: {
-                    display: true, // hiển thị tên trục x
-                    text: "Tháng", // nội dung tên trục x
+                        display: true, // hiển thị tên trục x
+                        text: "Tháng", // nội dung tên trục x
                     },
                 },
                 y: {
@@ -102,11 +107,14 @@
 
     var chartBody = document.querySelector('.chart-body');
     const totalLabels = labels.length;
-    if(totalLabels > 10) {
+    if (totalLabels > 10) {
         chartBody.style.width = totalLabels * 80 + 'px';
     }
     var myChart = new Chart(ctx, options);
 </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
 {% endif %}
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Add Motor</title>
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/add_motor.css' %}">
-</head>
-<body>
+{% comment %} <link rel="stylesheet" href="{% static 'styles/add_motor.css' %}"> {% endcomment %}
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -18,19 +17,25 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/add_motor/" method="post" enctype="multipart/form-data">{% csrf_token %}
-    <p>Tên xe: {{motor_form.name}}</p>
-    <p>Thương hiệu: {{motor_form.brand}}</p>
-    <p>Ảnh: {{motor_form.image}}</p>
-    <p>Mô tả: {{motor_form.description}}</p>
-    <p>Bảo hành: {{motor_form.assurance}}</p>
-    <p style="display: none">Số lượng: {{motor_form.quantity}}</p>
-    <p>Giá nhập: {{motor_form.import_price}}</p>
-    <p>Giá bán: {{motor_form.export_price}}</p>
-    <input type="submit" value="Thêm">
-    <a href="/motor_manager/">Về trang quản lý</a>
-</form>
+
+<div class='row justify-content-center'>
+    <div class='col-6'>
+        <div class='card p-5'>
+            <div class="card-title ">
+                <h3 class='text-center'>Thêm xe</h3>
+            </div>
+            <form action="/add_motor/" method="post">{% csrf_token %}
+                {{ motor_form.as_p }}
+                <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm"></div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/add_motor.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+

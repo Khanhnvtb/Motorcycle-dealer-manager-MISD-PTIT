@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Update Store</title>
-        <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/update_store.css' %}">
-</head>
-<body>
+    {% comment %} <link rel="stylesheet" href="{% static 'styles/update_store.css' %}"> {% endcomment %}
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -18,18 +17,27 @@
     {% endfor %}
 </ul>
 {% endif %}
-<h1>Cập nhật thông tin</h1>
-<form action="/update_store/{{ store_id }}/" method="post">{% csrf_token %}
-    <p style="display: none">Id: {{store_form.store_id}}</p>
-    <li>Tên cửa hàng: {{ store_form.name }}</li>
-    <li>Tên chủ cửa hàng: {{ store_form.owner }}</li>
-    <li>Địa chỉ: {{ store_form.address }}</li>
-    <li>Số điện thoại: {{ store_form.phone }}</li>
-    <li>Email: {{ store_form.email }}</li>
-    <input type="submit" value="Cập nhật">
-    <a href="/store_manager/">Về trang quản lý</a>
-</form>
+
+<div class='row justify-content-center'>
+    <div class='col-6'>
+        <div class='card p-5'>
+            <div class="card-title ">
+                <h3 class='text-center'>Cập nhật thông tin</h3>
+            </div>
+            <form action="/update_store/{{ store_id }}/" method="post">{% csrf_token %}
+                {{ store_form.as_p }}
+                <div class='d-flex justify-content-center mt-4 gap-4'>
+                    <input class='btn btn-primary' type="submit" value="Cập nhật">
+                    <a class='btn btn-primary'  href="/store_manager/">Về trang quản lý</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/update_store.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

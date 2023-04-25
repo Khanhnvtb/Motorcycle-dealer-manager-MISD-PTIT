@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Visualization export to store</title>
+{% extends 'base.html' %}
+
+{% block style %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
+{% endblock style %}
 
-</head>
 
-<body>
+{% block content %}
     <div class='chart'>
         <div class='chart-body'>
             <canvas id="myChart"></canvas>
@@ -23,11 +21,11 @@
         var ctx = document.getElementById('myChart').getContext('2d');
 
         // Tạo biến để lưu trữ dữ liệu từ context của django
-        var labels = {{ columns_name | safe}} // một list chứa các tên cột
-        var data = {{values | safe}}; // một list chứa giá trị là các số nguyên
-         labels = labels.map(function (label) {
+    var labels = {{columns_name | safe}}
+    var data = {{values | safe}}
+        labels = labels.map(function(label) {
             return label.split(' ');
-         });
+        });
         // Tạo biểu đồ cột sử dụng chart js
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -73,6 +71,9 @@
             chartBody.style.width = totalLabels * 100 + 'px';
         }
     </script>
-</body>
+{% endblock content %}
 
-</html>
+{% block script %}
+
+{% endblock script %}
+

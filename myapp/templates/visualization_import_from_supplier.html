@@ -1,75 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Visualization import from supplier</title>
+{% block style %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
-</head>
+{% endblock style %}
 
-<body>
+
+{% block content %}
      <div class='chart'>
          <div class='chart-body'>
              <canvas id="myChart"></canvas>
          </div>
      </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var labels = {{ columns_name | safe}} // một list chứa các tên cột
-        var data = {{values | safe}}; // một list chứa giá trị là các số nguyên
-        labels = labels.map(function (label) {
-            return label.split(' ');
-        });
+     <script>
+         var ctx = document.getElementById('myChart').getContext('2d');
+        var labels = {{columns_name | safe}}
+        var data = {{values | safe}}
+         labels = labels.map(function(label) {
+             return label.split(' ');
+         });
 
-        // Tạo biểu đồ cột sử dụng chart js
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Số lượng',
-                    data: data,
-                    backgroundColor: 'rgba(99,107,255,0.2)',
-                    borderColor: 'rgb(99,143,255)',
-                    borderWidth: 1,
-                    barPercentage: 0.5,
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'top',
-                    }
-                }]
-            },
-            plugins: [ChartDataLabels],
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {
-                            display: true, // hiển thị tên trục x
-                            text: "Cửa hàng", // nội dung tên trục x
-                        },
-                    },
-                    y: {
-                        title: {
-                            display: true, // hiển thị tên trục x
-                            text: "Số lượng", // nội dung tên trục x
-                        },
-                        beginAtZero: true
-                    }
-                },
-            }
-        })
+         // Tạo biểu đồ cột sử dụng chart js
+         var myChart = new Chart(ctx, {
+             type: 'bar',
+             data: {
+                 labels: labels,
+                 datasets: [{
+                     label: 'Số lượng',
+                     data: data,
+                     backgroundColor: 'rgba(99,107,255,0.2)',
+                     borderColor: 'rgb(99,143,255)',
+                     borderWidth: 1,
+                     barPercentage: 0.5,
+                     datalabels: {
+                         anchor: 'end',
+                         align: 'top',
+                     }
+                 }]
+             },
+             plugins: [ChartDataLabels],
+             options: {
+                 maintainAspectRatio: false,
+                 scales: {
+                     x: {
+                         title: {
+                             display: true, // hiển thị tên trục x
+                             text: "Cửa hàng", // nội dung tên trục x
+                         },
+                     },
+                     y: {
+                         title: {
+                             display: true, // hiển thị tên trục x
+                             text: "Số lượng", // nội dung tên trục x
+                         },
+                         beginAtZero: true
+                     }
+                 },
+             }
+         })
 
-        var chartBody = document.querySelector('.chart-body');
-        const totalLabels = labels.length;
-        if (totalLabels > 10) {
-            chartBody.style.width = totalLabels * 100 + 'px';
-        }
-    </script>
+         var chartBody = document.querySelector('.chart-body');
+         const totalLabels = labels.length;
+         if (totalLabels > 10) {
+             chartBody.style.width = totalLabels * 100 + 'px';
+         }
+     </script>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+
+
 </body>
 
 </html>

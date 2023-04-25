@@ -1,23 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Store information</title>
-        <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/show_store.css' %}">
-</head>
-<body>
-<h1>Thông tin cửa hàng</h1>
-<ul>
-    <li>Tên cửa hàng: {{ store.name }}</li>
-    <li>Tên chủ cửa hàng: {{ store.owner }}</li>
-    <li>Địa chỉ: {{ store.address }}</li>
-    <li>Số điện thoại: {{ store.phone }}</li>
-    <li>Email: {{ store.email }}</li>
-</ul>
-<a href="/store_manager/">Về trang quản lý</a>
+{% endblock style %}
+
+
+{% block content %}
+<div class='row justify-content-center'>
+    
+    <div class='col-7'>
+        <div class='card'>
+            <div class='card-title'>
+                <h1 class='text-center my-4'>Thông tin cửa hàng</h1>
+            </div>
+            <div class='card-body px-5'>
+                <table class="table">
+                    <tr>
+                        <td>Tên cửa hàng</td>
+                        <td>{{ store.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tên chủ cửa hàng</td>
+                        <td>{{ store.owner }}</td>
+                    </tr>
+                    <tr>
+                        <td>Địa chỉ</td>
+                        <td>{{ store.address }}</td>
+                    </tr>
+                    <tr>
+                        <td>Số điện thoại</td>
+                        <td>{{ store.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ store.email }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='d-flex justify-content-center mt-5'><a class='btn btn-primary' href="/store_manager/">Về trang quản lý</a></div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/show_store.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+

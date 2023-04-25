@@ -1,36 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Motor information</title>
-        <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/show_motor.css' %}">
-</head>
-<body>
-<h1>Thông tin xe máy</h1>
-<table style="width:100%">
-    <tr>
-        <td style="display:none">Ảnh đại diện</td>
-        <td style="display: none">Thông tin</td>
-    </tr>
-    <tr>
-        <td>
-            <img src="{{ motor.image.url }}" alt="{{ motor.name }}" height="200">
-        </td>
-        <td>
-            <li>Tên xe máy: {{ motor.name }}</li>
-            <li>Thương hiệu: {{ motor.brand }}</li>
-            <li>Mô tả xe: {{ motor.description }}</li>
-            <li>Bảo hành: {{motor.assurance }}</li>
-            <li>Số lượng: {{motor.quantity }}</li>
-            <li>Giá nhập: {{motor.import_price }}</li>
-            <li>Giá bán: {{motor.export_price }}</li>
-        </td>
-    </tr>
-</table>
-<a href="/motor_manager/">Về trang quản lý</a>
+{% endblock style %}
+
+
+{% block content %}
+{% load humanize %}
+<h1 class='text-center my-4'>Thông tin xe máy</h1>
+
+<div class="row">
+    <div class="col-4 pt-3">
+        <img class='motor-img' src="{{ motor.image.url }}" alt="{{ motor.name }}" height="200">
+    </div>
+    <div class="col-8 px-5">
+        <table class='table' style="width:100%">
+            <tr>
+                <td>
+                   Tên xe máy
+                </td>
+                <td>
+                    {{ motor.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>Thương hiệu</td>
+                <td>{{ motor.brand }}</td>
+            </tr>
+            <tr>
+                <td>Mô tả xe</td>
+                <td>{{ motor.description }}</td>
+            </tr>
+            <tr>
+                <td>Bảo hành</td>
+                <td>{{ motor.assurance }}</td>
+            </tr>
+            <tr>
+                <td>Số lượng</td>
+                <td>{{ motor.quantity }}</td>
+            </tr>
+            <tr>
+                <td>Giá nhập</td>
+                <td>{{ motor.import_price|intcomma|add:"đ" }}</td>
+            </tr>
+            <tr>
+                <td>Giá bán</td>
+                <td>{{ motor.export_price|intcomma|add:"đ" }}</td>
+            </tr>
+
+
+        </table>
+    </div>
+</div>
+<a class='btn btn-primary' href="/motor_manager/">Về trang quản lý</a>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/show_motor.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+

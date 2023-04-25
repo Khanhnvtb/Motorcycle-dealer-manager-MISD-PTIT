@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Sale history</title>
-    <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/sale_history.css' %}">
-</head>
-<body>
-<h1>Lịch sử bán hàng của {{ name }}</h1>
-<table border="1">
+{% endblock style %}
+
+
+{% block content %}
+<h1 class='my-4'>Lịch sử bán hàng của {{ name }}</h1>
+<table class='table table-bordered text-center' border="1">
     <tr>
         <th>Thời gian</th>
         <th>Tên xe</th>
@@ -29,23 +28,29 @@
     </tr>
     {% endfor %}
 </table>
-<div class="pagination"> <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
-    {% endif %}
+<nav class='d-flext ' aria-label="Page navigation example">
+    <ul class="pagination align-items-center justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">« Đầu tiên</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Trước</a></li>
+        {% endif %}
 
-    <span class="current">
-        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
-    </span>
-
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
-    {% endif %}
-</span>
-</div>
+        <li class="page-item mx-3">
+            <span class="current">
+                Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Tiếp theo</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key,value in date_form.cleaned_data.items %}&{{ key }}={{ value }}{% endfor %}">Cuối cùng »</a></li>
+        {% endif %}
+    </ul>
+</nav>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/sale_history.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+
