@@ -21,10 +21,18 @@
         </td>
         <td><a href="/show_motor/{{ record.0 }}/">{{ record.1 }}</a></td>
         <td>
-            {% if record.3 == 0 %}
-            <p>Khả năng bán chạy, có thể cân nhắc nhập thêm</p>
+            {% if record.4 == 0 %}
+            {% if record.3 > 0.85 %}
+            <p>Rất có khả năng bán chạy, nên nhập thêm </p>
+            {% elif record.3 > 0.6 %}
+            <p>Có khả năng bán chạy, cân nhắc nhập thêm</p>
+            {% endif %}
             {% else %}
-            <p>Khả năng tồn kho, nên sale {{ record.3 }}% </p>
+            {% if record.3 > 0.85 %}
+            <p>Rất có khả năng tồn kho, nên sale {{ record.4 }}% </p>
+            {% elif record.3 > 0.6 %}
+            <p>Có khả năng tồn kho, nên sale {{ record.4 }}%</p>
+            {% endif %}
             {% endif %}
         </td>
     </tr>

@@ -24,7 +24,7 @@
             <div class="card-title ">
                 <h3 class='text-center'>Cập nhật thông tin</h3>
             </div>
-            <form action="/add_user/" method="post">{% csrf_token %}
+            <form action="/update_user/{{ username }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
                 {{ user_form.as_p }}
                 <div class='d-flex justify-content-center mt-4 gap-4'>
                     <input class='btn btn-primary' type="submit" value="Cập nhật">

@@ -326,7 +326,7 @@ def storeManager(request):
         if keyword:
             stores = Store.objects.filter(name__contains=keyword)
             context['keyword'] = keyword
-        else :
+        else:
             stores = Store.objects.all()
     else:
         return render(request, 'home.html')
@@ -335,7 +335,7 @@ def storeManager(request):
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
     context['page_obj'] = page_obj
-    return render(request, 'store_manager.html',context)
+    return render(request, 'store_manager.html', context)
 
 
 @login_required(login_url='/login/')
@@ -1450,8 +1450,12 @@ def salePredict(request):
         # Dự đoán loại xe
         X_test = df.drop([1, 2, 7, 8], axis=1)
         X_test = preProcessing(X_test)
+        proba_predictions = []
+        for i in range(len(X_test)):
+            proba_predictions.append(max(label_model.predict_proba(X_test)[i]))
         label_model.predict(X_test)
         predictions = label_model.predict(X_test)
+        df['proba'] = proba_predictions
         # df1 chứa thông tin xe nên nhập, df chưa thông tin xe tồn kho
         df1 = df.copy()
         for i in range(len(predictions)):
@@ -1463,8 +1467,7 @@ def salePredict(request):
             else:
                 df1.drop(i, inplace=True)
         # dự đoán % giảm
-        x_test = df.drop([1, 2, 7, 8], axis=1)
-        sale_model = joblib.load('sale.joblib')
+        x_test = df.drop([1, 2, 7, 8, 'proba'], axis=1)
         predictions = list(sale_model.predict(preProcessing(x_test)))
         for i in range(len(predictions)):
             predictions[i] = round(predictions[i], 1)
