@@ -10,6 +10,9 @@ from datetime import date
 from django.db import connection
 from django.core.paginator import Paginator
 import calendar
+import joblib
+import pandas as pd
+import sklearn
 
 
 # Create your views here.
@@ -487,7 +490,7 @@ def exportMotor(request):
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.ERROR, 'Bạn chưa chọn các sản phẩm cần xuất')
-            else:
+            else:  # nếu đã viết
                 for motor in export_dict.keys():
                     quantity = export_dict[motor]
                     if motor.quantity < quantity:
@@ -1390,5 +1393,96 @@ def addExpense(request):
         return render(request, 'home.html')
     return render(request, 'add_expense.html', {'expense_form': expense_form})
 
-def home(request):
-    return render(request, 'base.html')
+
+def preProcessing(df):
+    df[3] = df[3] / 365
+    df[0] = df[0] / 2494
+    df[4] = df[4] / 2340
+    df[6] = df[6] / 500000000
+    df[5] = df[5] / 352
+    return df
+
+
+@login_required(login_url='/login/')
+def salePredict(request):
+    if request.user.role == 'admin':
+        # khởi tạo model
+        label_model = joblib.load('label.joblib')
+        sale_model = joblib.load('sale.joblib')
+
+        cursor = connection.cursor()
+
+        # do tập dữ liệu lớn hơn ngày hiện tại -> set cứng date thay cho datetime.now()
+        query = "select a.dt, a.motor_id, datediff('2024-1-2', a.dt) as import_date, " \
+                "a.quantity, a.last_sale, a.export_price, a.name, a.image " \
+                "from myapp_import_invoice " \
+                "join (select myapp_motor.motor_id, myapp_motor.name, max(myapp_import_invoice.time) as dt, " \
+                "myapp_motor.quantity, datediff('2024-1-2', max(myapp_delivery_invoice.time)) as last_sale, " \
+                "myapp_motor.export_price, myapp_motor.image " \
+                "from myapp_import_invoice " \
+                "join myapp_import_motor on myapp_import_invoice.invoice_id = myapp_import_motor.invoice_id " \
+                "join myapp_motor on myapp_import_motor.motor_id = myapp_motor.motor_id " \
+                "join myapp_delivery_motor on myapp_motor.motor_id = myapp_delivery_motor.motor_id " \
+                "join myapp_delivery_invoice on myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
+                "group by myapp_motor.motor_id) as a on myapp_import_invoice.time = a.dt " \
+                "order by a.motor_id"
+
+        cursor.execute(query)
+
+        df = []
+        result = cursor.fetchall()
+        for record in result:
+            # bảng motor thêm cột sale_quantity sẽ bỏ qua được bước này :<
+            query = "select ifnull((select sum(myapp_delivery_motor.quantity) " \
+                    "from myapp_delivery_motor " \
+                    "join myapp_delivery_invoice on myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
+                    "where myapp_delivery_motor.motor_id = {s1} and myapp_delivery_invoice.time > '{s2}' " \
+                    "group by myapp_delivery_motor.motor_id), 0) as sale_quantity".format(s1=record[1], s2=record[0])
+
+            cursor.execute(query)
+            # pass
+
+            df.append([int(cursor.fetchall()[0][0])] + list(record))
+
+        # df[0]: prev_quantity, df[1]: invoice_id, df[2]: motor_id, df[3]: import_date
+        # df[4]: curr_quantity, df[5]: last_sale, df[6]: export_price df[7]: name, df[8]: image
+        df = pd.DataFrame(df)
+        # Dự đoán loại xe
+        X_test = df.drop([1, 2, 7, 8], axis=1)
+        X_test = preProcessing(X_test)
+        label_model.predict(X_test)
+        predictions = label_model.predict(X_test)
+        # df1 chứa thông tin xe nên nhập, df chưa thông tin xe tồn kho
+        df1 = df.copy()
+        for i in range(len(predictions)):
+            if predictions[i] == 0:
+                df.drop(i, inplace=True)
+                df1.drop(i, inplace=True)
+            elif predictions[i] == 1:
+                df.drop(i, inplace=True)
+            else:
+                df1.drop(i, inplace=True)
+        # dự đoán % giảm
+        x_test = df.drop([1, 2, 7, 8], axis=1)
+        sale_model = joblib.load('sale.joblib')
+        predictions = list(sale_model.predict(preProcessing(x_test)))
+        for i in range(len(predictions)):
+            predictions[i] = round(predictions[i], 1)
+
+        df1['sale'] = [0] * len(df1)
+        df['sale'] = predictions
+        df1 = df1.drop([0, 1, 3, 4, 5, 6], axis=1)
+        df = df.drop(([0, 1, 3, 4, 5, 6]), axis=1)
+        results = pd.concat([df1, df], axis=0)
+        results = results.values.tolist()
+
+        for result in results:
+            print(result)
+
+        paginator = Paginator(results, 10)  # Show 25 contacts per page.
+
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+    else:
+        return render(request, 'home.html')
+    return render(request, 'sale_predict.html', {'page_obj': page_obj})
