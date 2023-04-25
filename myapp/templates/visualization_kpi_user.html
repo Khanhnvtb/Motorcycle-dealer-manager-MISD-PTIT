@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Visualization kpi user</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block style %}
+
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -15,15 +16,21 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/visualization_kpi_user/{{ username }}/" method="post">{% csrf_token %}
-    <p>Chọn thời gian bắt đầu:</p>
-    <p>{{ date_form.start_month.label }} {{ date_form.start_month }} {{ date_form.start_month.help_text }}</p>
-    {{ date_form.start_year.label }} {{ date_form.start_year }} {{ date_form.start_year.help_text }}
-    <p>Chọn thời gian kết thúc:</p>
-    <p>{{ date_form.end_month.label }} {{ date_form.end_month }} {{ date_form.end_month.help_text }}</p>
-    {{ date_form.end_year.label }} {{ date_form.end_year }} {{ date_form.end_year.help_text }}
-    <br><br>
-    <input type="submit" value="Submit">
+<form action="/visualization_sale_items/" method="post">{% csrf_token %}
+    <div class='d-flex gap-5 align-items-center'>
+        <div class='d-flex gap-3 align-items-center'>
+            <div>Từ</div>
+            <div class='d-flex align-items-center'>{{ date_form.start_month.label }} {{ date_form.start_month }}</div>
+            <div class='d-flex align-items-center'>{{ date_form.start_year.label }} {{ date_form.start_year }}</div>
+        </div>
+        <div class='d-flex gap-3 align-items-center'>
+            <div>Đến</div>
+            <div class='d-flex align-items-center'>{{ date_form.end_month.label }} {{ date_form.end_month }}</div>
+            <div class='d-flex align-items-center'>{{ date_form.end_year.label }} {{ date_form.end_year }}</div>
+            <br><br>
+        </div>
+        <input class='btn btn-primary align-middle' type="submit" value="Thống kê">
+    </div>
     <br><br>
 </form>
 {% if request.method == "POST" %}
@@ -35,8 +42,8 @@
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
+    var labels = {{columns_name | safe}}
+    var data = {{values | safe}}
 
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {
@@ -61,5 +68,8 @@
     })
 </script>
 {% endif %}
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

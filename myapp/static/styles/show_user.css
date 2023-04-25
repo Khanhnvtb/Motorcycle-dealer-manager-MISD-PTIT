@@ -1,40 +1,13 @@
-/* Định dạng cho tiêu đề */
-h1 {
-    color: rgb(251, 167, 49);
-    text-align: center;
-    font-family: Arial, sans-serif;
+.user-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
 }
-
-/* Định dạng cho bảng */
-table {
-    border-collapse: collapse;
-    margin: 0 auto;
-}
-
-/* Định dạng cho các ô trong bảng */
 td {
-    border: 1px solid black;
-    padding: 10px;
+    text-align: left;
 }
 
-/* Định dạng cho các phần tử li trong bảng */
-li {
-    list-style-type: none;
-}
-
-/* Định dạng cho liên kết */
-a {
-    display: block;
-    width: 200px;
-    margin: 20px auto;
-    background-color: #ff6200;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding: 10px;
-}
-
-/* Thay đổi màu nền khi di chuột qua liên kết */
-a:hover {
-    background-color: yellow;
+tr td:first-child {
+    font-weight: 500;
 }

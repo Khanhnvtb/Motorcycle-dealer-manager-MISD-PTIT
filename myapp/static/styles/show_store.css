@@ -1,37 +1,4 @@
-/* Định dạng cho tiêu đề */
-h1 {
-    color: purple;
-    text-align: center;
-    font-family: Verdana, sans-serif;
-}
 
-/* Định dạng cho danh sách */
-ul {
-    border: 2px dashed purple;
-    padding: 20px;
-    margin: 0 auto;
-    width: 400px;
-}
-
-/* Định dạng cho các phần tử li trong danh sách */
-li {
-    font-size: 18px;
-    line-height: 1.5;
-}
-
-/* Định dạng cho liên kết */
-a {
-    display: block;
-    width: 200px;
-    margin: 20px auto;
-    background-color: purple;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding: 10px;
-}
-
-/* Thay đổi màu nền khi di chuột qua liên kết */
-a:hover {
-    background-color: pink;
+tr td:first-child {
+    font-weight: 500;
 }

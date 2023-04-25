@@ -1,53 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Show invoice</title>
-    <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/show_invoice.css' %}">
-</head>
-<body>
-<h1>Thông tin hóa đơn</h1>
-<ul>
-    <li>Mã hóa đơn: {{ invoice.invoice_id }}</li>
-    <li>Ngày lâp: {{ invoice.time }}</li>
-    <li>Tổng tiền: {{ invoice.total }}</li>
-    <li>Số tiền đã thanh toán: {{ invoice.payment }}</li>
-    <li>Hạn thanh toán: {{ invoice.debt_term }}</li>
-    <li>Người lập: {{ name }}</li>
-    <li>Tên khách hàng: {{ customer }}</li>
-</ul>
-<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
-    <tr>
-        <th>Tên xe</th>
-        <th>Số lượng</th>
-    </tr>
-    {% for record in page_obj %}
-    <tr>
-        <td>{{ record.0 }}</td>
-        <td>{{ record.1 }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="pagination"> <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
-    {% endif %}
+{% endblock style %}
 
-    <span class="current">
-        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
-    </span>
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
-    {% endif %}
-</span>
+{% block content %}
+{% load humanize %}
+
+<h1 class='text-center my-4'>Thông tin hóa đơn</h1>
+
+<div class='row my-5'>
+    <div class="col-4">
+        <div class='card'>
+            <table class="invoice table table-borderless">
+                <tr>
+                    <td>Mã hóa đơn</td>
+                    <td>{{ invoice.invoice_id }}</td>
+                </tr>
+                <tr>
+                    <td>Ngày lập</td>
+                    <td>{{ invoice.time }}</td>
+                </tr>
+                <tr>
+                    <td>Tổng tiền</td>
+                    <td>{{ invoice.total|intcomma|add:"đ" }}</td>
+                </tr>
+                <tr>
+                    <td>Số tiền đã thanh toán</td>
+                    <td>{{ invoice.payment|intcomma|add:"đ" }}</td>
+                </tr>
+                <tr>
+                    <td>Hạn thanh toán</td>
+                    <td>{{ invoice.debt_term }}</td>
+                </tr>
+                <tr>
+                    <td>Người lập</td>
+                    <td>{{ name }}</td>
+                </tr>
+                <tr>
+                    <td>Tên khách hàng</td>
+                    <td>{{ customer }}</td>
+                </tr>
+    
+            </table>
+        </div>
+    </div>
+    <div class="col-8 ps-5">
+        <h4 class='text-center mb-3'>Danh sách xe</h4>
+        <table class="table list-motor">
+            <thead>
+                <tr>
+                    <th scope="col">Tên xe</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Đơn giá</th>
+                    <th scope="col">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if invoice.import_motor_set.all %}
+                {% load filter %}
+                {% for import_motor in invoice.import_motor_set.all %}
+
+                <tr>
+                    <td>{{ import_motor.motor.name }}</td>
+                    <td>{{ import_motor.quantity }}</td>
+                    <td>{{ import_motor.motor.import_price|intcomma|add:" đ" }}</td>
+                    <td>{{ import_motor.quantity|mul:import_motor.motor.import_price|intcomma|add:" đ" }}</td>
+                </tr>
+                {% endfor %}
+                
+                {% else %}
+                {% for delivery_motor in invoice.delivery_motor_set.all %}
+
+                <tr>
+                    <td>{{ delivery_motor.motor.name }}</td>
+                    <td>{{ delivery_motor.quantity }}</td>
+                    <td>{{ delivery_motor.motor.import_price|intcomma|add:" đ" }}</td>
+                    <td>{{ delivery_motor.quantity|mul:delivery_motor.motor.import_price|intcomma|add:" đ" }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
-<a href="/invoice_manager/">Về trang quản lý</a>
+
+
+<a class='btn btn-primary' href="/invoice_manager/">Về trang quản lý</a>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/show_invoice.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

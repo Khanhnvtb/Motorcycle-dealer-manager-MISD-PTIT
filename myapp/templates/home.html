@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
+    {% comment %} <link rel="stylesheet" href="{% static 'styles/home.css' %}"> {% endcomment %}
+{% endblock style %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
 
-</head>
-
-<body>
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -21,34 +17,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-{% if user.is_authenticated %}
-<div class='header'>
-    <div style="display: flex;">
-        <p>Hi, {{user.name}}</a></p>
-        <a href="/logout/">Đăng xuất</a>
-    </div>
-</div>
+{% endblock content %}
 
-{% if user.role == 'Nhân viên kho' %}
-<a href="/motor_manager/">Quản lý xe</a>
-<a href="/supplier_manager/">Quản lý nhà cung cấp</a>
+{% block script %}
 
-{% elif user.role == 'Nhân viên bán hàng' %}
-<a href="/store_manager/">Quản lý cửa hàng</a>
-<a href="/expense_manager/">Quản lý chi phí</a>
-{% else %}
-<a href="/user_manager/">Quản lý nhân viên</a>
-{% endif %}
-<a href="/report/{{ user.username }}/">Báo cáo thống kê</a>
-<a href="/visualization/{{ user.username }}">Trực quan hóa</a>
-{% if user.role != 'admin' %}
-<a href="/invoice_manager/">Quản lý hóa đơn</a>
-{% endif %}
-{% else %}
-<a href="/login/">Đăng nhập</a>
-{% endif %}
-<!-- Gọi file js trong folder static -->
-<script src="{% static 'scripts/home.js' %}"></script>
-</body>
+{% endblock script %}
 
-</html>

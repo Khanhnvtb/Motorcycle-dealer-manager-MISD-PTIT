@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+
+
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
+{% endblock style %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Visualization best sale items</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
-</head>
-
-<body>
+{% block content %}
     <div class='chart'>
         <div class='chart-body'>
             <canvas id="myChart"></canvas>
@@ -17,14 +15,14 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2 "></script>
-
+    
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
-
+    
         // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{ columns_name | safe }}; // một list chứa các tên cột
-    var data = {{ values | safe }}; // một list chứa giá trị là các số nguyên
-
+        var labels = {{ columns_name | safe}}
+        var data = {{ values | safe }}
+    
         labels = labels.map(function(item) {
             return item.split(' ');
         });
@@ -67,13 +65,15 @@
             },
             plugins: [ChartDataLabels],
         })
-
+    
         var chartBody = document.querySelector('.chart-body');
         const totalLabels = labels.length;
         if (totalLabels > 10) {
             chartBody.style.width = totalLabels * 100 + 'px';
         }
     </script> <!-- Thêm dấu ngoặc vuông và dấu ngoặc nhọn -->
-</body>
+{% endblock content %}
 
-</html>
+{% block script %}
+{% endblock script %}
+

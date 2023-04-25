@@ -1,22 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Supplier information</title>
-        <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/show_supplier.css' %}">
-</head>
-<body>
-<h1>Thông tin nhà cung cấp</h1>
-<ul>
-    <li>Tên nhà cung cấp: {{ supplier.name }}</li>
-    <li>Tên cửa hàng: {{ supplier.address }}</li>
-    <li>Số điện thoại: {{ supplier.phone }}</li>
-    <li>Email: {{ supplier.email }}</li>
-</ul>
-<a href="/supplier_manager/">Về trang quản lý</a>
+{% endblock style %}
+
+
+{% block content %}
+
+
+<div class='row justify-content-center'>
+
+    <div class='col-7'>
+        <div class='card'>
+            <div class='card-title'>
+                <h1 class='text-center my-4'>Thông tin nhà cung cấp</h1>
+            </div>
+            <div class='card-body px-5'>
+                <table class='table table-bordered my-4'>
+                    <tr>
+                        <td>Tên nhà cung cấp</td>
+                        <td>{{ supplier.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Địa chỉ</td>
+                        <td>{{ supplier.address }}</td>
+                    </tr>
+                    <tr>
+                        <td>Số điện thoại</td>
+                        <td>{{ supplier.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ supplier.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phí vận chuyển</td>
+                        <td>{{supplier.transport_price}}</td>
+                    </tr>
+                    <tr>
+                        <td>Thời gian giao hàng</td>
+                        <td>{{delivery_day}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a class='btn btn-primary' href="/supplier_manager/">Về trang quản lý</a>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/show_supplier.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

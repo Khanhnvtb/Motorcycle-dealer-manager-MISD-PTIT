@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Export motor</title>
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}">
-</head>
-<body>
+    {% comment %} <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}"> {% endcomment %}
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -18,22 +17,43 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form action="/export_motor/" method="POST" enctype="multipart/form-data">
-    <!-- Management data of formset -->
-    {{ import_forms.management_data }}
 
-    <!-- Security token -->
-    {% csrf_token %}
+<div class='row justify-content-center'>
+    <div class='col-7'>
+        <div class='card p-5'>
+            <div class="card-title ">
+                <h3 class='text-center'>Xuất hàng</h3>
+            </div>
+            <form action="/export_motor/" method="post">{% csrf_token %}
+                {{ import_forms.management_data }}
 
-    {{ store_form.as_p}}
-    {{ debt_form.as_p }}
-    <!-- Using the formset -->
-    {{ export_forms.as_p }}
+                <!-- Security token -->
+                {% csrf_token %}
 
-    <input type="submit" value="Xuất xe">
-</form>
-<a href="/">Trang chủ</a>
+                <div class='my-3'>{{ store_form.store.label}} {{ store_form.store}}</div>
+
+                <div class='my-3'>{{ debt_form.debt_term.label}} {{ debt_form.debt_term}}</div>
+
+                <!-- Using the formset -->
+                {% comment %} {{ export_forms.as_p }} {% endcomment %}
+                <h5>Danh sách xe</h5>
+                {% for form in export_forms %}
+                    <div class="row my-3">
+                        <div class="col-6">{{ form.motor}}</div>
+                        <div class="col-6">{{ form.quantity}}</div>
+                    </div>
+                {% endfor %}
+                <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm hóa đơn"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/export_motor.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
+

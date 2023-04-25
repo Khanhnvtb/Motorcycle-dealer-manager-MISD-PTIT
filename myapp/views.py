@@ -24,7 +24,7 @@ def loginUser(request):
 
         if user is not None:
             login(request, user)
-            return render(request, 'home.html', {'user': user})
+            return redirect('/')
         else:
             storage = messages.get_messages(request)
             storage.used = True
@@ -229,7 +229,7 @@ def deleteStore(request, store_id):
         messages.add_message(request, messages.SUCCESS, 'Xóa cửa hàng thành công', )
     else:
         return render(request, 'home.html')
-    paginator = Paginator(stores, 20)  # Show 20 contacts per page.
+    paginator = Paginator(stores, 10)  # Show 20 contacts per page.
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
@@ -300,10 +300,12 @@ def deleteSupplier(request, supplier_id):
 
 @login_required(login_url='/login/')
 def userManager(request):
+    context = {}
     if request.user.role == "admin":
-        if request.method == "POST":
-            keyword = request.POST.get('keyword', None)
+        keyword = request.GET.get('keyword', None)
+        if keyword:
             users = User.objects.filter(name__contains=keyword)
+            context['keyword'] = keyword
         else:
             users = User.objects.all()
     else:
@@ -312,32 +314,38 @@ def userManager(request):
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
-    return render(request, 'user_manager.html', {'page_obj': page_obj})
+    context['page_obj'] = page_obj
+    return render(request, 'user_manager.html', context)
 
 
 @login_required(login_url='/login/')
 def storeManager(request):
+    context = {}
     if request.user.role != "Nhân viên kho":
-        if request.method == "POST":
-            keyword = request.POST.get('keyword', None)
+        keyword = request.GET.get('keyword', None)
+        if keyword:
             stores = Store.objects.filter(name__contains=keyword)
-        else:
+            context['keyword'] = keyword
+        else :
             stores = Store.objects.all()
     else:
         return render(request, 'home.html')
-    paginator = Paginator(stores, 20)  # Show 20 contacts per page.
+    paginator = Paginator(stores, 10)  # Show 20 contacts per page.
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
-    return render(request, 'store_manager.html', {'page_obj': page_obj})
+    context['page_obj'] = page_obj
+    return render(request, 'store_manager.html',context)
 
 
 @login_required(login_url='/login/')
 def motorManager(request):
+    context = {}
     if request.user.role != 'Nhân viên bán hàng':
-        if request.method == "POST":
-            keyword = request.POST.get('keyword', None)
+        keyword = request.GET.get('keyword', None)
+        if keyword:
             motors = Motor.objects.filter(name__contains=keyword)
+            context['keyword'] = keyword
         else:
             motors = Motor.objects.all()
     else:
@@ -346,7 +354,8 @@ def motorManager(request):
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
-    return render(request, 'motor_manager.html', {"page_obj": page_obj})
+    context['page_obj'] = page_obj
+    return render(request, 'motor_manager.html', context)
 
 
 @login_required(login_url='/login/')
@@ -1245,18 +1254,21 @@ def exportReceipt(request, invoice_id):
 
 @login_required(login_url='/login/')
 def invoiceManager(request):
+    context = {}
     if request.user.role == "Nhân viên bán hàng":
-        if request.method == "POST":
-            keyword = request.POST.get('keyword', None)
+        keyword = request.GET.get('keyword', None)
+        if keyword:
             invoices = Delivery_Invoice.objects.filter(invoice_id__contains=keyword).extra(
                 select={'balance': 'total - payment'}).order_by('-balance')
+            context['keyword'] = keyword
         else:
             invoices = Delivery_Invoice.objects.extra(select={'balance': 'total - payment'}).order_by('-balance')
     elif request.user.role == "Nhân viên kho":
-        if request.method == "POST":
-            keyword = request.POST.get('keyword', None)
+        keyword = request.GET.get('keyword', None)
+        if keyword:
             invoices = Import_Invoice.objects.filter(invoice_id__contains=keyword).extra(
                 select={'balance': 'total - payment'}).order_by('-balance')
+            context['keyword'] = keyword
         else:
             invoices = Import_Invoice.objects.extra(select={'balance': 'total - payment'}).order_by('-balance')
     else:
@@ -1265,7 +1277,8 @@ def invoiceManager(request):
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)
-    return render(request, 'invoice_manager.html', {'page_obj': page_obj})
+    context['page_obj'] = page_obj
+    return render(request, 'invoice_manager.html', context)
 
 
 @login_required(login_url='/login/')
@@ -1354,7 +1367,7 @@ def expenseManager(request):
             expense = Expense.objects.all().order_by('-time')
     else:
         return render(request, 'home.html')
-    paginator = Paginator(expense, 15)  # Show 25 contacts per page.
+    paginator = Paginator(expense, 10)  # Show 25 contacts per page.
 
     page_number = request.GET.get("page", 1)
     page_obj = paginator.get_page(page_number)

@@ -1,0 +1,16 @@
+.invoice tr td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+.invoice tr td:last-child {
+    text-align: right;
+}
+
+.list-motor {
+    padding-left: 40px;
+}
+.list-motor tr td:first-child,
+.list-motor tr th:first-child {
+    text-align: left;
+}

@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Show user</title>
-    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
-    <!-- Gọi file css trong folder static -->
-    <link rel="stylesheet" href="{% static 'styles/user_manager.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block style %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/user_manager.css' %}">
+{% endblock style %}
+
+
+{% block content %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -20,69 +18,91 @@
     {% endfor %}
 </ul>
 {% endif %}
-<a href="/">Trang chủ</a>
+
 <h1>Danh sách nhân viên</h1>
 
-<div class='search'>
-    <div>
-        <form action="/user_manager/" method="POST">
+
+<div class='search d-flex justify-content-between my-4'>
+    <form action="/user_manager/" method="get">
+    <div class='d-flex gap-3'>
             {% csrf_token %}
-            <input type="text" name="keyword">
-            <input type="submit" name="submit" value="Tìm kiếm">
-        </form>
-    </div>
-    <a href="/add_user/">Thêm nhân viên</a>
+            <input class='form-control' type="text" name="keyword">
+            <input class='btn btn-primary' type="submit" name="submit" value="Tìm kiếm">
+        </div>
+    </form>
+    <a class='btn btn-primary' href="/add_user/">Thêm nhân viên</a>
 </div>
-<table style="width:100%">
-    <tr>
-        <td style="display:none">Ảnh đại diện</td>
-        <td style="display: none">Thông tin</td>
-        <td style="display: none">Quản lý</td>
-    </tr>
+
+{% if page_obj %}
+<table class='table table-bordered border-dark text-center'style="width:100%">
+        <tr>
+            <th>Nhân viên</th>
+            <th>Chức vụ</th>
+            <th >Quản lý</th>
+        </tr>
     {% for user in page_obj %}
     <tr>
         <td>
-            <img src="{{ user.avatar.url }}" alt="{{ user.name }}" width="100" height="100">
+            <div class='d-flex align-items-center'>
+                <img src="{{ user.avatar.url }}" alt="{{ user.name }}" width="100" height="100">
+                <div>
+                    <div class='fw-400'>Tên nhân viên: {{ user.name }}</div>
+                    <div class='fw-400'>Tuổi: {{user.dob }}</div>
+                </div>
+            </div>
         </td>
+        <td><div class='fw-400'><div>{{ user.role }}</div></div></td>
         <td>
-            <li>Tên nhân viên: {{ user.name }}</li>
-            <li>Tuổi: {{user.dob }}</li>
-            <li>Chức vụ: {{ user.role }}</li>
-        </td>
-        <td>
-            {% if user.role == 'Nhân viên bán hàng' %}
-            <a href="/sale_history/{{ user.username }}/">Xem lịch sử bán hàng</a>
-            <a href="/visualization_kpi_user/{{ user.username }}/">Xem biểu đồ doanh số</a>
-            {% endif %}
-            {% if user.role == 'Nhân viên kho' %}
-            <a href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
-            {% endif %}
-            <a href="/show_user/{{ user.username }}/">Xem thông tin</a>
-            <a href="/update_user/{{ user.username }}/">Sửa</a>
-            {% if user.role != 'admin' %}
-            <a href="/delete_user/{{ user.username }}/">Xóa</a>
-            {% endif %}
+            <div class='d-flex justify-content-between'>
+                <div>
+                    <a class='btn btn-primary' href="/show_user/{{ user.username }}/">Xem thông tin</a>
+                    <a class='btn btn-primary' href="/update_user/{{ user.username }}/">Sửa</a>
+                    {% if user.role != 'admin' %}
+                    <a class='btn btn-primary' href="/delete_user/{{ user.username }}/">Xóa</a>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if user.role == 'Nhân viên bán hàng' %}
+                    <a class='btn btn-primary' href="/sale_history/{{ user.username }}/">Xem lịch sử bán hàng</a>
+                    <a class='btn btn-primary' href="/visualization_kpi_user/{{ user.username }}/">Xem biểu đồ doanh số</a>
+                    {% endif %}
+                    {% if user.role == 'Nhân viên kho' %}
+                    <a class='btn btn-primary' href="/import_history/{{ user.username }}/">Xem lịch sử nhập hàng</a>
+                    {% endif %}
+                </div>
+                
+            </div>
         </td>
     </tr>
     {% endfor %}
 </table>
-<div class="pagination"> <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
-    {% endif %}
+<nav class='d-flext ' aria-label="Page navigation example">
+    <ul class="pagination align-items-center justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">« Đầu tiên</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Trước</a></li>
+        {% endif %}
 
-    <span class="current">
-        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
-    </span>
+        <li class="page-item mx-3">
+            <span class="current">
+                Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Tiếp theo</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a></li>
+        {% endif %}
+    </ul>
+</nav>
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
-    {% endif %}
-</span>
-</div>
+{% else %}
+    <h3 class='mt-4 text-center'>Không có nhân viên nào phù hợp với từ khóa '{{keyword}}'</h3>
+
+{% endif %}
 <!-- Gọi file js trong folder static -->
-<script src="{% static 'scripts/user_manager.js' %}"></script>
-</body>
-</html>
+<script src="{% static 'scripts/pagination.js' %}"></script>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}

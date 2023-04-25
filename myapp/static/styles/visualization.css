@@ -1,15 +1,4 @@
-a {
-    display: inline-block;
-    margin: 10px;
-    padding: 10px;
-    background-color: #2196f3;
-    color: white;
-    text-decoration: none;
-}
 
-a:hover {
-    opacity: 0.8;
-}
 
 .chart {
     width: 100%;
@@ -20,3 +9,9 @@ a:hover {
 .chart-body {
     height: 700px;
 }
+
+.form-select {
+    height: 36px;
+}
+
+

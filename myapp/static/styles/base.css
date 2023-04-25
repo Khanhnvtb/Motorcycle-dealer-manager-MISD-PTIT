@@ -4,6 +4,28 @@
     --light-blue: #2196F3;
 }
 
-body {
-    padding: 16px;
+.color-white {
+    color: #fff;
+}
+
+.header {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo, .logo img {
+    width: 40px;
+}
+
+
+.header-user img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+td, th {
+    vertical-align: middle;
+    text-align: center;
 }

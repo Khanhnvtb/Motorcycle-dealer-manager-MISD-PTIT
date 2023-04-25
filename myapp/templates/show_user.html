@@ -1,37 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>User information</title>
-        <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/show_user.css' %}">
-</head>
-<body>
-<h1>Thông tin nhân viên</h1>
-<table style="width:100%">
-    <tr>
-        <td style="display:none">Ảnh đại diện</td>
-        <td style="display: none">Thông tin</td>
-    </tr>
-    <tr>
-        <td>
-            <img src="{{ user.avatar.url }}" alt="{{ user.name }}" height="200">
-        </td>
-        <td>
-            <li>Tên nhân viên: {{ user.name }}</li>
-            <li>Ngày sinh: {{ user.dob }}</li>
-            <li>Giới tính: {{ user.gender }}</li>
-            <li>Địa chỉ: {{ user.address }}</li>
-            <li>Số điện thoại: {{ user.phone }}</li>
-            <li>Email: {{ user.email }}</li>
-            <li>Chức vụ: {{ user.role }}</li>
-            <li>Lương: {{ user.salary }}</li>
-        </td>
-    </tr>
-</table>
-<a href="/user_manager/">Về trang quản lý</a>
+{% endblock style %}
+
+
+{% block content %}
+<h1 class='mb-4'>Thông tin nhân viên</h1>
+
+
+<div class="row">
+    <div class="col-4">
+        <img class='user-image' src="{{ user.avatar.url }}" alt="{{ user.name }}" height="200">
+    </div>
+    <div class="col-8 px-5">
+        <table class='table' style="width:100%">
+            <tr>
+                <td style="display:none">Ảnh đại diện</td>
+                <td style="display: none">Thông tin</td>
+            </tr>
+            <tr>
+                <td>
+                    Tên nhân viên
+                </td>
+                <td>
+                    {{ user.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>Ngày sinh</td>
+                <td>{{ user.dob }}</td>
+            </tr>
+            <tr>
+                <td>Giới tính</td>
+                <td>{{ user.gender }}</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ</td>
+                <td>{{ user.address }}</td>
+            </tr>
+            <tr>
+                <td>Số điện thoại</td>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>Chức vụ</td>
+                <td>{{ user.role }}</td>
+            </tr>
+            <tr>
+                <td>Lương</td>
+                <td>{{ user.salary }}</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+<div class='d-flex justify-content-center mt-5'><a class='btn btn-primary' href="/user_manager/">Về trang quản lý</a></div>
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/show_user.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
