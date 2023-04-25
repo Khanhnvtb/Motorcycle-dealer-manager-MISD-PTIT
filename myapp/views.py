@@ -481,7 +481,7 @@ def exportMotor(request):
                 storage = messages.get_messages(request)
                 storage.used = True
                 messages.add_message(request, messages.ERROR, 'Bạn chưa chọn các sản phẩm cần xuất')
-            else:
+            else:  # nếu đã viết
                 for motor in export_dict.keys():
                     quantity = export_dict[motor]
                     if motor.quantity < quantity:
@@ -1400,13 +1400,12 @@ def salePredict(request):
         cursor = connection.cursor()
 
         # do tập dữ liệu lớn hơn ngày hiện tại -> set cứng date thay cho datetime.now()
-        query = "select myapp_import_invoice.invoice_id, a.motor_id, datediff('2024-1-2', a.dt) as import_date, " \
+        query = "select a.dt, a.motor_id, datediff('2024-1-2', a.dt) as import_date, " \
                 "a.quantity, a.last_sale, a.export_price, a.name, a.image " \
                 "from myapp_import_invoice " \
-                "join (" \
-                "select myapp_motor.motor_id, myapp_motor.name, myapp_motor.image, max(myapp_import_invoice.time) as dt, " \
+                "join (select myapp_motor.motor_id, myapp_motor.name, max(myapp_import_invoice.time) as dt, " \
                 "myapp_motor.quantity, datediff('2024-1-2', max(myapp_delivery_invoice.time)) as last_sale, " \
-                "myapp_motor.export_price " \
+                "myapp_motor.export_price, myapp_motor.image " \
                 "from myapp_import_invoice " \
                 "join myapp_import_motor on myapp_import_invoice.invoice_id = myapp_import_motor.invoice_id " \
                 "join myapp_motor on myapp_import_motor.motor_id = myapp_motor.motor_id " \
@@ -1421,11 +1420,11 @@ def salePredict(request):
         result = cursor.fetchall()
         for record in result:
             # bảng motor thêm cột sale_quantity sẽ bỏ qua được bước này :<
-            query = "select sum(myapp_import_motor.quantity) + myapp_motor.quantity as prev_quantity " \
-                    "from myapp_import_motor " \
-                    "join myapp_motor on myapp_import_motor.motor_id = myapp_motor.motor_id " \
-                    "where myapp_import_motor.invoice_id = {s1} " \
-                    "group by myapp_import_motor.invoice_id".format(s1=record[0])
+            query = "select ifnull((select sum(myapp_delivery_motor.quantity) " \
+                    "from myapp_delivery_motor " \
+                    "join myapp_delivery_invoice on myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
+                    "where myapp_delivery_motor.motor_id = {s1} and myapp_delivery_invoice.time > '{s2}' " \
+                    "group by myapp_delivery_motor.motor_id), 0) as sale_quantity".format(s1=record[1], s2=record[0])
 
             cursor.execute(query)
             # pass
@@ -1433,7 +1432,7 @@ def salePredict(request):
             df.append([int(cursor.fetchall()[0][0])] + list(record))
 
         # df[0]: prev_quantity, df[1]: invoice_id, df[2]: motor_id, df[3]: import_date
-        # df[4]: curr_quantity, df[5]: last_sale, df[6]: export_price
+        # df[4]: curr_quantity, df[5]: last_sale, df[6]: export_price df[7]: name, df[8]: image
         df = pd.DataFrame(df)
         # Dự đoán loại xe
         X_test = df.drop([1, 2, 7, 8], axis=1)
@@ -1466,8 +1465,11 @@ def salePredict(request):
 
         for result in results:
             print(result)
+
         paginator = Paginator(results, 10)  # Show 25 contacts per page.
 
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
+    else:
+        return render(request, 'home.html')
     return render(request, 'sale_predict.html', {'page_obj': page_obj})
