@@ -2,14 +2,14 @@
 
 {% block style %}
 {% load static %}
-        <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
+<link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
 {% endblock style %}
 
 
 {% block content %}
 <h3 class="text-center my-3">Trực quan doanh số theo tháng</h3>
 
-<form action="/visualization_kpi_user/{{user.username}}/" method="post">{% csrf_token %}
+<form action="/visualization_kpi_user/{{ username }}/" method="post">{% csrf_token %}
     <div class='d-flex gap-5 align-items-center'>
         <div class='d-flex gap-3 align-items-center'>
             <div>Từ</div>
@@ -36,11 +36,11 @@
     <br><br>
 </form>
 {% if request.method == "POST" %}
-    <div class='chart'>
-        <div class='chart-body'>
-            <canvas id="myChart"></canvas>
-        </div>
+<div class='chart'>
+    <div class='chart-body'>
+        <canvas id="myChart"></canvas>
     </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
@@ -48,8 +48,16 @@
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{columns_name | safe}}
-    var data = {{values | safe}}
+    var labels = {
+        {
+            columns_name | safe
+        }
+    }
+    var data = {
+        {
+            values | safe
+        }
+    }
 
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {

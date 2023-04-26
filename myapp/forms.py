@@ -270,10 +270,11 @@ class DebtForm(forms.Form):
 
 
 class ImportReceiptForm(forms.Form):
-    money = forms.IntegerField(label='Số tiền: ',
+    money = forms.IntegerField(validators=[MinValueValidator(1)], label='Số tiền: ',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
-                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', },
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên',
+                                   'min_value': 'Không được nhập nhỏ hơn 1'},
                                widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
                                                              'placeholder': 'Nhập vào số tiền'}))
     note = forms.CharField(label='Ghi chú: ', required=False,
@@ -281,10 +282,11 @@ class ImportReceiptForm(forms.Form):
 
 
 class ExportReceiptForm(forms.Form):
-    money = forms.IntegerField(label='Số tiền: ',
+    money = forms.IntegerField(validators=[MinValueValidator(1)], label='Số tiền: ',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
-                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', },
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên',
+                                   'min_value': 'Không được nhập nhỏ hơn 1'},
                                widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
                                                              'placeholder': 'Nhập vào số tiền'}))
     note = forms.CharField(label='Ghi chú: ', required=False,
@@ -292,10 +294,11 @@ class ExportReceiptForm(forms.Form):
 
 
 class ExpenseForm(forms.Form):
-    money = forms.IntegerField(label='Số tiền: ',
+    money = forms.IntegerField(validators=[MinValueValidator(1)], label='Số tiền: ',
                                error_messages={
                                    'required': 'Bạn phải nhập vào số tiền',
-                                   'invalid': 'Bạn phải nhập giá trị là số nguyên', },
+                                   'invalid': 'Bạn phải nhập giá trị là số nguyên',
+                                   'min_value': 'Không được nhập nhỏ hơn 1'},
                                widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number',
                                                              'placeholder': 'Nhập vào số tiền'}))
     type = forms.CharField(label='Loại chi phí: ',
