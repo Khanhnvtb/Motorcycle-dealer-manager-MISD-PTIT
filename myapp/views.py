@@ -907,7 +907,7 @@ def visualizationBalanceSheet(request):
                     for record in results:
                         columns_name.append(record[0])
                         one_values.append(int(record[1]))
-
+        
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_import_invoice " \
                             "where time between '{s2}' and '{s3}'" \
@@ -964,7 +964,7 @@ def visualizationSaleItems(request):
             if start_date > end_date:
                 storage = messages.get_messages(request)
                 storage.used = True
-                messages.add_message(request, messages.SUCCESS, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
+                messages.add_message(request, messages.ERROR, 'Thời điểm bắt đầu không được lớn hơn kết thúc')
             else:
                 # tạo một con trỏ cho cơ sở dữ liệu
                 cursor = connection.cursor()

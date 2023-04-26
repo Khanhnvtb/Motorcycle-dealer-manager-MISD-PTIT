@@ -25,6 +25,7 @@ class Supplier(models.Model):
     email = models.EmailField(max_length=50, blank=False, null=False)
     transport_price = models.IntegerField(blank=False, null=False)
     delivery_day = models.IntegerField(blank=False, null=False)
+    rating = models.IntegerField(blank=False, null=True)
 
     def __str__(self):
         return self.name

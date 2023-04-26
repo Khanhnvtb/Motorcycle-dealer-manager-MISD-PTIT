@@ -33,10 +33,11 @@
 {% if page_obj %}
 <table class='table table-bordered' style="width:100%">
     <tr>
-        <th>Tên nhà cung cấp</th>
+        <th>Nhà cung cấp</th>
+
         <th>Thao tác</th>
     </tr>
-    {% for supplier in page_obj %}
+  {% for supplier in page_obj %}
     <tr>
         <td>
             {{ supplier.name }}
@@ -49,7 +50,7 @@
             </div>
         </td>
     </tr>
-    <tr></tr>
+
     {% endfor %}
 </table>
 <nav class='d-flex justify-content-center ' aria-label="Page navigation example">

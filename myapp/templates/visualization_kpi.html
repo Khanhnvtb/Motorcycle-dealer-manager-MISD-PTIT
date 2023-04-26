@@ -28,6 +28,15 @@
            </div>
            <input class='btn btn-primary align-middle' type="submit" value="Thống kê">
        </div>
+       {% if messages %}
+       {% for message in messages %}
+       {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+       <div class='mt-3' style='color:red'>
+           {{ message }}
+       </div>
+       {% endif %}
+       {% endfor %}
+       {% endif %}
        <br><br>
    </form>
    {% if request.method == "POST" %}
@@ -38,29 +47,39 @@
    </div>
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
+   <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
    <script>
        var ctx = document.getElementById('myChart').getContext('2d');
 
        // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {{columns_name | safe}}
-    var data = {{values | safe}}
+        var labels = {{columns_name | safe}}
+        var data = {{values | safe}}
        // Tạo biểu đồ cột sử dụng chart js
        var myChart = new Chart(ctx, {
-           type: 'bar',
+           type: 'pie',
            data: {
                labels: labels,
                datasets: [{
                    label: 'Doanh số',
                    data: data,
-                   backgroundColor: 'rgba(99,107,255,0.2)',
-                   borderColor: 'rgb(99,143,255)',
+                   backgroundColor: [
+                   'rgba(255, 99, 132, 0.2)',
+                   'rgba(54, 162, 235, 0.2)',
+                   'rgba(255, 206, 86, 0.2)',
+                   'rgba(75, 192, 192, 0.2)'
+                   ],
+                   borderColor: [
+                   'rgba(255, 99, 132, 1)',
+                   'rgba(54, 162, 235, 1)',
+                   'rgba(255, 206, 86, 1)',
+                   'rgba(75, 192, 192, 1)'
+                   ],
                    borderWidth: 1,
-                   barPercentage: 0.5,
-                   datalabels: {
+                   {% comment %} barPercentage: 0.5,
+                   datalabels: {z
                        anchor: 'end',
                        align: 'top',
-                   }
+                   } {% endcomment %}
                }]
            },
            plugins: [ChartDataLabels],
@@ -69,11 +88,17 @@
                plugins: {
                    legend: {
                        display: true, // hiển thị chú thích
+                       position: 'right'
                    },
                    title: {
                        display: true, // hiển thị tiêu đề
                        text: "Biểu đồ doanh số nhân viên", // nội dung tiêu đề
                    },
+                   labels: {
+                        render: 'percentage',
+                        position: 'outside',
+                        textMargin: 10,
+                   }
                },
                scales: {
                    x: {

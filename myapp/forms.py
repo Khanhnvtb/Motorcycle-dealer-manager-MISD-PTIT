@@ -138,6 +138,7 @@ class SupplierForm(forms.ModelForm):
             'email': forms.TextInput(attrs={'class': 'email form-control', 'type': 'email'}),
             'transport_price': forms.TextInput(attrs={'class': 'transport_price form-control', 'type': 'number'}),
             'delivery_day': forms.TextInput(attrs={'class': 'delivery_day form-control', 'type': 'number'}),
+            'rating': forms.TextInput(attrs={'class': 'rating form-control', 'type': 'number'}),
         }
         labels = {
             'supplier_id': 'Supplier ID',
@@ -147,6 +148,7 @@ class SupplierForm(forms.ModelForm):
             'email': 'Email',
             'transport_price': 'Phí vận chuyển',
             'delivery_day': 'Thời gian giao hàng',
+            'rating': 'Đánh giá chất lượng',
         }
 
 
