@@ -2,7 +2,8 @@
 
 {% block style %}
 {% load static %}
-    {% comment %} <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}"> {% endcomment %}
+{% comment %}
+<link rel="stylesheet" href="{% static 'styles/export_motor.css' %}"> {% endcomment %}
 {% endblock style %}
 
 
@@ -24,26 +25,24 @@
             <div class="card-title ">
                 <h3 class='text-center'>Xuất hàng</h3>
             </div>
-            <form action="/export_motor/" method="post">{% csrf_token %}
-                {{ import_forms.management_data }}
+            <form action="/export_motor/" method="post" enctype="multipart/form-data">
+                {{ export_forms.management_data }}
 
                 <!-- Security token -->
                 {% csrf_token %}
 
-                <div class='my-3'>{{ store_form.store.label}} {{ store_form.store}}</div>
+                <div class='my-3'>{{ store_form.store.label}} {{ store_form.store}} {{ store_form.error_messages}}</div>
 
-                <div class='my-3'>{{ debt_form.debt_term.label}} {{ debt_form.debt_term}}</div>
+                <div class='my-3'>{{ debt_form.debt_term.label}} {{ debt_form.debt_term}} {{
+                    debt_form.error_messages}}
+                </div>
 
                 <!-- Using the formset -->
                 {% comment %} {{ export_forms.as_p }} {% endcomment %}
                 <h5>Danh sách xe</h5>
-                {% for form in export_forms %}
-                    <div class="row my-3">
-                        <div class="col-6">{{ form.motor}}</div>
-                        <div class="col-6">{{ form.quantity}}</div>
-                    </div>
-                {% endfor %}
-                <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm hóa đơn"></div>
+                {{ export_forms.as_p }}
+                <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit"
+                                                                       value="Thêm hóa đơn"></div>
             </form>
         </div>
     </div>
