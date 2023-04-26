@@ -1056,7 +1056,7 @@ def visualizationKpiUser(request, username):
                 else:
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
-
+                    
                     query = "SELECT date_format(time, '{s1}') AS Month_sale, SUM(total) as sales " \
                             "FROM myapp_delivery_invoice " \
                             "WHERE myapp_delivery_invoice.employee_id = {s2} " \

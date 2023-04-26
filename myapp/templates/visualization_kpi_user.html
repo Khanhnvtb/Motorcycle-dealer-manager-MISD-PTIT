@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block style %}
-
+{% load static %}
+        <link rel="stylesheet" href="{% static 'styles/visualization.css' %}">
 {% endblock style %}
 
 
 {% block content %}
+<h3 class="text-center my-3">Trực quan doanh số theo tháng</h3>
 
-<form action="/visualization_sale_items/" method="post">{% csrf_token %}
+<form action="/visualization_kpi_user/{{user.username}}/" method="post">{% csrf_token %}
     <div class='d-flex gap-5 align-items-center'>
         <div class='d-flex gap-3 align-items-center'>
             <div>Từ</div>
@@ -34,10 +36,14 @@
     <br><br>
 </form>
 {% if request.method == "POST" %}
-<div>
-    <canvas id="myChart" height="90"></canvas>
-</div>
+    <div class='chart'>
+        <div class='chart-body'>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -55,12 +61,37 @@
                 data: data,
                 backgroundColor: 'rgba(99,107,255,0.2)',
                 borderColor: 'rgb(201,5,80)',
-                borderWidth: 1
+                borderWidth: 1,
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                }
             }]
         },
+        plugins: [ChartDataLabels],
         options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                    }
+                }
+            },
             scales: {
+                x: {
+                    title: {
+                        display: true, // hiển thị tên trục x
+                        text: "Tháng", // nội dung tên trục x
+                    },
+                },
                 y: {
+                    title: {
+                        display: true, // hiển thị tên trục y1
+                        text: "Doanh số", // nội dung tên trục y1
+                    },
+                    position: "left", // vị trí bên trái của biểu đồ
                     beginAtZero: true
                 }
             }
