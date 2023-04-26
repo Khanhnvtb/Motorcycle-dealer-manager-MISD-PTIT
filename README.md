@@ -66,14 +66,14 @@ py manage.py runserver
         - Quản lý hóa đơn xuất hàng
           <img src="image/17.png" alt="Alt text" title="Optional title">
         - Xem báo cáo thống kê
-            - Báo cáo mặt hàng đã bán theo tháng(giống với admin)
-            - Báo cáo mặt hàng bán chạy(giống với admin)
+            - Báo cáo mặt hàng đã bán theo tháng (giống với admin)
+            - Báo cáo mặt hàng bán chạy (giống với admin)
             - Xem lịch sử bán hàng
               <img src="image/18.png" alt="Alt text" title="Optional title">
         - Xem trực quan hóa
-            - Trực quan mặt hàng đã bán theo tháng(giống admin)
-            - Trực quan mặt hàng bán chạy(giống admin)
-            - Trực quan số lượng hàng đã bán cho từng cửa hàng(giống admin)
+            - Trực quan mặt hàng đã bán theo tháng (giống admin)
+            - Trực quan mặt hàng bán chạy (giống admin)
+            - Trực quan số lượng hàng đã bán cho từng cửa hàng (giống admin)
             - Trực quan kpi
               <img src="image/19.png" alt="Alt text" title="Optional title">
     - Các chức năng của nhân viên kho
@@ -87,4 +87,4 @@ py manage.py runserver
             - Xem lịch sử nhập hàng
               <img src="image/23.png" alt="Alt text" title="Optional title">
         - Xem trực quan hóa
-            - Trực quan số lượng hàng đã nhập của từng nhà cung cấp(giống admin)
+            - Trực quan số lượng hàng đã nhập của từng nhà cung cấp (giống admin)
