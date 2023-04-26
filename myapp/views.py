@@ -12,6 +12,8 @@ from django.core.paginator import Paginator
 import calendar
 import joblib
 import pandas as pd
+
+
 # import sklearn
 
 
@@ -641,8 +643,8 @@ def reportSaleItems(request):
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
 
-                    query = "SELECT date_format(Time, '{s1}') as Month_sale, " \
-                            "myapp_Motor.image, myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity " \
+                    query = "SELECT date_format(Time, '{s1}') as Month_sale, myapp_Motor.image, " \
+                            "myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity, myapp_motor.motor_id " \
                             "FROM myapp_Motor " \
                             "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
                             "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
@@ -660,9 +662,9 @@ def reportSaleItems(request):
                     for record in results:
                         key = record[0]
                         if key not in report.keys():
-                            report[key] = [tuple([record[1], record[2], record[3]])]
+                            report[key] = [tuple([record[1], record[2], record[3], record[4]])]
                         else:
-                            report[key].append(tuple([record[1], record[2], record[3]]))
+                            report[key].append(tuple([record[1], record[2], record[3], record[4]]))
                     report = [(k, v) for k, v in report.items()]
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -1478,9 +1480,6 @@ def salePredict(request):
         df = df.drop(([0, 1, 3, 4, 5, 6]), axis=1)
         results = pd.concat([df1, df], axis=0)
         results = results.values.tolist()
-
-        for result in results:
-            print(result)
 
         paginator = Paginator(results, 10)  # Show 25 contacts per page.
 
