@@ -7,29 +7,11 @@
 
 
 {% block content %}
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    {% comment %} <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
-    </li> {% endcomment %}
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Thông báo</strong>
-            <small>11 mins ago</small>
-        </div>
-        <div class="toast-body">
-            {{ message }}
-        </div>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
+
 
 <h3 class="text-center my-3">Trực quan thu chi theo tháng</h3>
 <form action="/visualization_balance_sheet/" method="post">{% csrf_token %}
-    <div class='d-flex gap-5 align-items-center'>
+    <div class='d-flex gap-5 align-items-center position-relative'>
         <div class='d-flex gap-3 align-items-center'>
             <div>Từ</div>
             <div class='d-flex align-items-center'>{{ date_form.start_month.label }} {{ date_form.start_month }}</div>
@@ -42,10 +24,20 @@
             <br><br>
         </div>
         <input class='btn btn-primary align-middle' type="submit" value="Thống kê">
+
     </div>
+    {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class='mt-3' style='color:red'>
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
     <br><br>
 </form>
-{% if request.method == "POST" %}
+{% if columns_name %}
     <div class='chart'>
         <div class='chart-body'>
             <canvas id="myChart"></canvas>
@@ -119,7 +111,11 @@
                     position: "left", // vị trí bên trái của biểu đồ
                     beginAtZero: true,
                 },
+                
             },
+            scaleLabel: function(label) {
+                return label.toLocaleString("en-US",{style:"currency", currency:"USD"});
+            }
         },
         
     };

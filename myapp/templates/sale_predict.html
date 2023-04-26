@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block style %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>Sale predict</title>
-    <!-- Gọi file css trong folder static -->
     <link rel="stylesheet" href="{% static 'styles/sale_predict.css' %}">
-</head>
-<body>
-<table border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+
+{% endblock style %}
+
+
+{% block content %}
+<table class='table table-bordered' border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
     <tr>
         <th>Ảnh xe</th>
         <th>Tên xe</th>
@@ -38,23 +38,26 @@
     </tr>
     {% endfor %}
 </table>
-<div class="pagination"> <span class="step-links">
-    {% if page_obj.has_previous %}
-    <a href="?page=1">« Đầu tiên</a>
-    <a href="?page={{ page_obj.previous_page_number }}">Trước</a>
-    {% endif %}
+<nav class='d-flex justify-content-center ' aria-label="Page navigation example">
+    <ul class="pagination align-items-center justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">« Đầu tiên</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Trước</a></li>
+        {% endif %}
 
-    <span class="current">
-        Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}.
-    </span>
+        <li class="page-item mx-3">
+            <span class="current">
+                Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Tiếp theo</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock content %}
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Tiếp theo</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a>
-    {% endif %}
-</span>
-</div>
-<!-- Gọi file js trong folder static -->
-<script src="{% static 'scripts/sale_predict.js' %}"></script>
-</body>
-</html>
+{% block script %}
+
+{% endblock script %}
