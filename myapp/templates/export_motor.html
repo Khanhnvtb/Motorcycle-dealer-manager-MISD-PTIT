@@ -2,7 +2,8 @@
 
 {% block style %}
 {% load static %}
-    {% comment %} <link rel="stylesheet" href="{% static 'styles/export_motor.css' %}"> {% endcomment %}
+{% comment %}
+<link rel="stylesheet" href="{% static 'styles/export_motor.css' %}"> {% endcomment %}
 {% endblock style %}
 
 
@@ -25,7 +26,6 @@
                 <h3 class='text-center'>Xuất hàng</h3>
             </div>
             <form action="/export_motor/" method="post">{% csrf_token %}
-                {{ import_forms.management_form }}
 
                 <!-- Security token -->
                 {% csrf_token %}

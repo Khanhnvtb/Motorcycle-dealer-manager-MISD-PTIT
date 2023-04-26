@@ -12,6 +12,8 @@ from django.core.paginator import Paginator
 import calendar
 import joblib
 import pandas as pd
+
+
 # import sklearn
 
 
@@ -641,8 +643,8 @@ def reportSaleItems(request):
                     # tạo một con trỏ cho cơ sở dữ liệu
                     cursor = connection.cursor()
 
-                    query = "SELECT date_format(Time, '{s1}') as Month_sale, " \
-                            "myapp_Motor.image, myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity " \
+                    query = "SELECT date_format(Time, '{s1}') as Month_sale, myapp_Motor.image, " \
+                            "myapp_Motor.name, SUM(myapp_Delivery_Motor.quantity) AS quantity, myapp_motor.motor_id " \
                             "FROM myapp_Motor " \
                             "JOIN myapp_Delivery_Motor ON myapp_Motor.motor_Id = myapp_Delivery_Motor.motor_Id " \
                             "JOIN myapp_delivery_invoice ON myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
@@ -660,9 +662,9 @@ def reportSaleItems(request):
                     for record in results:
                         key = record[0]
                         if key not in report.keys():
-                            report[key] = [tuple([record[1], record[2], record[3]])]
+                            report[key] = [tuple([record[1], record[2], record[3], record[4]])]
                         else:
-                            report[key].append(tuple([record[1], record[2], record[3]]))
+                            report[key].append(tuple([record[1], record[2], record[3], record[4]]))
                     report = [(k, v) for k, v in report.items()]
                     storage = messages.get_messages(request)
                     storage.used = True
@@ -905,7 +907,7 @@ def visualizationBalanceSheet(request):
                     for record in results:
                         columns_name.append(record[0])
                         one_values.append(int(record[1]))
-        
+
                     query = "select date_format(time, '{s1}') as Month_sale, SUM(total) as sales " \
                             "from myapp_import_invoice " \
                             "where time between '{s2}' and '{s3}'" \
@@ -1394,6 +1396,44 @@ def addExpense(request):
     return render(request, 'add_expense.html', {'expense_form': expense_form})
 
 
+@login_required(login_url='/login/')
+def supplierPredict(request):
+    if request.user.role == 'admin':
+        cursor = connection.cursor()
+        query = "select supplier_id, name, rating, delivery_day, transport_price " \
+                "from myapp_supplier"
+
+        cursor.execute(query)
+
+        results = pd.DataFrame(cursor.fetchall(), columns=['id', 'name', 'rating', 'delivery_day', 'transport_price'])
+
+        u = []
+        rating = {3: 50, 4: 75, 5: 100}
+
+        for i in range(len(results['rating'])):
+            results['rating'][i] = rating[results['rating'][i]]
+        results['delivery_day'] = \
+            (max(results['delivery_day']) - results['delivery_day']) / max(results['delivery_day']) * 100
+        results['transport_price'] = \
+            (max(results['transport_price']) - results['transport_price']) / max(results['transport_price']) * 100
+
+        results['u'] = 0.4 * results['rating'] + 0.25 * results['delivery_day'] + 0.35 * results['transport_price']
+        results['delivery_day'] = round(results['delivery_day'], 2)
+        results['transport_price'] = round(results['transport_price'], 2)
+        results['u'] = round(results['u'], 2)
+
+        results = results.values.tolist()
+
+        paginator = Paginator(results, 15)  # Show 15 contacts per page.
+
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+
+    else:
+        return render(request, 'home.html')
+    return render(request, 'supplier_predict.html', {'page_obj': page_obj})
+
+
 def preProcessing(df):
     df[3] = df[3] / 365
     df[0] = df[0] / 2494
@@ -1413,11 +1453,12 @@ def salePredict(request):
         cursor = connection.cursor()
 
         # do tập dữ liệu lớn hơn ngày hiện tại -> set cứng date thay cho datetime.now()
-        query = "select a.dt, a.motor_id, datediff('2024-1-2', a.dt) as import_date, " \
+
+        query = "select a.dt, a.motor_id, datediff('{s1}', a.dt) as import_date, " \
                 "a.quantity, a.last_sale, a.export_price, a.name, a.image " \
                 "from myapp_import_invoice " \
                 "join (select myapp_motor.motor_id, myapp_motor.name, max(myapp_import_invoice.time) as dt, " \
-                "myapp_motor.quantity, datediff('2024-1-2', max(myapp_delivery_invoice.time)) as last_sale, " \
+                "myapp_motor.quantity, datediff('{s1}', max(myapp_delivery_invoice.time)) as last_sale, " \
                 "myapp_motor.export_price, myapp_motor.image " \
                 "from myapp_import_invoice " \
                 "join myapp_import_motor on myapp_import_invoice.invoice_id = myapp_import_motor.invoice_id " \
@@ -1425,7 +1466,7 @@ def salePredict(request):
                 "join myapp_delivery_motor on myapp_motor.motor_id = myapp_delivery_motor.motor_id " \
                 "join myapp_delivery_invoice on myapp_delivery_motor.invoice_id = myapp_delivery_invoice.invoice_id " \
                 "group by myapp_motor.motor_id) as a on myapp_import_invoice.time = a.dt " \
-                "order by a.motor_id"
+                "order by a.motor_id".format(s1='2024-1-1')
 
         cursor.execute(query)
 
@@ -1479,10 +1520,7 @@ def salePredict(request):
         results = pd.concat([df1, df], axis=0)
         results = results.values.tolist()
 
-        for result in results:
-            print(result)
-
-        paginator = Paginator(results, 10)  # Show 25 contacts per page.
+        paginator = Paginator(results, 10)  # Show 10 contacts per page.
 
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)

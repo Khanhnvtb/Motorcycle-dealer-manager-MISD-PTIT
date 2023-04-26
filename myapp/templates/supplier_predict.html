@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'styles/supplier_predict.css' %}">
+
+{% endblock style %}
+
+
+{% block content %}
+<table class='table table-bordered' border="1" style="border-collapse: collapse; border-spacing: 0;text-align: center; vertical-align: middle">
+    <tr>
+        <th>Nhà cung cấp</th>
+        <th>Chất lượng sản phẩm</th>
+        <th>Thời gian giao hàng</th>
+        <th>Chi phí giao hàng</th>
+        <th>U</th>
+    </tr>
+    {% for record in page_obj %}
+    <tr>
+        <td><a href="/show_supplier/{{ record.0 }}/">{{ record.1 }}</a></td>
+        <td>{{ record.2 }}</td>
+        <td>{{ record.3 }}</td>
+        <td> {{ record.4 }}</td>
+        <td> {{ record.5 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<nav class='d-flex justify-content-center ' aria-label="Page navigation example">
+    <ul class="pagination align-items-center justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">« Đầu tiên</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Trước</a></li>
+        {% endif %}
+
+        <li class="page-item mx-3">
+            <span class="current">
+                Trang {{ page_obj.number }} của {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Tiếp theo</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Cuối cùng »</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
