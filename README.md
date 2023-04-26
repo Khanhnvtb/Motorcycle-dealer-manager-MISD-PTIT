@@ -28,25 +28,25 @@ py manage.py runserver
     <img src="E:\Untitled.png"/>
       - Xem báo cáo thống kê
         - Xem thống kê thu chi theo tháng
-        <img src="E:\1.png"/>
+        <img src="image/1.png" alt="Alt text" title="Optional title">
         - Xem lịch sử bán hàng của nhân viên
-       <img src="E:\2.png"/>
+        <img src="image/2.png" alt="Alt text" title="Optional title">
         - Xem các mặt hàng bán ra theo tháng
-        <img src="E:\3.png"/>
+        <img src="image/3.png" alt="Alt text" title="Optional title">
         - Xem mặt hàng bán chạy
-        <img src="E:\4.png"/>
+        <img src="image/4.png" alt="Alt text" title="Optional title">
         - Xem lịch sử nhập hàng của nhân viên
-        <img src="E:\5.png"/>
+        <img src="image/5.png" alt="Alt text" title="Optional title">
       - Xem trực quan dữ liệu
         - Trực quan thu chi
-        <img src="E:\6.png"/>
+        <img src="image/6.png" alt="Alt text" title="Optional title">
         - Trực quan doanh số của nhân viên theo tháng
-        <img src="E:\7.png"/>
+        <img src="image/7.png" alt="Alt text" title="Optional title">
         - Trực quan mặt hàng bán chạy theo tháng
-        <img src="E:\8.png"/>
+        <img src="image/8.png" alt="Alt text" title="Optional title">
         - Trực quan mặt hàng bán chạy
-        <img src="E:\9.png"/>
+        <img src="image/9.png" alt="Alt text" title="Optional title">
         - Trực quan số lượng đã nhập theo cửa hàng
-        <img src="E:\10.png"/>
+        <img src="image/10.png" alt="Alt text" title="Optional title">
         - Trực quan lượng hàng đã nhập theo từng nhà cung cấp
-        <img src="E:\11.png"/>
+        <img src="image/11.png" alt="Alt text" title="Optional title">
