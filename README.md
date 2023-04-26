@@ -1,6 +1,8 @@
 # Motorcycle-dealer-manager-MISD-PTIT
 - Thiết kế hệ thống: Các tệp pdf
+
 https://www.canva.com/design/DAFcSgsBSuY/dfenHzkRr1k4s4IQSq9XfQ/edit
+
 https://www.canva.com/design/DAFgzqm7S90/cVCrgREzGYqicni6ew_B_w/edit
 - Sơ đồ cơ sở dữ liệu cho hệ thống:
 ![](Thiết kế cơ sở dữ liệu.png)
