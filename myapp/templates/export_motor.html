@@ -25,23 +25,33 @@
                 <h3 class='text-center'>Xuất hàng</h3>
             </div>
             <form action="/export_motor/" method="post">{% csrf_token %}
-                {{ import_forms.management_data }}
+                {{ import_forms.management_form }}
 
                 <!-- Security token -->
                 {% csrf_token %}
 
                 <div class='my-3'>{{ store_form.store.label}} {{ store_form.store}}</div>
+                <small class="form-text text-muted">{{ store_form.store.help_text}}</small>
+                {% if store_form.store.errors %}
+                <span class="text-danger">{{ store_form.store.errors|join:", " }}</span>
+                {% endif %}
 
                 <div class='my-3'>{{ debt_form.debt_term.label}} {{ debt_form.debt_term}}</div>
-
+                <small class="form-text text-muted">{{ debt_form.debt_term.help_text}}</small>
+                {% if debt_form.debt_term.errors %}
+                <span class="text-danger">{{ debt_form.debt_term.errors|join:", " }}</span>
+                {% endif %}
                 <!-- Using the formset -->
                 {% comment %} {{ export_forms.as_p }} {% endcomment %}
                 <h5>Danh sách xe</h5>
+                {{ export_forms.management_form }}
                 {% for form in export_forms %}
-                    <div class="row my-3">
-                        <div class="col-6">{{ form.motor}}</div>
-                        <div class="col-6">{{ form.quantity}}</div>
-                    </div>
+                <div class="row my-3">
+                    {{ form.field_errors }}
+                    {{ form.errors }}
+                    <div class="col-6">{{ form.motor}}</div>
+                    <div class="col-6">{{ form.quantity}}</div>
+                </div>
                 {% endfor %}
                 <div class='d-flex justify-content-center mt-4'><input class='btn btn-primary' type="submit" value="Thêm hóa đơn"></div>
             </form>
@@ -51,6 +61,7 @@
 
 <!-- Gọi file js trong folder static -->
 <script src="{% static 'scripts/export_motor.js' %}"></script>
+
 {% endblock content %}
 
 {% block script %}
