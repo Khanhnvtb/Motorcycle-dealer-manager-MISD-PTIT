@@ -5,7 +5,7 @@ https://www.canva.com/design/DAFcSgsBSuY/dfenHzkRr1k4s4IQSq9XfQ/edit
 
 https://www.canva.com/design/DAFgzqm7S90/cVCrgREzGYqicni6ew_B_w/edit
 - Sơ đồ cơ sở dữ liệu cho hệ thống:
-<img src="E:\Thiết kế cơ sở dữ liệu.png"/>
+<img src="E:\Motorcycle-dealer-manager-MISD-PTIT\image\Thiết kế cơ sở dữ liệu.png"/>
 - Các bước để có thể sử dụng:
 
 Bước 1: Cài đặt python
