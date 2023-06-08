@@ -45,7 +45,7 @@ def logoutUser(request):
     messages.add_message(request, messages.SUCCESS, "Đăng xuất thành công")
     return redirect('/login/')
 
-
+@login_required(login_url='/login/')
 def home(request):
     return render(request, 'home.html')
 
@@ -416,7 +416,7 @@ def importMotor(request):
         context = {}
 
         # creating a formset and 5 instances of ImportForm
-        ImportFormSet = formset_factory(ImportForm, extra=5)
+        ImportFormSet = formset_factory(ImportForm, extra=1)
         import_forms = ImportFormSet(request.POST or None)
         supplier_form = ImportFromSupplierFrom(request.POST or None)
         debt_form = DebtForm(request.POST or None)
@@ -470,7 +470,7 @@ def exportMotor(request):
         context = {}
 
         # creating a formset and 5 instances of ExportForm
-        ExportFormSet = formset_factory(ExportForm, extra=5)
+        ExportFormSet = formset_factory(ExportForm, extra=1)
         export_forms = ExportFormSet(request.POST or None)
         store_form = ExportToStoreForm(request.POST or None)
         debt_form = DebtForm(request.POST or None)
@@ -762,7 +762,9 @@ def reportSaleHistory(request):
     if request.user.role == 'admin':
         # tạo một con trỏ cho cơ sở dữ liệu
         cursor = connection.cursor()
-
+        start_date = request.GET.get('start_date', None)
+        end_date = request.GET.get('end_date', None)
+        
         query = "SELECT date_format(myapp_Delivery_invoice.time, '{s1}') AS time, myapp_Motor.motor_Id, myapp_User.username, " \
                 "myapp_User.name, myapp_Motor.name, myapp_Motor.image, myapp_Store.name, myapp_Store.Store_Id, " \
                 "myapp_Delivery_motor.quantity " \

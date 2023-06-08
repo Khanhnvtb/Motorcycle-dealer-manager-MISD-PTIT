@@ -51,13 +51,17 @@
         <td>{{ invoice.total|intcomma|add:"đ" }}</td>
         <td>{{ invoice.payment|intcomma|add:"đ" }}</td>
         <td>
-            <div class='d-flex justify-content-center gap-4'>
+            <div class='d-flex justify-content-start gap-4 ps-5'>
                 <a class='btn btn-primary' href="/show_invoice/{{ invoice.invoice_id }}/">Xem thông tin hóa đơn</a>
                 <a class='btn btn-primary' href="/receipt_history/{{ invoice.invoice_id }}/">Xem lịch sử thanh toán</a>
+                {% if invoice.total != invoice.payment %}
+
                 {% if request.user.role == 'Nhân viên bán hàng' %}
                 <a class='btn btn-primary' href="/export_receipt/{{ invoice.invoice_id }}">Thanh toán</a>
                 {% elif request.user.role == 'Nhân viên kho' %}
                 <a class='btn btn-primary' href="/import_receipt/{{ invoice.invoice_id }}">Thanh toán</a>
+                {% endif %}
+
                 {% endif %}
             </div>
         </td>

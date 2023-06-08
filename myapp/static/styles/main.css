@@ -1,0 +1,15 @@
+
+.table-col tr td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+.table-col tr td:last-child {
+    text-align: right;
+}
+
+.image-medium {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}

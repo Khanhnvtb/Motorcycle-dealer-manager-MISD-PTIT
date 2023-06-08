@@ -1,9 +1,14 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,500&display=swap');
+
 :root {
     --blue: #1c80f3;
     --light-blue: #2196F3;
 }
 
+body {
+    font-family: 'Roboto', sans-serif;
+}
 .color-white {
     color: #fff;
 }
@@ -28,4 +33,11 @@
 td, th {
     vertical-align: middle;
     text-align: center;
+}
+
+
+.image-medium {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
 }

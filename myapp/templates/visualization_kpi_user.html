@@ -48,16 +48,9 @@
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Tạo biến để lưu trữ dữ liệu từ context của django
-    var labels = {
-        {
-            columns_name | safe
-        }
-    }
-    var data = {
-        {
-            values | safe
-        }
-    }
+    var labels ={{columns_name | safe}}
+
+    var data = {{values | safe}}
 
     // Tạo biểu đồ cột sử dụng chart js
     var myChart = new Chart(ctx, {

@@ -21,7 +21,7 @@
         <td>{{ record.0 }}</td>
         <td><a href="/show_motor/{{ record.1 }}/"> {{ record.2 }}</a></td>
         <td style="width:200px">
-            {% load static %} <img src="{% static 'media/'|add:record.3 %}" alt="{{ record.2 }}" width="200">
+            {% load static %} <img class='image-medium' src="{% static 'media/'|add:record.3 %}" alt="{{ record.2 }}" width="200">
         </td>
         <td><a href="/show_supplier/{{ record.5 }}/"> {{ record.4 }}</a></td>
         <td>{{ record.6 }}</td>

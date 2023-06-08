@@ -13,7 +13,7 @@
 
 <div class='row my-5'>
     <div class="col-4">
-        <div class='card'>
+        <div class='card p-2'>
             <table class="invoice table table-borderless">
                 <tr>
                     <td>Mã hóa đơn</td>
@@ -21,7 +21,7 @@
                 </tr>
                 <tr>
                     <td>Ngày lập</td>
-                    <td>{{ invoice.time }}</td>
+                    <td>{{ invoice.time|date:"d/m/Y" }}</td>
                 </tr>
                 <tr>
                     <td>Tổng tiền</td>
@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>Hạn thanh toán</td>
-                    <td>{{ invoice.debt_term }}</td>
+                    <td>{{ invoice.debt_term|date:"d/m/Y" }}</td>
                 </tr>
                 <tr>
                     <td>Người lập</td>
